@@ -121,6 +121,7 @@ const goToHome = () => {
 };
 </script>
 
+// Descrição do estilo que vamos usar nas páginas
 <style scoped>
 .bg-white {
   background-color: white;

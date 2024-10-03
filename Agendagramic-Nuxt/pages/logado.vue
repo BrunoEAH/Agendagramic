@@ -22,6 +22,7 @@
         </button>
       </div>
 
+
       <!-- Nome do projeto no canto superior direito -->
       <h1 class="text-xl font-bold">AgendaGramic</h1>
     </div>
