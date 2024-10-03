@@ -50,7 +50,7 @@ import { useRouter } from 'vue-router';
 // Função para redirecionar para a página de login
 const router = useRouter();
 const goToLogin = () => {
-  router.push('/logado');
+  router.push('/profile');
 };
 
 // Função para redirecionar para a página de cadastro

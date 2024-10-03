@@ -111,7 +111,7 @@ const goToSettings = () => {
 
 // Função para redirecionar à página de agendas
 const goToAgenda = () => {
-  router.push('/agenda/index'); // Certifique-se de que a rota '/agenda' está corretamente configurada no seu arquivo de rotas
+  router.push('/profile/agenda'); // Certifique-se de que a rota '/agenda' está corretamente configurada no seu arquivo de rotas
 };
 
 // Função de logout
