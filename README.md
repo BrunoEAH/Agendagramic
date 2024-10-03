@@ -9,11 +9,23 @@ AJUSTES FUTUROS:
 EXTENÕES USADAS:
 - Python Telegram Bot API
 - Nuxt.js (Framework principal)
-- Node.js
+- Node.js e Express
 - Tailwind CSS (Framework de CSS)
 - Axios (Para requisições HTTP)
 - PostCSS (Para processamento de CSS com Autoprefixer e Tailwind)
 - @types/node (Para garantir a compatibilidade com tipos Node.js)
+- npm install firebase (autenticar usu'rios em json
 
 ACESSO AO TELEGRAM
 - Arquivo .env
+__________________________________________________________________________________________
+
+ACESSO PADRÃO DA PÁGINA:
+http://localhost:3000
+
+SERVIDOR NODE 
+http://localhost:3001
+
+Autenticar no servidor (eceber get)
+Problema: Servidor ainda é local, não sei se o bot ou o telegram vai ter acesso.
+
