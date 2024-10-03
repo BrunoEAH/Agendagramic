@@ -68,7 +68,7 @@ const handleLogin = async () => {
     localStorage.setItem('token', response.data.token);
 
     // Redirecionar para a página logada ou home após o login bem-sucedido
-    router.push('/logado'); 
+    router.push('/profile/'); 
   } catch (error) {
     alert('Erro no login: ' + error.response?.data?.message || 'Erro inesperado');
   }
