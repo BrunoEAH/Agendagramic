@@ -29,3 +29,20 @@ http://localhost:3001
 Autenticar no servidor (eceber get)
 Problema: Servidor ainda é local, não sei se o bot ou o telegram vai ter acesso.
 
+
+
+TODO:
+
+- Ajustar bot do telegram para ler inputs do usuário de diferentes formatos, usando 2:00 PM ao invés de 14:00 por exemplo.
+- Fazer API do JSON para a agenda. 
+
+TESTAR O BOT:
+
+- Evento : 
+    - começar com /event
+    - escrever nesse formato:  DD/MM/YY HH:MM-HH:MM Info 
+
+-Tarefa:
+    -começar com /task
+    -escreve nesse formato: DD/MM/YY HH:MM Info
+    -Exemplo: 10/03/2024 13:20 Fazer licao

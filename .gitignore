@@ -1,3 +1,8 @@
 Agendagramic-bot/token.env
 Agendagramic-bot/.env
+Agendagramic-bot/__pycache__/bot.cpython-312.pyc
+Agendagramic-bot/__pycache__/processing_schedule.cpython-312.pyc
+Agendagramic-bot/__pycache__/processing.cpython-312.pyc
+Agendagramic-bot/tasks.json
+Agendagramic-bot/events.json
 node_modules
