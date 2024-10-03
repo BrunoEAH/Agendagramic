@@ -13,6 +13,7 @@
     "nuxt": "^3.13.0",
     "sass": "^1.79.4",
     "vue": "latest",
+    "vue-cal": "^4.10.0",
     "vue-router": "latest"
   },
   "devDependencies": {

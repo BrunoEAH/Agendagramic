@@ -1,0 +1,15 @@
+{
+    "name": "agendagramic-server",
+    "version": "1.0.0",
+    "description": "Servidor para o projeto AgendaGramic",
+    "main": "auth.js",
+    "type": "module",
+    "scripts": {
+        "start": "node auth.js"
+    },
+    "dependencies": {
+        "body-parser": "^1.19.1",
+        "express": "^4.18.1",
+        "vue-cal": "^4.10.0"
+    }
+}
