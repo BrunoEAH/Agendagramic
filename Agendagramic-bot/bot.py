@@ -74,10 +74,10 @@ def resposta_event(message):
 def listar_tudo(message):
     
     lista = ""
-    with open('tasks.json') as tasks_file:
+    with open(json_task_path) as tasks_file:
         data_task = json.load(tasks_file)
 
-    with open('events.json') as events_file:
+    with open(json_event_path) as events_file:
         data_event = json.load(events_file)
 
     if not data_task and not data_event:
