@@ -2,8 +2,15 @@ import os
 import telebot 
 from processing_schedule import processar_task,processar_event
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
+#import tg_to_web
 
 bot = telebot.TeleBot(BOT_TOKEN)
+
+json_task_path = 'tasks.json'
+json_event_path = 'events.json'
+api_url = 'http://localhost:3000/api/'
+
+
 
 # Função para exibir a mensagem de boas-vindas
 @bot.message_handler(commands=['start', 'hello'])
@@ -23,6 +30,7 @@ def send_menu(message):
         "/menu - Exibe este menu de comandos\n"
         "/event - Marcar um evento\n"
         "/task - Marcar uma tarefa\n"
+        "/lista - Listar eventos e tarefas em ordem"
         # Adicione outros comandos conforme necessário
     )
     bot.reply_to(message, menu_message)
@@ -60,6 +68,16 @@ def resposta_event(message):
     bot.send_message(message.chat.id, f"Começo: {event.comeco}", parse_mode="Markdown")
     bot.send_message(message.chat.id, f"Fim: {event.fim}", parse_mode="Markdown")
     bot.send_message(message.chat.id, f"Evento: {event.info}", parse_mode="Markdown")
+
+@bot.message_handler(commands=['list'])
+def listar_tudo(message):
+    
+    arquivo_eventos = json.loads(x)
+    
+    for name in 
+
+
+
 
 
 # Mantém o bot em funcionamento

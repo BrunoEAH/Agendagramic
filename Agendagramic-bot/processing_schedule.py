@@ -19,6 +19,9 @@ class Event:
     info:str
 
 
+combined_data = [] #Lista para combinar arquivos JSON.
+
+
 def processar_task(message) -> Task:
     
     msg = message.text
@@ -99,6 +102,32 @@ def salvar_json(instance, filename: str):
     with open(filename, 'w') as json_file:
         json.dump(data_dict, json_file, indent=4)
 
+
+def carrega_json(caminho):
+        with open(caminho,'r') as c:
+            return json.load(c)
+
+
+def combinacao(events_file, tasks_files):
+    data_task = load_json(tasks_files)
+    data_event = load_json(events_file)
+
+    for item in data_task:
+        combined_data.append({
+            "data": item["Data"],
+            "horario": item["Horario"],
+            "info": item["info"]
+        })
+
+    for item in data_event:
+        comeco_fim_str = f"{item['comeco']} - {item['fim']} "
+        combined_data.append({
+            "data": item["event"],
+            "horario": comeco_fim_str,
+            "info": item["info"]
+        })
+
+    
 
 def create_task(data:str,horario:str,info:str) -> Task:
     return Task(data=data,horario=horario,info=info)
