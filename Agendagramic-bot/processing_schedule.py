@@ -3,6 +3,12 @@ import re
 from dateutil import parser
 from dataclasses import dataclass,asdict
 import json 
+from datetime import datetime
+
+event_path = '../Agendagramic-Nuxt/static/events.json'
+task_path = '../Agendagramic-Nuxt/static/tasks.json'
+os.makedirs(os.path.dirname(event_path), exist_ok=True)
+os.makedirs(os.path.dirname(task_path), exist_ok=True)
 
 @dataclass
 class Task:
@@ -49,7 +55,7 @@ def processar_task(message) -> Task:
 
     task = create_task(date,time,text)
 
-    salvar_json(task,'tasks.json')
+    salvar_json(task,task_path)
 
     return task
 
@@ -74,10 +80,9 @@ def processar_event(message) -> Event:
  
     event = create_event(date_str,start_time_str,end_time_str,text)
 
-    salvar_json(event,'events.json')
+    salvar_json(event,event_path)
 
     return event
-
 
 def salvar_json(instance, filename: str):
 
@@ -96,8 +101,18 @@ def salvar_json(instance, filename: str):
     else:
         raise TypeError(f"Unsupported instance type: {type(instance)}")
     
+    try:
+        with open(filename, 'r') as json_file:
+            existing_data = json.load(json_file)
+            if not isinstance(existing_data, list):
+                existing_data = [] 
+    except (FileNotFoundError, json.JSONDecodeError):
+        existing_data = []  
+
+    existing_data.append(data_dict)
+
     with open(filename, 'w') as json_file:
-        json.dump(data_dict, json_file, indent=4)
+        json.dump(existing_data, json_file, indent=4)
 
 
 def create_task(data:str,horario:str,info:str) -> Task:

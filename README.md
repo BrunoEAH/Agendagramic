@@ -35,6 +35,7 @@ TODO:
 
 - Ajustar bot do telegram para ler inputs do usuário de diferentes formatos, usando 2:00 PM ao invés de 14:00 por exemplo.
 - Fazer API do JSON para a agenda. 
+- Ordenar a lista de tarefas
 
 TESTAR O BOT:
 
@@ -42,7 +43,10 @@ TESTAR O BOT:
     - começar com /event
     - escrever nesse formato:  DD/MM/YY HH:MM-HH:MM Info 
 
--Tarefa:
-    -começar com /task
-    -escreve nesse formato: DD/MM/YY HH:MM Info
-    -Exemplo: 10/03/2024 13:20 Fazer licao
+- Tarefa:
+    - começar com /task
+    - escreve nesse formato: DD/MM/YY HH:MM Info
+    - Exemplo: 10/03/2024 13:20 Fazer licao
+
+- Lista:
+    - enviar /lista
