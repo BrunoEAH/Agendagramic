@@ -3,6 +3,7 @@ import re
 from dateutil import parser
 from dataclasses import dataclass,asdict
 import json 
+from datetime import datetime
 
 @dataclass
 class Task:
@@ -17,9 +18,6 @@ class Event:
     comeco:str
     fim:str
     info:str
-
-
-combined_data = [] #Lista para combinar arquivos JSON.
 
 
 def processar_task(message) -> Task:
@@ -81,7 +79,6 @@ def processar_event(message) -> Event:
 
     return event
 
-
 def salvar_json(instance, filename: str):
 
     if isinstance(instance, Task):
@@ -99,35 +96,19 @@ def salvar_json(instance, filename: str):
     else:
         raise TypeError(f"Unsupported instance type: {type(instance)}")
     
+    try:
+        with open(filename, 'r') as json_file:
+            existing_data = json.load(json_file)
+            if not isinstance(existing_data, list):
+                existing_data = [] 
+    except (FileNotFoundError, json.JSONDecodeError):
+        existing_data = []  
+
+    existing_data.append(data_dict)
+
     with open(filename, 'w') as json_file:
-        json.dump(data_dict, json_file, indent=4)
+        json.dump(existing_data, json_file, indent=4)
 
-
-def carrega_json(caminho):
-        with open(caminho,'r') as c:
-            return json.load(c)
-
-
-def combinacao(events_file, tasks_files):
-    data_task = load_json(tasks_files)
-    data_event = load_json(events_file)
-
-    for item in data_task:
-        combined_data.append({
-            "data": item["Data"],
-            "horario": item["Horario"],
-            "info": item["info"]
-        })
-
-    for item in data_event:
-        comeco_fim_str = f"{item['comeco']} - {item['fim']} "
-        combined_data.append({
-            "data": item["event"],
-            "horario": comeco_fim_str,
-            "info": item["info"]
-        })
-
-    
 
 def create_task(data:str,horario:str,info:str) -> Task:
     return Task(data=data,horario=horario,info=info)

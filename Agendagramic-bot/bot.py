@@ -1,8 +1,9 @@
 import os
 import telebot 
 from processing_schedule import processar_task,processar_event
+import json
+
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
-#import tg_to_web
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
@@ -72,12 +73,34 @@ def resposta_event(message):
 @bot.message_handler(commands=['list'])
 def listar_tudo(message):
     
-    arquivo_eventos = json.loads(x)
+    lista = ""
+    with open('tasks.json') as tasks_file:
+        data_task = json.load(tasks_file)
+
+    with open('events.json') as events_file:
+        data_event = json.load(events_file)
+
+    if not data_task and not data_event:
+        bot.send_message(message.chat.id, "Lista vazia.")
+    else:
+        lista = "Tarefas:\n\n"
+
+        for count,item in enumerate(data_task, start=1):
+            lista_text = f"Tarefa {count}: {item['info']}\n"
+            lista_text += f"Data: {item['Data']}\n"
+            lista_text += f"Horario: {item['Horario']}\n\n"
+            lista += lista_text
+
+        lista+= "\nEventos:\n\n "
+
+        for count,item in enumerate(data_event  , start=1):
+            lista_text = f"Evento {count}: {item['Info']}\n"
+            lista_text += f"Data: {item['Data']}\n"
+            lista_text += f"Horario: {item['Horario']}\n\n"
+            lista += lista_text
+   
+        bot.send_message(message.chat.id, f"{lista}", parse_mode="Markdown")
     
-    for name in 
-
-
-
 
 
 # Mantém o bot em funcionamento
