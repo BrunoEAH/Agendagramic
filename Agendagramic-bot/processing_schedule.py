@@ -5,8 +5,8 @@ from dataclasses import dataclass,asdict
 import json 
 from datetime import datetime
 
-event_path = '../Agendagramic-Nuxt/pages/profile/agenda/Day/static/tasks.json'
-task_path = '../Agendagramic-Nuxt/pages/profile/agenda/Day/static/events.json'
+event_path = '../Agendagramic-Nuxt/static/events.json'
+task_path = '../Agendagramic-Nuxt/static/tasks.json'
 os.makedirs(os.path.dirname(event_path), exist_ok=True)
 os.makedirs(os.path.dirname(task_path), exist_ok=True)
 

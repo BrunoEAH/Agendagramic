@@ -39,8 +39,8 @@ const events = ref([]);
 
 onMounted(async () => {
   try {
-    const tasksResponse = await fetch('../static/tasks.json');
-    const eventsResponse = await fetch('../static/events.json'); 
+    const tasksResponse = await fetch('/tasks.json');
+    const eventsResponse = await fetch('/events.json'); 
 
     const tasksData = await tasksResponse.json();
     const eventsData = await eventsResponse.json();

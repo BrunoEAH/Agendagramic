@@ -7,8 +7,8 @@ BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
-json_task_path = '../Agendagramic-Nuxt/pages/profile/agenda/Day/static/tasks.json'
-json_event_path = '../Agendagramic-Nuxt/pages/profile/agenda/Day/static/events.json'
+json_task_path = '../Agendagramic-Nuxt/static/tasks.json'
+json_event_path = '../Agendagramic-Nuxt/static/events.json'
 api_url = 'http://localhost:3000/api/'
 
 
