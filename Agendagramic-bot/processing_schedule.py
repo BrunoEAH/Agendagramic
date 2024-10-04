@@ -5,6 +5,11 @@ from dataclasses import dataclass,asdict
 import json 
 from datetime import datetime
 
+event_path = '../Agendagramic-Nuxt/pages/profile/agenda/Day/static/tasks.json'
+task_path = '../Agendagramic-Nuxt/pages/profile/agenda/Day/static/events.json'
+os.makedirs(os.path.dirname(event_path), exist_ok=True)
+os.makedirs(os.path.dirname(task_path), exist_ok=True)
+
 @dataclass
 class Task:
     data: str
@@ -50,7 +55,7 @@ def processar_task(message) -> Task:
 
     task = create_task(date,time,text)
 
-    salvar_json(task,'tasks.json')
+    salvar_json(task,task_path)
 
     return task
 
@@ -75,7 +80,7 @@ def processar_event(message) -> Event:
  
     event = create_event(date_str,start_time_str,end_time_str,text)
 
-    salvar_json(event,'events.json')
+    salvar_json(event,event_path)
 
     return event
 

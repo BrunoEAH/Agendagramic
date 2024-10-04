@@ -7,8 +7,8 @@ BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
-json_task_path = 'tasks.json'
-json_event_path = 'events.json'
+json_task_path = '../Agendagramic-Nuxt/pages/profile/agenda/Day/static/tasks.json'
+json_event_path = '../Agendagramic-Nuxt/pages/profile/agenda/Day/static/events.json'
 api_url = 'http://localhost:3000/api/'
 
 
@@ -31,7 +31,7 @@ def send_menu(message):
         "/menu - Exibe este menu de comandos\n"
         "/event - Marcar um evento\n"
         "/task - Marcar uma tarefa\n"
-        "/lista - Listar eventos e tarefas em ordem"
+        "/list - Listar eventos e tarefas em ordem"
         # Adicione outros comandos conforme necessário
     )
     bot.reply_to(message, menu_message)
