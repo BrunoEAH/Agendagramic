@@ -1,6 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { resolve } from "path";
-export default defineNuxtConfig({
+import react from '@vitejs/plugin-react';
+
+export default {
   alias:{
     '@' : resolve(__dirname,"/"),
   },
@@ -16,4 +18,8 @@ export default defineNuxtConfig({
   },
 
   modules: ["@nuxtjs/tailwindcss"],
-})
+
+  vite: {
+    plugins: [react()] // Adiciona o plugin React
+  }
+}
