@@ -22,18 +22,17 @@
         </button>
       </div>
 
-
       <!-- Nome do projeto no canto superior direito -->
       <h1 class="text-xl font-bold">AgendaGramic</h1>
     </div>
 
-    <!-- Título principal da página logada -->
+    <!-- TÍTULO PRINCIPAL DA PÁGINA LOGADA -->
     <h1 class="text-3xl font-bold text-center mb-6">Bem-vindo, {{ userName }}!</h1>
 
-    <!-- Layout vertical para as funcionalidades -->
+    <!-- LAYOUT VERTICAL PARA AS FUNCIONALIDADES -->
     <div class="flex flex-col space-y-6 max-w-lg mx-auto">
       
-      <!-- Gerenciamento de Tarefas -->
+      <!-- CARD DE GERENCIAMENTO DE TAREFAS, COM TÍTULO, DESCRIÇÃO E BOTÃO -->
       <div class="bg-white p-4 rounded-lg shadow-md">
         <h2 class="text-xl font-semibold mb-4">Gerenciamento de Tarefas</h2>
         <p class="text-gray-600 mb-4">
@@ -45,7 +44,7 @@
         </button>
       </div>
 
-      <!-- Compromissos e Agendas -->
+      <!-- CARD DE COMPROMISSOS E AGENDAS, COM TÍTULO, DESCRIÇÃO E BOTÃO DE AÇÃO -->
       <div class="bg-white p-4 rounded-lg shadow-md">
         <h2 class="text-xl font-semibold mb-4">Compromissos e Agendas</h2>
         <p class="text-gray-600 mb-4">
@@ -57,23 +56,11 @@
         </button>
       </div>
 
-      <!-- Lembretes -->
-      <div class="bg-white p-4 rounded-lg shadow-md">
-        <h2 class="text-xl font-semibold mb-4">Lembretes</h2>
-        <p class="text-gray-600 mb-4">
-          Configure lembretes personalizados e receba notificações diretamente pelo WhatsApp. Nunca perca um compromisso!
-        </p>
-        <p class="text-red-500 font-semibold mb-4">*Em breve</p> <!-- Aviso de Em Breve -->
-        <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-          Acessar Lembretes
-        </button>
-      </div>
-
-      <!-- Gerenciamento de Equipes -->
+      <!-- CARD DE GERENCIAMENTO DE EQUIPES, COM FUNCIONALIDADES DE CONTROLE DE MEMBROS -->
       <div class="bg-white p-4 rounded-lg shadow-md">
         <h2 class="text-xl font-semibold mb-4">Gerenciamento de Equipes</h2>
         <p class="text-gray-600 mb-4">
-          Adicione ou remova membros da sua equipe e organize tarefas em conjunto com um sistema hierárquico eficiente.
+          Adicione ou remova membros da sua equipe!
         </p>
         <p class="text-red-500 font-semibold mb-4">*Em breve</p> <!-- Aviso de Em Breve -->
         <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
@@ -82,8 +69,6 @@
       </div>
       
     </div>
-
-    <!-- Versão do sistema no rodapé -->
     <div class="text-center text-gray-500">
       AgendaGramic Alpha 0.0.1
     </div>
@@ -96,7 +81,7 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-// Nome genérico do usuário (pode ser ajustado futuramente para chamar do backend)
+// Nome genérico do usuário (isso será substituído por uma chamada ao backend posteriormente)
 const userName = ref('Usuário');
 
 // Função para redirecionar ao Bot do Telegram
@@ -106,7 +91,7 @@ const goToTelegram = () => {
 
 // Função para redirecionar à página de configurações
 const goToSettings = () => {
-  router.push('/settings'); // Redireciona para a página de configurações
+  window.location.href = '/settings'; 
 };
 
 // Função para redirecionar à página de agendas
@@ -116,8 +101,9 @@ const goToAgenda = () => {
 
 // Função de logout
 const logout = () => {
-  localStorage.removeItem('token'); // Remover token de autenticação
-  router.push('/'); // Redireciona para a página inicial (index)
+  // Aqui, qualquer lógica de logout pode ser executada, como limpar tokens de autenticação
+  localStorage.removeItem('token'); // Exemplo: remover token de autenticação
+  window.location.href = '/'; // Redireciona para a página inicial (index)
 };
 </script>
 
