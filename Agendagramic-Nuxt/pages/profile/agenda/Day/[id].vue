@@ -74,7 +74,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
 const router = useRouter();
-const day = route.params.id;
+const day = route.params.id; // Obtém o parâmetro 'id' da URL para representar o dia
 const tasks = ref([]);
 const events = ref([]);
 
@@ -83,18 +83,19 @@ onMounted(() => {
   const tasksData = JSON.parse(localStorage.getItem('tasks')) || {};
   const eventsData = JSON.parse(localStorage.getItem('events')) || {};
 
+  // Verifica se há dados de tarefas e eventos para o dia atual
   tasks.value = tasksData[day] || [];
   events.value = eventsData[day] || [];
 });
 
 // Função para redirecionar para a criação de tarefa
 const goToCreateTask = () => {
-  router.push(`/profile/agenda/create-task`);
+  router.push(`/profile/agenda/create-task?day=${day}`);
 };
 
 // Função para redirecionar para a criação de evento
 const goToCreateEvent = () => {
-  router.push(`/profile/agenda/create-event`);
+  router.push(`/profile/agenda/create-event?day=${day}`);
 };
 
 // Função para voltar para a página de Agenda
