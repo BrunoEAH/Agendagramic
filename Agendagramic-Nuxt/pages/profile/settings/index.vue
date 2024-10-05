@@ -27,6 +27,7 @@
       <!-- Caixa de Ajustes de Conta -->
       <div class="bg-white p-6 rounded-lg shadow-md">
         <h2 class="text-xl font-semibold mb-4">Ajustes de Conta</h2>
+        <p class="text-green-500 font-semibold">*Em desenvolvimento!</p>
         <p class="text-gray-600 mb-4">Visualize e edite suas informações pessoais, como nome, email e senha.</p>
         <button @click="goToAccountSettings" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
           Ajustar Conta
@@ -79,7 +80,7 @@ const router = useRouter();
 
 // Função para redirecionar à página inicial (logado)
 const goToHome = () => {
-  router.push('/logado');
+  router.push('/profile');
 };
 
 // Função de logout que redireciona para a página inicial
@@ -90,7 +91,7 @@ const logout = () => {
 
 // Funções de redirecionamento para as respectivas páginas
 const goToAccountSettings = () => {
-  router.push('/account-settings');
+  router.push('/profile/settings/account-settings');
 };
 
 const goToTeamManagement = () => {
@@ -138,5 +139,9 @@ const goToPrivacySettings = () => {
 
 .text-red-500 {
   color: #ef4444;
+}
+
+.text-green-500 {
+  color: #10b981;
 }
 </style>

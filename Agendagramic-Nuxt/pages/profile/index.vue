@@ -39,7 +39,7 @@
           Crie, edite e acompanhe suas tarefas diárias. Mantenha o controle de suas atividades e receba lembretes automáticos.
         </p>
         <p class="text-red-500 font-semibold mb-4">*Em breve</p> <!-- Aviso de Em Breve -->
-        <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+        <button @click="showDevelopmentAlert" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
           Acessar Tarefas
         </button>
       </div>
@@ -63,7 +63,7 @@
           Adicione ou remova membros da sua equipe!
         </p>
         <p class="text-red-500 font-semibold mb-4">*Em breve</p> <!-- Aviso de Em Breve -->
-        <button class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+        <button @click="showDevelopmentAlert" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
           Acessar Equipes
         </button>
       </div>
@@ -84,6 +84,11 @@ const router = useRouter();
 // Nome genérico do usuário (isso será substituído por uma chamada ao backend posteriormente)
 const userName = ref('Usuário');
 
+// Função para exibir o alerta de "Em Desenvolvimento"
+const showDevelopmentAlert = () => {
+  alert('Calma ai amostradinho, estamos desenvolvendo!');
+};
+
 // Função para redirecionar ao Bot do Telegram
 const goToTelegram = () => {
   window.open('https://t.me/agendagramic_bot', '_blank'); // Abre o link do Bot em uma nova aba
@@ -91,7 +96,7 @@ const goToTelegram = () => {
 
 // Função para redirecionar à página de configurações
 const goToSettings = () => {
-  window.location.href = '/settings'; 
+  window.location.href = '/profile/settings'; 
 };
 
 // Função para redirecionar à página de agendas
