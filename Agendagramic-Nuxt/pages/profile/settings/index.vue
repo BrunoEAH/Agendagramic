@@ -39,7 +39,7 @@
         <h2 class="text-xl font-semibold mb-4">Gerenciamento de Equipes</h2>
         <p class="text-gray-600 mb-2">Adicione, remova membros e ajuste permissões da sua equipe.</p>
         <p class="text-red-500 font-semibold">*Em breve</p>
-        <button @click="goToTeamManagement" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+        <button @click="showUnderDevelopment" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
           Gerenciar Equipes
         </button>
       </div>
@@ -49,7 +49,7 @@
         <h2 class="text-xl font-semibold mb-4">Ajustes de Notificações</h2>
         <p class="text-gray-600 mb-2">Configure as preferências de notificações por WhatsApp e email.</p>
         <p class="text-red-500 font-semibold">*Em breve</p>
-        <button @click="goToNotificationSettings" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+        <button @click="showUnderDevelopment" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
           Ajustar Notificações
         </button>
       </div>
@@ -59,7 +59,7 @@
         <h2 class="text-xl font-semibold mb-4">Privacidade e Segurança</h2>
         <p class="text-gray-600 mb-2">Gerencie as configurações de segurança da sua conta.</p>
         <p class="text-red-500 font-semibold">*Em breve</p>
-        <button @click="goToPrivacySettings" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+        <button @click="showUnderDevelopment" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
           Ajustar Privacidade
         </button>
       </div>
@@ -89,21 +89,14 @@ const logout = () => {
   router.push('/');
 };
 
-// Funções de redirecionamento para as respectivas páginas
+// Funções de redirecionamento para páginas que estão prontas
 const goToAccountSettings = () => {
   router.push('/profile/settings/account-settings');
 };
 
-const goToTeamManagement = () => {
-  router.push('/team-management');
-};
-
-const goToNotificationSettings = () => {
-  router.push('/notification-settings');
-};
-
-const goToPrivacySettings = () => {
-  router.push('/privacy-settings');
+// Função para exibir a mensagem "Calma ai, amostradinho..." para funções "Em breve"
+const showUnderDevelopment = () => {
+  alert("Calma ai, amostradinho, estamos desenvolvendo!");
 };
 </script>
 

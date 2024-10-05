@@ -77,7 +77,6 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
 
 // Variáveis reativas para armazenar os dados do formulário
 const name = ref('');
@@ -87,32 +86,18 @@ const confirmPassword = ref('');
 
 const router = useRouter();
 
-// Função de manipulação de cadastro com tratamento de erros
-const handleSignup = async () => {
+// Função de manipulação de cadastro com a mensagem do amostradinho
+const handleSignup = () => {
   if (password.value !== confirmPassword.value) {
     alert('As senhas não coincidem!');
     return;
   }
 
-  try {
-    // Requisição para a API de cadastro (substitua a URL se necessário)
-    const response = await axios.post('http://localhost:3001/signup', {
-      name: name.value,
-      email: email.value,
-      password: password.value,
-    });
+  // Mostra a mensagem de desenvolvimento
+  alert('Alterações salv... Calma ai amostradinho, estamos desenvolvendo!');
 
-    // Exibir mensagem de sucesso e redirecionar para a página de login
-    alert('Cadastro realizado com sucesso!');
-    router.push('/login');
-  } catch (error) {
-    // Tratamento de erro aprimorado com mensagens claras
-    if (error.response && error.response.data && error.response.data.message) {
-      alert('Erro no cadastro: ' + error.response.data.message);
-    } else {
-      alert('Erro no cadastro: Ocorreu um erro inesperado');
-    }
-  }
+  // Simulação de redirecionamento
+  router.push('/profile');
 };
 
 // Função para redirecionar para a página inicial
