@@ -1,3 +1,8 @@
+AJUSTES URGENTES (Funcionalidades):
+- Backend
+- Login e Cadastro
+- Sincronização da agenda em tempo real
+
 AJUSTES FUTUROS:
 1. Funcoes para o bot copiar o evento/tarefa do usuario para algum arquivo JSON;
 2. API para o a aplicacao ler esse arquivo JSON e mostrar no site;
@@ -28,8 +33,6 @@ http://localhost:3001
 
 Autenticar no servidor (eceber get)
 Problema: Servidor ainda é local, não sei se o bot ou o telegram vai ter acesso.
-
-
 
 TODO:
 

@@ -1,12 +1,14 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
-import { resolve } from "path";
+import { defineNuxtConfig } from 'nuxt/config';
+import { resolve } from 'path';
+
 export default defineNuxtConfig({
-  alias:{
-    '@' : resolve(__dirname,"/"),
+  alias: {
+    '@': resolve(__dirname, './'), // Alias para facilitar importações
   },
 
-  css: ["~/assets/main.scss"],
-  devtools: { enabled: true },
+  css: ['~/assets/main.scss'], // Importação do arquivo global de estilos
+
+  devtools: { enabled: true }, // Habilita as ferramentas de desenvolvimento
 
   postcss: {
     plugins: {
@@ -15,6 +17,11 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@nuxtjs/tailwindcss"],
-  compatibilityDate: "2024-10-04",
-})
+  modules: ['@nuxtjs/tailwindcss'], // Importa o módulo Tailwind CSS para a configuração do Nuxt
+
+  runtimeConfig: {
+    public: {
+      compatibilityDate: '2024-10-04', // Variável de configuração pública (personalizada, se necessário)
+    },
+  },
+});

@@ -1,75 +1,82 @@
 <template>
-  <div class="min-h-screen bg-gray-100 p-6 flex flex-col justify-between">
-    
-    <!-- Barra superior com Nome do Projeto e Botão de Início -->
-    <div class="flex justify-between items-center mb-6">
-      <button @click="goToHome" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
-        Início
-      </button>
-      <div>
-        <h1 class="text-xl font-bold">AgendaGramic</h1>
-      </div>
-    </div>
-
-    <!-- Formulário de Cadastro Centralizado -->
-    <div class="flex justify-center items-center flex-1">
-      <form @submit.prevent="handleSignup" class="bg-white p-6 rounded shadow-md w-96">
-        <h2 class="text-2xl font-bold mb-6 text-center">Cadastro</h2>
-
-        <div class="mb-4">
-          <label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
-          <input
-            type="text"
-            id="name"
-            v-model="name"
-            required
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-
-        <div class="mb-4">
-          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-          <input
-            type="email"
-            id="email"
-            v-model="email"
-            required
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-
-        <div class="mb-4">
-          <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
-          <input
-            type="password"
-            id="password"
-            v-model="password"
-            required
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-
-        <div class="mb-6">
-          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirmar Senha</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            v-model="confirmPassword"
-            required
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-
-        <p class="text-red-500 font-semibold text-center mb-4">*Em breve</p> <!-- Aviso de Em Breve -->
-
-        <button type="submit" class="w-full bg-blue-500 text-white font-semibold py-2 rounded hover:bg-blue-600">
-          Cadastrar
+  <div class="min-h-screen bg-dark-gray p-6 flex flex-col justify-between border-white border-2">
+    <!-- Degradê Verde com Sombra -->
+    <div class="bg-gradient-green-inverse shadow-green min-h-screen flex flex-col justify-between">
+      <!-- Barra superior com Botão de Início e Nome do Projeto -->
+      <div class="flex justify-between items-start mb-6">
+        <button @click="goToHome" class="bg-gray-500 text-white py-2 px-4 rounded-full hover:bg-gray-600 border-white border-2">
+          Início
         </button>
-      </form>
-    </div>
+        <div>
+          <h1 class="text-3xl font-bold text-white">AgendaGramic</h1>
+        </div>
+      </div>
 
-    <div class="text-center text-gray-500">
-      AgendaGramic Alpha 0.0.1
+      <!-- Formulário de Cadastro Centralizado -->
+      <div class="flex justify-center items-center flex-1">
+        <form @submit.prevent="handleSignup" class="bg-medium-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2 w-full max-w-md">
+          <h2 class="text-2xl font-bold mb-6 text-center text-white">Cadastro</h2>
+
+          <div class="mb-4">
+            <label for="name" class="block text-sm font-medium text-white">Nome</label>
+            <input
+              type="text"
+              id="name"
+              v-model="name"
+              required
+              class="mt-1 block w-full py-2 px-3 border border-white rounded-full bg-dark-gray text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+
+          <div class="mb-4">
+            <label for="email" class="block text-sm font-medium text-white">Email</label>
+            <input
+              type="email"
+              id="email"
+              v-model="email"
+              required
+              class="mt-1 block w-full py-2 px-3 border border-white rounded-full bg-dark-gray text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+
+          <div class="mb-4">
+            <label for="password" class="block text-sm font-medium text-white">Senha</label>
+            <input
+              type="password"
+              id="password"
+              v-model="password"
+              required
+              class="mt-1 block w-full py-2 px-3 border border-white rounded-full bg-dark-gray text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+
+          <div class="mb-6">
+            <label for="confirmPassword" class="block text-sm font-medium text-white">Confirmar Senha</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              v-model="confirmPassword"
+              required
+              class="mt-1 block w-full py-2 px-3 border border-white rounded-full bg-dark-gray text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+
+          <p class="text-red-500 font-semibold text-center mb-4">*Em breve</p> <!-- Aviso de Em Breve -->
+
+          <button type="submit" class="w-full bg-light-gray text-black font-semibold py-2 rounded-full hover:bg-green-500 border-white border-2 transition mb-4">
+            Cadastrar
+          </button>
+
+          <button @click="goToLogin" class="w-full bg-light-gray text-black font-semibold py-2 rounded-full hover:bg-green-500 border-white border-2 transition">
+            Já tem uma conta? Faça login
+          </button>
+        </form>
+      </div>
+
+      <!-- Rodapé com a versão do projeto -->
+      <div class="text-center text-gray-300 mt-6">
+        AgendaGramic Alpha 0.0.1
+      </div>
     </div>
   </div>
 </template>
@@ -104,31 +111,66 @@ const handleSignup = () => {
 const goToHome = () => {
   router.push('/');
 };
+
+// Função para redirecionar para a página de login
+const goToLogin = () => {
+  router.push('/login');
+};
 </script>
 
-// Descrição do estilo que vamos usar nas páginas
 <style scoped>
-.bg-white {
-  background-color: white;
+/* Fundo cinza escuro */
+.bg-dark-gray {
+  background-color: #1e1e1e;
 }
 
-.rounded {
-  border-radius: 0.375rem;
+/* Fundo mais claro para caixas */
+.bg-medium-gray {
+  background-color: #3c3c3c;
+}
+
+/* Fundo ainda mais claro para bordas */
+.border-lighter-gray {
+  border-color: #5a5a5a;
+}
+
+.bg-light-gray {
+  background-color: #d1d5db;
+}
+
+/* Degradê verde de baixo para cima */
+.bg-gradient-green-inverse {
+  background: linear-gradient(to top, #32cd32, transparent 50%);
+}
+
+/* Sombra verde */
+.shadow-green {
+  box-shadow: 0 10px 15px rgba(50, 205, 50, 0.3);
+}
+
+.text-gray-300 {
+  color: #d1d5db;
+}
+
+/* Botões */
+button {
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.bg-green-500:hover {
+  background-color: #32cd32;
 }
 
 .shadow-md {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-.focus\:ring-blue-500 {
-  outline-color: #4299e1;
+/* Estilo arredondado */
+.rounded-full {
+  border-radius: 9999px;
 }
 
-.hover\:bg-blue-600:hover {
-  background-color: #2b6cb0;
-}
-
-.text-red-500 {
-  color: #ef4444;
+.rounded-3xl {
+  border-radius: 1.5rem;
 }
 </style>

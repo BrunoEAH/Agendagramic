@@ -14,5 +14,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "sass": "^1.79.5",
+    "sass-loader": "^16.0.2"
+  }
 }

@@ -1,69 +1,71 @@
 <template>
-  <div class="min-h-screen bg-gray-100 p-6 flex flex-col justify-between">
-    <!-- Cabeçalho da página com AgendaGramic -->
-    <div class="flex justify-between items-center mb-6">
-      <!-- Nome da página e o dia -->
-      <div>
-        <h1 class="text-4xl font-bold">Eventos e Tarefas</h1>
-        <h2 class="text-xl text-gray-500">Dia: {{ day }}</h2>
+  <div class="min-h-screen bg-dark-gray p-6 flex flex-col justify-between border-white border-2">
+    <div class="bg-gradient-green-inverse shadow-green min-h-screen flex flex-col justify-between">
+      <!-- Cabeçalho da página com AgendaGramic -->
+      <div class="flex justify-between items-center mb-6">
+        <!-- Nome da página e o dia -->
+        <div>
+          <h1 class="text-4xl font-bold text-white">Eventos e Tarefas</h1>
+          <h2 class="text-xl text-gray-300">Dia: {{ day }}</h2>
+        </div>
+
+        <!-- Nome do Projeto com fonte maior -->
+        <div>
+          <h3 class="text-3xl font-semibold text-white">AgendaGramic</h3> <!-- Fonte aumentada para 3xl -->
+        </div>
       </div>
 
-      <!-- Nome do Projeto -->
-      <div>
-        <h3 class="text-xl font-medium">AgendaGramic</h3>
+      <!-- Listagem de Tarefas -->
+      <div class="bg-medium-gray p-6 rounded-lg shadow-md mb-6 border-lighter-gray border-2">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-semibold text-white">Tarefas</h2>
+          <button @click="goToCreateTask" class="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 border-white border-2">
+            Criar Tarefa
+          </button>
+        </div>
+        <div v-if="tasks.length > 0">
+          <ul>
+            <li v-for="(task, index) in tasks" :key="index" class="mt-2 text-white">
+              <strong>{{ task.taskName }}</strong> - Status: {{ task.taskStatus }}
+            </li>
+          </ul>
+        </div>
+        <div v-else>
+          <p class="text-lg text-gray-400">Sem tarefas para esse dia.</p>
+        </div>
       </div>
-    </div>
 
-    <!-- Listagem de Tarefas -->
-    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-semibold">Tarefas</h2>
-        <button @click="goToCreateTask" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
-          Criar Tarefa
+      <!-- Listagem de Eventos -->
+      <div class="bg-medium-gray p-6 rounded-lg shadow-md mb-6 border-lighter-gray border-2">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-semibold text-white">Eventos</h2>
+          <button @click="goToCreateEvent" class="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 border-white border-2">
+            Criar Evento
+          </button>
+        </div>
+        <div v-if="events.length > 0">
+          <ul>
+            <li v-for="(event, index) in events" :key="index" class="mt-2 text-white">
+              <strong>{{ event.eventTitle }}</strong> - Local: {{ event.eventLocation }} - Horário: {{ event.eventTime }}
+            </li>
+          </ul>
+        </div>
+        <div v-else>
+          <p class="text-lg text-gray-400">Sem eventos para esse dia.</p>
+        </div>
+      </div>
+
+      <!-- Botão Voltar no canto inferior esquerdo -->
+      <div class="mt-6 flex justify-start">
+        <button @click="goBackToAgenda" class="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600 border-white border-2">
+          Voltar
         </button>
       </div>
-      <div v-if="tasks.length > 0">
-        <ul>
-          <li v-for="(task, index) in tasks" :key="index" class="mt-2">
-            <strong>{{ task.taskName }}</strong> - Status: {{ task.taskStatus }}
-          </li>
-        </ul>
-      </div>
-      <div v-else>
-        <p class="text-lg text-gray-600">Sem tarefas para esse dia.</p>
-      </div>
-    </div>
 
-    <!-- Listagem de Eventos -->
-    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-semibold">Eventos</h2>
-        <button @click="goToCreateEvent" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
-          Criar Evento
-        </button>
+      <!-- Rodapé com versão -->
+      <div class="text-center text-gray-300 mt-4">
+        AgendaGramic Alpha 0.0.1
       </div>
-      <div v-if="events.length > 0">
-        <ul>
-          <li v-for="(event, index) in events" :key="index" class="mt-2">
-            <strong>{{ event.eventTitle }}</strong> - Local: {{ event.eventLocation }} - Horário: {{ event.eventTime }}
-          </li>
-        </ul>
-      </div>
-      <div v-else>
-        <p class="text-lg text-gray-600">Sem eventos para esse dia.</p>
-      </div>
-    </div>
-
-    <!-- Botão Voltar no canto inferior esquerdo -->
-    <div class="mt-6 flex justify-start">
-      <button @click="goBackToAgenda" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-        Voltar
-      </button>
-    </div>
-
-    <!-- Rodapé com versão -->
-    <div class="text-center text-gray-500 mt-4">
-      AgendaGramic Alpha 0.0.1
     </div>
   </div>
 </template>
@@ -105,64 +107,67 @@ const goBackToAgenda = () => {
 </script>
 
 <style scoped>
-/* Estilos para manter o padrão visual */
-.bg-gray-100 {
-  background-color: #f7fafc;
+/* Fundo cinza escuro */
+.bg-dark-gray {
+  background-color: #1e1e1e;
 }
 
-.bg-white {
-  background-color: white;
+/* Degradê verde de baixo para cima */
+.bg-gradient-green-inverse {
+  background: linear-gradient(to top, #32cd32, transparent 50%);
 }
 
-.rounded-lg {
-  border-radius: 0.5rem;
+/* Sombra verde */
+.shadow-green {
+  box-shadow: 0 10px 15px rgba(50, 205, 50, 0.3);
 }
 
-.shadow-md {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* Contêiner de tarefas e eventos */
+.bg-medium-gray {
+  background-color: #3c3c3c;
 }
 
-.text-gray-600 {
-  color: #4b5563;
+.border-lighter-gray {
+  border-color: #5a5a5a;
 }
 
-.text-gray-500 {
-  color: #6b7280;
+/* Estilo de textos */
+.text-white {
+  color: white;
 }
 
-.text-xl {
-  font-size: 1.25rem;
+.text-gray-300 {
+  color: #d1d5db;
 }
 
-.text-2xl {
-  font-size: 1.5rem;
+.text-gray-400 {
+  color: #9ca3af;
 }
 
-.text-4xl {
-  font-size: 2.25rem;
-}
-
-.flex {
-  display: flex;
-}
-
-.items-center {
-  align-items: center;
-}
-
-.justify-between {
-  justify-content: space-between;
+/* Estilos para botões arredondados */
+button {
+  transition: background-color 0.3s;
+  border-radius: 99px; /* Totalmente arredondado */
 }
 
 .bg-green-500 {
-  background-color: #10b981;
+  background-color: #32cd32;
 }
 
 .bg-green-600:hover {
-  background-color: #059669;
+  background-color: #28a745;
 }
 
 .bg-blue-500:hover {
   background-color: #2563eb;
+}
+
+/* Estilo de sombra */
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.rounded-lg {
+  border-radius: 48px;
 }
 </style>

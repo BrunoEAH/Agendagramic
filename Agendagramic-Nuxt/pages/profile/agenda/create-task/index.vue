@@ -1,90 +1,92 @@
 <template>
-  <div class="min-h-screen bg-gray-100 p-6 flex flex-col justify-between">
-    <!-- Cabeçalho da página com AgendaGramic -->
-    <div class="flex justify-between items-center mb-6">
-      <!-- Título da página -->
-      <div>
-        <h1 class="text-4xl font-bold">Criar Nova Tarefa</h1>
+  <div class="min-h-screen bg-dark-gray p-6 flex flex-col justify-between border-white border-2">
+    <div class="bg-gradient-green-inverse shadow-green min-h-screen flex flex-col justify-between">
+      <!-- Cabeçalho da página com AgendaGramic -->
+      <div class="flex justify-between items-center mb-6">
+        <!-- Título da página -->
+        <div>
+          <h1 class="text-4xl font-bold text-white">Criar Nova Tarefa</h1>
+        </div>
+
+        <!-- Nome do Projeto com fonte maior -->
+        <div class="text-center">
+          <h3 class="text-3xl font-semibold text-white">AgendaGramic</h3>
+        </div>
       </div>
 
-      <!-- Nome do Projeto -->
-      <div class="text-center">
-        <h3 class="text-lg font-medium">AgendaGramic</h3>
-      </div>
-    </div>
+      <!-- Formulário de criação de tarefa -->
+      <div class="bg-medium-gray p-6 rounded-lg shadow-md border-lighter-gray border-2 mb-6">
+        <h2 class="text-2xl font-semibold mb-4 text-white">Detalhes da Tarefa</h2>
 
-    <!-- Formulário de criação de tarefa -->
-    <div class="bg-white p-6 rounded-lg shadow-md">
-      <h2 class="text-2xl font-semibold mb-4">Detalhes da Tarefa</h2>
+        <!-- Nome da Tarefa -->
+        <div class="mb-4">
+          <label for="taskName" class="block text-white text-sm font-bold mb-2">Nome da Tarefa</label>
+          <input
+            v-model="taskName"
+            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            id="taskName"
+            type="text"
+            placeholder="Digite o nome da tarefa"
+          />
+        </div>
 
-      <!-- Nome da Tarefa -->
-      <div class="mb-4">
-        <label for="taskName" class="block text-gray-700 text-sm font-bold mb-2">Nome da Tarefa</label>
-        <input
-          v-model="taskName"
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="taskName"
-          type="text"
-          placeholder="Digite o nome da tarefa"
-        />
-      </div>
+        <!-- Descrição da Tarefa -->
+        <div class="mb-4">
+          <label for="taskDescription" class="block text-white text-sm font-bold mb-2">Descrição</label>
+          <textarea
+            v-model="taskDescription"
+            class="bg-light-gray shadow appearance-none border rounded-lg w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            id="taskDescription"
+            rows="4"
+            placeholder="Descreva a tarefa"
+          ></textarea>
+        </div>
 
-      <!-- Descrição da Tarefa -->
-      <div class="mb-4">
-        <label for="taskDescription" class="block text-gray-700 text-sm font-bold mb-2">Descrição</label>
-        <textarea
-          v-model="taskDescription"
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="taskDescription"
-          rows="4"
-          placeholder="Descreva a tarefa"
-        ></textarea>
-      </div>
+        <!-- Data de Conclusão -->
+        <div class="mb-4">
+          <label for="dueDate" class="block text-white text-sm font-bold mb-2">Data de Conclusão</label>
+          <input
+            v-model="dueDate"
+            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            id="dueDate"
+            type="date"
+          />
+        </div>
 
-      <!-- Data de Conclusão -->
-      <div class="mb-4">
-        <label for="dueDate" class="block text-gray-700 text-sm font-bold mb-2">Data de Conclusão</label>
-        <input
-          v-model="dueDate"
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="dueDate"
-          type="date"
-        />
-      </div>
+        <!-- Status da Tarefa -->
+        <div class="mb-4">
+          <label for="taskStatus" class="block text-white text-sm font-bold mb-2">Status da Tarefa</label>
+          <select
+            v-model="taskStatus"
+            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            id="taskStatus"
+          >
+            <option value="pendente">Pendente</option>
+            <option value="em progresso">Em Progresso</option>
+            <option value="concluída">Concluída</option>
+          </select>
+        </div>
 
-      <!-- Status da Tarefa -->
-      <div class="mb-4">
-        <label for="taskStatus" class="block text-gray-700 text-sm font-bold mb-2">Status da Tarefa</label>
-        <select
-          v-model="taskStatus"
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="taskStatus"
+        <!-- Botão para criar a tarefa -->
+        <button
+          @click="createTask"
+          class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline border-white border-2"
         >
-          <option value="pendente">Pendente</option>
-          <option value="em progresso">Em Progresso</option>
-          <option value="concluída">Concluída</option>
-        </select>
+          Criar Tarefa
+        </button>
       </div>
 
-      <!-- Botão para criar a tarefa -->
-      <button
-        @click="createTask"
-        class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      >
-        Criar Tarefa
-      </button>
-    </div>
+      <!-- Botão Voltar no canto inferior esquerdo -->
+      <div class="mt-6 flex justify-start">
+        <button @click="goBack" class="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600 border-white border-2">
+          Voltar
+        </button>
+      </div>
 
-    <!-- Botão Voltar no canto inferior esquerdo -->
-    <div class="mt-6 flex justify-start">
-      <button @click="goBack" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-        Voltar
-      </button>
-    </div>
-
-    <!-- Rodapé com versão -->
-    <div class="text-center text-gray-500 mt-4">
-      AgendaGramic Alpha 0.0.1
+      <!-- Rodapé com versão -->
+      <div class="text-center text-gray-300 mt-4">
+        AgendaGramic Alpha 0.0.1
+      </div>
     </div>
   </div>
 </template>
@@ -95,7 +97,7 @@ import { useRouter, useRoute } from 'vue-router';
 
 const router = useRouter();
 const route = useRoute();
-const day = route.params.id;  // Pega o dia a partir da URL
+const day = route.params.id;
 
 const taskName = ref('');
 const taskDescription = ref('');
@@ -136,8 +138,51 @@ const goBack = () => {
 </script>
 
 <style scoped>
-/* Estilos personalizados */
-.shadow {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* Fundo cinza escuro */
+.bg-dark-gray {
+  background-color: #1e1e1e;
 }
+
+/* Degradê verde de baixo para cima */
+.bg-gradient-green-inverse {
+  background: linear-gradient(to top, #32cd32, transparent 50%);
+}
+
+/* Sombra verde */
+.shadow-green {
+  box-shadow: 0 10px 15px rgba(50, 205, 50, 0.3);
+}
+
+/* Contêiner com cor cinza médio */
+.bg-medium-gray {
+  background-color: #3c3c3c;
+}
+
+.border-lighter-gray {
+  border-color: #5a5a5a;
+}
+
+/* Campos de entrada */
+.bg-light-gray {
+  background-color: #2e2e2e;
+  color: white;
+}
+
+/* Botões arredondados */
+button {
+  transition: background-color 0.3s;
+  border-radius: 9999px;
+}
+
+/* Estilo de sombra */
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo para o ícone do calendário dentro do campo de data */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* Inverte as cores para branco */
+  opacity: 0.8;
+}
+
 </style>
