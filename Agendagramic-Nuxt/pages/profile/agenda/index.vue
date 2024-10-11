@@ -45,6 +45,26 @@
         </div>
       </div>
 
+      <!-- Caixa do dia atual -->
+      <div class="bg-medium-gray p-4 rounded-3xl shadow-md border-lighter-gray border-2 max-w-3xl w-full mx-auto mt-6">
+        <h3 class="text-xl text-white text-center">Hoje é: {{ currentDateString }}</h3>
+      </div>
+
+      <!-- Contêiner das duas caixas principais -->
+      <div class="flex space-x-4 mt-6 max-w-5xl mx-auto">
+        <!-- Caixa de Atividades do Dia -->
+        <div class="bg-medium-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2 flex-1">
+          <h3 class="text-xl text-white mb-4">Atividades do Dia</h3>
+          <p class="text-gray-300">Nenhuma atividade programada para hoje.</p>
+        </div>
+
+        <!-- Caixa de Eventos do Dia -->
+        <div class="bg-medium-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2 flex-1">
+          <h3 class="text-xl text-white mb-4">Eventos do Dia</h3>
+          <p class="text-gray-300">Nenhum evento programado para hoje.</p>
+        </div>
+      </div>
+
       <!-- Botão Voltar no canto inferior esquerdo -->
       <div class="mt-6">
         <button @click="goToProfile" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 border-white border-2">
@@ -72,6 +92,7 @@ const currentDate = new Date();
 const currentMonthIndex = currentDate.getMonth();
 const currentMonth = months[currentMonthIndex];
 const currentYear = currentDate.getFullYear();
+const currentDateString = currentDate.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
 
 // Obter o número de dias no mês atual
 const daysInMonth = new Date(currentYear, currentMonthIndex + 1, 0).getDate();
@@ -87,7 +108,6 @@ const calendarDays = ref(
 const router = useRouter();
 
 const goToDate = (day) => {
-  // Redireciona para a rota do dia selecionado
   router.push(`/profile/agenda/day/${day}`);
 };
 
@@ -128,11 +148,11 @@ const goToProfile = () => {
 
 /* Estilos para os dias do calendário */
 .bg-medium-gray {
-  background-color: #d4d4d4;
+  background-color: #3c3c3c;
 }
 
 .text-black {
-  color: #000000;
+  color: rgb(211, 211, 211);
 }
 
 .text-lg {
