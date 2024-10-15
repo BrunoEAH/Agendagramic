@@ -35,9 +35,11 @@ Autenticar no servidor (eceber get)
 Problema: Servidor ainda é local, não sei se o bot ou o telegram vai ter acesso.
 
 CONSTRUIR E RODAR O DOCKER:
+
 docker-compose up --build
 
 RODAR O DOCKER:
+
 docker-compose up
 
 PARAR O DOCKER:
