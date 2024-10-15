@@ -6469,3 +6469,4 @@ Agendagramic-bot/venv/share/jupyter/nbconvert/templates/script/script.j2
 Agendagramic-bot/venv/share/jupyter/nbconvert/templates/webpdf/conf.json
 Agendagramic-bot/venv/share/jupyter/nbconvert/templates/webpdf/index.pdf.j2
 Agendagramic-bot/venv/share/man/man1/ipython.1
+Agendagramic-bot/__pycache__/processing_schedule.cpython-311.pyc

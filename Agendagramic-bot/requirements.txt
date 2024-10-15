@@ -1,5 +1,4 @@
 pyTelegramBotAPI==4.23.0
-python_dateutil==2.9.0
-python_dateutil==2.9.0.post0
+python_dateutil>=2.9.0
 Requests==2.32.3
 watchdog==3.0.0
