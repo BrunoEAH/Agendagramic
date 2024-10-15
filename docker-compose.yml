@@ -1,0 +1,19 @@
+version: '3'
+services:
+  nuxt:
+    build: ./Agendagramic-Nuxt
+    container_name: nuxt-app
+    ports:
+      - "3000:3000"  # Expose Nuxt.js on port 3000
+    volumes:
+      - ./Agendagramic-Nuxt:/app
+    environment:
+      - HOST=0.0.0.0
+    restart: always
+
+  bot:
+    build: ./Agendagramic-bot
+    container_name: python-bot
+    volumes:
+      - ./Agendagramic-bot:/app
+    restart: always

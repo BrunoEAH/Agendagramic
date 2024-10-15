@@ -34,6 +34,18 @@ http://localhost:3001
 Autenticar no servidor (eceber get)
 Problema: Servidor ainda é local, não sei se o bot ou o telegram vai ter acesso.
 
+CONSTRUIR E RODAR O DOCKER:
+docker-compose up --build
+
+RODAR O DOCKER:
+docker-compose up
+
+PARAR O DOCKER:
+
+docker-compose down
+
+
+
 TODO:
 
 - Ajustar bot do telegram para ler inputs do usuário de diferentes formatos, usando 2:00 PM ao invés de 14:00 por exemplo.
