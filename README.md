@@ -1,14 +1,15 @@
 AJUSTES URGENTES (Funcionalidades):
-- Backend
-- Login e Cadastro
-- Sincronização da agenda em tempo real
+- Backend [Vini]
+- Banco de Dados [Navarro]
+- Login e Cadastro (depende do Banco de Dados pronto)
+- Sincronização da agenda em tempo real [Vini]
 
 AJUSTES FUTUROS:
-1. Funcoes para o bot copiar o evento/tarefa do usuario para algum arquivo JSON;
+1. Funcoes para o bot copiar o evento/tarefa do usuario para algum arquivo JSON; 
 2. API para o a aplicacao ler esse arquivo JSON e mostrar no site;
 3. Bot copiar resultado da pesquisa,processar,responder e armazena no JSON;
 4. Elaborar a interface do site;
-5. Menu do bot;
+5. Menu do bot; [Bruno]
 6. Elaborar a pagina de login.
 
 EXTENÕES USADAS:
