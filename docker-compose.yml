@@ -14,6 +14,8 @@ services:
   bot:
     build: ./Agendagramic-bot
     container_name: python-bot
+    env_file:
+      - Agendagramic-bot/.env
     volumes:
       - ./Agendagramic-bot:/app
     restart: always
