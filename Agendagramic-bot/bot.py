@@ -1,9 +1,15 @@
 import os
 import telebot 
+from dotenv import load_dotenv
 from processing_schedule import processar_task,processar_event
 import json
 
-BOT_TOKEN = os.environ.get('BOT_TOKEN')
+load_dotenv()
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+
+if not BOT_TOKEN:
+    raise ValueError("Token nao encontrado")
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
