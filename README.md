@@ -31,7 +31,7 @@ http://localhost:3000
 SERVIDOR NODE 
 http://localhost:3001
 
-Autenticar no servidor (eceber get)
+Autenticar no servidor (receber get)
 Problema: Servidor ainda é local, não sei se o bot ou o telegram vai ter acesso.
 
 CONSTRUIR E RODAR O DOCKER:
