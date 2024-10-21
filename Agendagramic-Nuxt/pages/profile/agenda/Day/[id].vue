@@ -11,7 +11,7 @@
 
         <!-- Nome do Projeto com fonte maior -->
         <div>
-          <h3 class="text-3xl font-semibold text-white">AgendaGramic</h3> <!-- Fonte aumentada para 3xl -->
+          <h3 class="text-3xl font-semibold text-white">AgendaGramic</h3>
         </div>
       </div>
 
@@ -78,14 +78,22 @@ const route = useRoute();
 const router = useRouter();
 const day = route.params.id; // Obtém o parâmetro 'id' da URL para representar o dia
 
-if(day < 1 || day > 31) //Se o dia for menor que 1 ou maior que 31, vai para a página de erro.
-  return redirect('profile/error');
-
 const tasks = ref([]);
 const events = ref([]);
 
+// Função para redirecionar para a página de erro
+const redirectToErrorPage = () => {
+  router.push('/profile/error');
+};
+
 // Função para buscar dados de tarefas e eventos do localStorage
 onMounted(() => {
+  // Verifica se o dia é inválido
+  if (day < 1 || day > 31) {
+    redirectToErrorPage();
+    return;
+  }
+
   const tasksData = JSON.parse(localStorage.getItem('tasks')) || {};
   const eventsData = JSON.parse(localStorage.getItem('events')) || {};
 

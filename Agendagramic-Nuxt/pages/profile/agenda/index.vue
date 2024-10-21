@@ -51,6 +51,43 @@
         <h3 class="text-xl text-white text-center">Hoje é: {{ currentDateString }}</h3>
       </div>
 
+      <!-- Contêiner das caixas de Tarefas e Eventos, organizadas em duas colunas -->
+      <div class="grid grid-cols-2 gap-6 max-w-6xl w-full mx-auto mt-6">
+        <!-- Caixa de Tarefas -->
+        <div class="bg-medium-gray p-8 rounded-3xl shadow-md border-lighter-gray border-2">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold text-white">Tarefas</h2>
+          </div>
+          <div v-if="tasks.length > 0">
+            <ul>
+              <li v-for="(task, index) in tasks" :key="index" class="mt-2 text-white">
+                <strong>{{ task.taskName }}</strong> - Status: {{ task.taskStatus }}
+              </li>
+            </ul>
+          </div>
+          <div v-else>
+            <p class="text-lg text-gray-400">Sem tarefas para esse dia.</p>
+          </div>
+        </div>
+
+        <!-- Caixa de Eventos -->
+        <div class="bg-medium-gray p-8 rounded-3xl shadow-md border-lighter-gray border-2">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-semibold text-white">Eventos</h2>
+          </div>
+          <div v-if="events.length > 0">
+            <ul>
+              <li v-for="(event, index) in events" :key="index" class="mt-2 text-white">
+                <strong>{{ event.eventTitle }}</strong> - Local: {{ event.eventLocation }} - Horário: {{ event.eventTime }}
+              </li>
+            </ul>
+          </div>
+          <div v-else>
+            <p class="text-lg text-gray-400">Sem eventos para esse dia.</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Botão Voltar -->
       <div class="mt-6 text-center">
         <button @click="goToProfile" class="bg-gray-500 text-white py-2 px-4 rounded-full hover:bg-green-500 border-white border-2">
@@ -67,7 +104,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 // Nome dos meses
@@ -118,9 +155,23 @@ updateCalendarDays();
 
 const router = useRouter();
 
+// Funções para manipular tarefas e eventos
+const tasks = ref([]);
+const events = ref([]);
+
 const goToDate = (day) => {
   router.push(`/profile/agenda/day/${day}`);
 };
+
+// Carregar dados de tarefas e eventos para o dia atual
+onMounted(() => {
+  const tasksData = JSON.parse(localStorage.getItem('tasks')) || {};
+  const eventsData = JSON.parse(localStorage.getItem('events')) || {};
+
+  // Verifica se há dados de tarefas e eventos para o dia atual
+  tasks.value = tasksData[today] || [];
+  events.value = eventsData[today] || [];
+});
 
 const goToProfile = () => {
   router.push('/profile');
