@@ -77,6 +77,10 @@ import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
 const day = route.params.id; // Obtém o parâmetro 'id' da URL para representar o dia
+
+if(day < 1 || day > 31) //Se o dia for menor que 1 ou maior que 31, vai para a página de erro.
+  return redirect('profile/error');
+
 const tasks = ref([]);
 const events = ref([]);
 

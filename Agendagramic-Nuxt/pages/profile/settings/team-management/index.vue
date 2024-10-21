@@ -110,8 +110,12 @@ const createTeam = () => {
 // Função para adicionar um membro a uma equipe
 const addMemberToTeam = (teamIndex) => {
   const email = prompt('Digite o email do membro:');
-  if (email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex para email
+  if (emailRegex.test(email)) {
     teams.value[teamIndex].members.push(email);
+  }
+  else{
+    alert('Por favor, insira um email válido.');
   }
 };
 
