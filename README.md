@@ -68,3 +68,14 @@ TESTAR O BOT:
 
 - Lista:
     - enviar /lista
+
+BANCO DE DADOS:
+
+-  Alterar os dados no arquivo server/config/database.js para utilizar o banco de dados local;
+
+- Inserir dados padrões no banco de dados antes de enviar tarefas, EXEMPLO DE COMANDO:
+    USE agendagramic;
+    INSERT INTO Grupos (grupo_id , nome , admin , criado_em)
+    VALUES (1,'@UsuarioTelegram','@UsuarioTelegram',NOW());
+
+- Instalar mariadb ( npm install mariadb --save-dev)

@@ -61,10 +61,51 @@
             class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
             id="taskStatus"
           >
-            <option value="pendente">Pendente</option>
-            <option value="em progresso">Em Progresso</option>
-            <option value="concluída">Concluída</option>
+            <option :value="0">Pendente</option>
+            <option :value="1">Em Progresso</option>
+            <option :value="2">Concluída</option>
           </select>
+        </div>
+
+        <!-- Prioridade da Tarefa -->
+                <div class="mb-4">
+          <label for="taskPriority" class="block text-white text-sm font-bold mb-2">Prioridade da Tarefa</label>
+          <select
+            v-model="taskPriority"
+            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            id="taskPriority"
+          >
+            <option value="alta">Alta</option>
+            <option value="media">Média</option>
+            <option value="baixa">Baixa</option>
+          </select>
+        </div>
+
+        <!-- Grupo para Tarefa -->
+                <div class="mb-4">
+          <label for="taskGroup" class="block text-white text-sm font-bold mb-2">Grupo da Tarefa</label>
+          <select
+            v-model="taskGroup"
+            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            id="taskGroup"
+          >
+            <option :value="0">Nenhum</option>
+            <option :value="1">Grupo 1</option>
+            <option :value="2">Grupo 2</option>
+          </select>
+        </div>
+
+
+        <!-- Descrição da Tarefa -->
+        <div class="mb-4">
+          <label for="taskMembers" class="block text-white text-sm font-bold mb-2">Responsáveis pela tarefa</label>
+          <textarea
+            v-model="taskMembers"
+            class="bg-light-gray shadow appearance-none border rounded-lg w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            id="taskMembers"
+            rows="4"
+            placeholder="Escreva o nome dos responsáveis"
+          ></textarea>
         </div>
 
         <!-- Botão para criar a tarefa -->
@@ -99,18 +140,28 @@ const router = useRouter();
 const route = useRoute();
 const day = route.params.id;
 
+var task_ID = 0;
 const taskName = ref('');
 const taskDescription = ref('');
 const dueDate = ref('');
-const taskStatus = ref('pendente');
+const taskStatus = ref(0);
+const taskPriority = ref('alta');
+const taskGroup = ref(0);
+const taskCreator = "@SeuUsuario";
+const taskMembers = ref('');
 
 // Função para criar uma nova tarefa
-const createTask = () => {
+const createTask = async () => {
   const newTask = {
+    task_ID: task_ID++,
     taskName: taskName.value,
     taskDescription: taskDescription.value,
     dueDate: dueDate.value,
     taskStatus: taskStatus.value,
+    taskPriority: taskPriority.value,
+    taskGroup : taskGroup.value,
+    taskMembers: taskMembers.value,
+    taskCreator: taskCreator,
   };
 
   // Pega as tarefas existentes no localStorage ou cria uma nova estrutura
@@ -127,8 +178,21 @@ const createTask = () => {
   // Atualiza o localStorage com os novos dados
   localStorage.setItem('tasks', JSON.stringify(tasksData));
 
-  // Redireciona de volta para a página do dia
-  router.push(`/profile/agenda/day/${day}`);
+  try {
+    const { data } = await useFetch('/api/addTask', {
+      method: 'POST',
+      body: newTask,
+    });
+    message.value = 'User added successfully!';
+    console.log('Insert result:', data.value);
+      // Redireciona de volta para a página do dia
+    router.push(`/profile/agenda/day/${day}`);
+  } catch (error) {
+    console.error('Failed to add user:', error);
+    message.value = 'Failed to add user.';
+  }
+
+
 };
 
 // Função para voltar à página de agenda
