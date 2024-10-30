@@ -20,6 +20,7 @@ jobs:
         run: |
           cd Agendagramic-Nuxt/
           npm install nuxt
+          npm run dev &
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
