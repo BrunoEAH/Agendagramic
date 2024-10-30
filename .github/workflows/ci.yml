@@ -26,6 +26,7 @@ jobs:
         
       - name: Run Nuxt
         run: |
+          cd Agendagramic-Nuxt/
           npm run dev --o &
           
       - name: Run tests with pytest
