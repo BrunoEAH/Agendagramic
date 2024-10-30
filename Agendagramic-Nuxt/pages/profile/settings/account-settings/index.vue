@@ -61,6 +61,24 @@
             />
           </div>
 
+                    
+          
+          <!-- Usuario Atual e Novo -->
+         <div class="mb-6">
+            <label class="block text-white text-sm font-bold mb-2">Usuário do telegram Atual:</label>
+            <p class="mb-4 text-gray-400">@teste</p>
+
+            <label for="newUser" class="block text-white text-sm font-bold mb-2">Usuário Novo:</label>
+            <input
+              v-model="newUser"
+              class="shadow appearance-none border border-lighter-gray rounded-full w-full py-2 px-3 text-white bg-dark-gray focus:outline-none focus:shadow-outline"
+              id="newUser"
+              type="text"
+              placeholder="Digite seu novo usuário"
+            />
+          </div>
+
+
           <!-- Senha Atual e Nova -->
           <div class="mb-6">
             <label class="block text-white text-sm font-bold mb-2">Senha Atual:</label>

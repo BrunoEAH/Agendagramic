@@ -108,11 +108,25 @@ const createTeam = () => {
 };
 
 // Função para adicionar um membro a uma equipe
-const addMemberToTeam = (teamIndex) => {
+const addMemberToTeam = async (teamIndex) => {
   const email = prompt('Digite o email do membro:');
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex para email
   if (emailRegex.test(email)) {
-    teams.value[teamIndex].members.push(email);
+    try{
+      const response = await fetch(`/api/checkEmail?email=${encodeURIComponent(email)}`);
+      const data = await response.json();
+
+      if(data.exists){
+        teams.value[teamIndex].members.push(email);
+        alert('Membro adicionado com sucesso!');
+      } else {
+      alert('Email não encontrado no banco de dados. Por favor, verifique o email.');
+      }
+    }
+    catch(error) {
+      console.error('Erro ao checar o email:', error);
+      alert('Erro ao verificar o email. Tente novamente mais tarde.');
+    }
   }
   else{
     alert('Por favor, insira um email válido.');

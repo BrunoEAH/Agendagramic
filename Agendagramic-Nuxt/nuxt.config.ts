@@ -6,9 +6,11 @@ export default defineNuxtConfig({
     '@': resolve(__dirname, './'), // Alias para facilitar importações
   },
 
-  css: ['~/assets/main.scss'], // Importação do arquivo global de estilos
+  // Importação do arquivo global de estilos
+  css: ['~/assets/main.scss'],
 
-  devtools: { enabled: true }, // Habilita as ferramentas de desenvolvimento
+  // Habilita as ferramentas de desenvolvimento
+  devtools: { enabled: true },
 
   postcss: {
     plugins: {
@@ -17,11 +19,14 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@nuxtjs/tailwindcss'], // Importa o módulo Tailwind CSS para a configuração do Nuxt
+  // Importa o módulo Tailwind CSS para a configuração do Nuxt
+  modules: ['@nuxtjs/tailwindcss'],
 
   runtimeConfig: {
     public: {
       compatibilityDate: '2024-10-04', // Variável de configuração pública (personalizada, se necessário)
     },
   },
+
+  compatibilityDate: '2024-10-30',
 });
