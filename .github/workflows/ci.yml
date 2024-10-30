@@ -1,7 +1,12 @@
-
 name: Run Tests and Generate Report
 
-on: push
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test:
@@ -14,32 +19,24 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.x'
 
       - name: Install dependencies
-        run: |  
-        
-          cd Agendagramic-Nuxt/
+        run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          npm install
 
       - name: Install Chrome
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget
-          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo apt install -y ./google-chrome-stable_current_amd64.deb        
+          sudo apt-get install -y google-chrome-stable
 
-      - name: Run Nuxt
-        run: |
-          cd Agendagramic-Nuxt/
-          npm run dev --o &
-          
       - name: Run tests with pytest
+        env:
+          DISPLAY: :99  # Necessário para rodar o Chrome no ambiente sem GUI
         run: |
           python -m pytest testes --html=report.html --self-contained-html
-          
+
       - name: Upload Test Report
         if: always()
         uses: actions/upload-artifact@v3
