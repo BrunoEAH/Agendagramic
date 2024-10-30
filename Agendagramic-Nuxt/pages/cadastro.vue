@@ -61,7 +61,8 @@
             />
           </div>
 
-          <p class="text-red-500 font-semibold text-center mb-4">*Em breve</p> <!-- Aviso de Em Breve -->
+          <p v-if="errorMessage" class="text-red-500 font-semibold text-center mb-4">{{ errorMessage }}</p> <!-- Exibe mensagem de erro -->
+          <p v-if="successMessage" class="text-green-500 font-semibold text-center mb-4">{{ successMessage }}</p> <!-- Exibe mensagem de sucesso -->
 
           <button type="submit" class="w-full bg-light-gray text-black font-semibold py-2 rounded-full hover:bg-green-500 border-white border-2 transition mb-4">
             Cadastrar
@@ -84,27 +85,46 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios'; // Importando o axios para requisição HTTP
 
 // Variáveis reativas para armazenar os dados do formulário
 const name = ref('');
 const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
+const errorMessage = ref('');
+const successMessage = ref('');
 
 const router = useRouter();
 
-// Função de manipulação de cadastro com a mensagem do amostradinho
-const handleSignup = () => {
+// Função de manipulação de cadastro para salvar as informações no banco de dados
+const handleSignup = async () => {
+  errorMessage.value = '';
+  successMessage.value = '';
+
   if (password.value !== confirmPassword.value) {
-    alert('As senhas não coincidem!');
+    errorMessage.value = 'As senhas não coincidem!';
     return;
   }
 
-  // Mostra a mensagem de desenvolvimento
-  alert('Alterações salv... Calma ai amostradinho, estamos desenvolvendo!');
+  try {
+    const response = await axios.post('/api/register', {
+      name: name.value,
+      email: email.value,
+      password: password.value,
+    });
 
-  // Simulação de redirecionamento
-  router.push('/profile');
+    // Verifica se o cadastro foi bem-sucedido
+    if (response.data.success) {
+      successMessage.value = 'Cadastro realizado com sucesso!';
+      // Redireciona para o login após um tempo
+      setTimeout(() => router.push('/login'), 2000);
+    } else {
+      errorMessage.value = response.data.message || 'Erro ao realizar cadastro.';
+    }
+  } catch (error) {
+    errorMessage.value = 'Erro ao conectar com o servidor. Tente novamente mais tarde.';
+  }
 };
 
 // Função para redirecionar para a página inicial

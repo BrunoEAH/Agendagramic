@@ -1,6 +1,5 @@
 <template>
   <div class="min-h-screen bg-dark-gray p-6 flex flex-col justify-between">
-    
     <!-- Barra superior com Nome do Projeto e Botão de Início -->
     <div class="flex justify-between items-center mb-6 justify-end">
       <div class="flex items-center space-x-2">
@@ -62,15 +61,17 @@ const router = useRouter();
 
 const handleLogin = async () => {
   try {
-    const response = await axios.post('http://localhost:3001/login', {
+    // Envia a requisição de login para o backend
+    const response = await axios.post('http://localhost:3001/api/login', {
       email: email.value,
       password: password.value,
     });
 
+    // Armazena o token no localStorage e redireciona para o perfil
     localStorage.setItem('token', response.data.token);
-    router.push('/profile/'); 
+    router.push('/profile/');
   } catch (error) {
-    alert('Erro no login: ' + error.response?.data?.message || 'Erro inesperado');
+    alert('Erro no login: ' + (error.response?.data?.message || 'Erro inesperado'));
   }
 };
 
