@@ -189,8 +189,8 @@ const createEvent = async () => {
     // Redireciona de volta para a página do dia
     router.push(`/profile/agenda/day/${day}`);
   } catch (error) {
-    console.error('Failed to add user:', error);
-    alert('Failed to add user.');
+    console.error('Errado ao adicionar o evento:', error);
+    alert('Errado ao adicionar o evento.');
   }
 
 };

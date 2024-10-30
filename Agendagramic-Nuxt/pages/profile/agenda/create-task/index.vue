@@ -188,14 +188,14 @@ const createTask = async () => {
       throw new Error(error.value); // Handle fetch error
     }
 
-    console.log('User added successfully!', data.value);
+    console.log('Tarefa adicionada:', data.value);
 
     // Redireciona de volta para a página do dia
     router.push(`/profile/agenda/day/${day}`);
 
   } catch (error) {
-    console.error('Failed to add user:', error);
-    alert('Failed to add user.');
+    console.error('Errado ao adicionar a tarefa:', error);
+    alert('Errado ao adicionar a tarefa.');
   }
 
 

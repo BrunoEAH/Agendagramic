@@ -87,6 +87,11 @@ const newTeamName = ref('');
 // Estado para armazenar as equipes e seus membros
 const teams = ref([]);
 
+var group_ID = 2;
+
+const groupAdmin = "@Usuario"
+
+
 // Função para redirecionar à página inicial (logado)
 const goToHome = () => {
   router.push('/profile');
@@ -98,10 +103,30 @@ const goBack = () => {
 };
 
 // Função para criar uma nova equipe
-const createTeam = () => {
+const createTeam = async () => {
   if (newTeamName.value) {
+
+    const newTeam = {group_ID : group_ID, groupName:newTeamName.value, groupAdmin:groupAdmin};
+
+    try {
+    const { data,error } = await $fetch('/api/addGroup', {
+      method: 'POST',
+      body: newTeam,
+    });
+    
+    if (error.value) {
+      throw new Error(error.value); // Handle fetch error
+    }
+
     teams.value.push({ name: newTeamName.value, members: [] });
     newTeamName.value = ''; // Limpa o campo após criar a equipe
+    console.log('Grupo adicionado:', data.value);
+
+  } catch (error) {
+    console.error('Erro ao adicionar o grupo:', error);
+    alert('Erro ao adicionar o grupo.');
+  }
+
   } else {
     alert('Por favor, insira um nome válido para a equipe.');
   }
