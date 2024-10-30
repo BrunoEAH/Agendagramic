@@ -53,27 +53,35 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
 
 const email = ref('');
 const password = ref('');
 const router = useRouter();
 
 const handleLogin = async () => {
+  const newLogin = { email: email.value, password: password.value };
+
   try {
     // Envia a requisição de login para o backend
-    const response = await axios.post('http://localhost:3001/api/login', {
-      email: email.value,
-      password: password.value,
+    const response = await $fetch('/api/login', {
+      method: 'POST',
+      body: newLogin,
     });
 
+    console.log('API Response:', response); // Check the API response
+
+    if (!response || !response.token) {
+      throw new Error(response?.error || 'Erro inesperado');
+    }
+
     // Armazena o token no localStorage e redireciona para o perfil
-    localStorage.setItem('token', response.data.token);
+    localStorage.setItem('token', response.token);
     router.push('/profile/');
   } catch (error) {
-    alert('Erro no login: ' + (error.response?.data?.message || 'Erro inesperado'));
+    alert('Erro no login: ' + (error.message || 'Erro inesperado'));
   }
 };
+
 
 const goToHome = () => {
   router.push('/');

@@ -194,7 +194,7 @@ const createTask = async () => {
     router.push(`/profile/agenda/day/${day}`);
 
   } catch (error) {
-    console.error('Errado ao adicionar a tarefa:', error);
+    console.error('Erro ao adicionar a tarefa:', error);
     alert('Errado ao adicionar a tarefa.');
   }
 

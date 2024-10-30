@@ -18,15 +18,28 @@
           <h2 class="text-2xl font-bold mb-6 text-center text-white">Cadastro</h2>
 
           <div class="mb-4">
-            <label for="name" class="block text-sm font-medium text-white">Nome</label>
+            <label for="nome" class="block text-sm font-medium text-white">Nome</label>
             <input
               type="text"
-              id="name"
-              v-model="name"
+              id="nome"
+              v-model="nome"
               required
               class="mt-1 block w-full py-2 px-3 border border-white rounded-full bg-dark-gray text-white focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
+
+          <div class="mb-4">
+            <label for="tgUser" class="block text-sm font-medium text-white">Usuário do Telegram</label>
+            <input
+              type="text"
+              id="tgUser"
+              v-model="tgUser"
+              required
+              class="mt-1 block w-full py-2 px-3 border border-white rounded-full bg-dark-gray text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+
+
 
           <div class="mb-4">
             <label for="email" class="block text-sm font-medium text-white">Email</label>
@@ -85,12 +98,12 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios'; // Importando o axios para requisição HTTP
 
 // Variáveis reativas para armazenar os dados do formulário
-const name = ref('');
+const nome = ref('');
 const email = ref('');
 const password = ref('');
+const tgUser = ref('');
 const confirmPassword = ref('');
 const errorMessage = ref('');
 const successMessage = ref('');
@@ -107,12 +120,22 @@ const handleSignup = async () => {
     return;
   }
 
+  const newUser = {
+    name: nome.value,
+    email: email.value,
+    password: confirmPassword.value,
+    tgUser: tgUser.value
+  }
+
   try {
-    const response = await axios.post('/api/register', {
-      name: name.value,
-      email: email.value,
-      password: password.value,
+    const { data, error } = await $fetch('/api/registerUser', {
+      method: 'POST',
+      body: newUser,
     });
+    
+    if (error.value) {
+      throw new Error(error.value); // Handle fetch error
+    }
 
     // Verifica se o cadastro foi bem-sucedido
     if (response.data.success) {

@@ -1,31 +1,20 @@
-// Importa os módulos necessários
-const express = require('express');
-const mariadb = require('mariadb');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-
-const router = express.Router();
-
-// Configura o pool de conexão com MariaDB
-const pool = mariadb.createPool({
-  host: 'localhost',
-  user: 'seu-usuario',
-  password: 'sua-senha',
-  database: 'agendagramic',
-  connectionLimit: 5,
-});
+import pool from '~/server/config/database';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 // Endpoint de login
-router.post('/api/login', async (req, res) => {
-  const { email, password } = req.body;
+export default defineEventHandler(async (event) => {
+  const body = await readBody(event); 
+  const { email, password } = body;
 
+  let connection;
   try {
-    const connection = await pool.getConnection();
+    connection = await pool.getConnection();
 
     // Consulta o usuário com o email fornecido
-    const rows = await connection.query('SELECT * FROM users WHERE email = ?', [email]);
+    const rows = await connection.query('SELECT * FROM Usuario WHERE email = ?', [email]);
     if (rows.length === 0) {
-      return res.status(401).json({ message: 'Usuário não encontrado' });
+      return { statusCode: 401, message: 'Usuário não encontrado' };
     }
 
     const user = rows[0];
@@ -33,16 +22,23 @@ router.post('/api/login', async (req, res) => {
     // Verifica a senha
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-      return res.status(401).json({ message: 'Senha incorreta' });
+      return { statusCode: 401, message: 'Senha incorreta' };
     }
 
     // Gera um token JWT
-    const token = jwt.sign({ id: user.id, email: user.email }, 'seu-segredo-jwt', { expiresIn: '1h' });
+    const token = jwt.sign({ user_telegram: user.user_telegram, email: user.email }, 'seu-segredo-jwt', { expiresIn: '1h' });
 
-    res.json({ token });
+    // Retorna o token
+    return { success: true, token };
+
   } catch (error) {
-    res.status(500).json({ message: 'Erro no servidor' });
+    console.error('Erro em buscar os dados:', error);
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Falha ao buscar os dados',
+      data: error.message,
+    });
+  } finally {
+    if (connection) connection.release(); 
   }
 });
-
-module.exports = router;

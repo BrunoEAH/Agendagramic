@@ -185,7 +185,7 @@ const createEvent = async () => {
       throw new Error(error.value); // Handle fetch error
     }
 
-    console.log('User added successfully!', data.value);
+    console.log('Usuario adicionado com sucesso!', data.value);
     // Redireciona de volta para a página do dia
     router.push(`/profile/agenda/day/${day}`);
   } catch (error) {
