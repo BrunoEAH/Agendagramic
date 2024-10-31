@@ -26,8 +26,6 @@ jobs:
           pip install -r requirements.txt
           npm install
 
-      - name: Build application
-        run: npm run build
 
       - name: Start application server
         run: |
