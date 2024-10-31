@@ -29,7 +29,8 @@ jobs:
         env:
           DISPLAY: :99  # Necessário para rodar o Chrome no ambiente sem GUI
         run: |
-          python -m pytest testes --html=report.html --self-contained-html
+          
+          npm run testes
 
       - name: Upload Test Report
         if: always()
