@@ -20,24 +20,34 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Instala o Chrome no ambiente de CI
-      - name: Install Chrome
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # ou a versão necessária para sua aplicação
 
-      # Define o caminho do ChromeDriver para o WebDriver Manager
-      - name: Set Chrome path environment variable
-        run: echo "CHROME_BIN=/usr/bin/google-chrome" >> $GITHUB_ENV
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Start application server
+        run: npm run dev &
+        env:
+          PORT: 3000  # define a porta que o servidor usará
+        # Aguarda até que o servidor esteja ativo na porta 3000
+      - name: Wait for server to be ready
+        run: |
+          sudo apt-get install -y curl
+          until curl -s http://localhost:3000 > /dev/null; do
+            echo "Aguardando o servidor iniciar..."
+            sleep 2
+          done
 
       - name: Run tests with pytest
         run: |
           python -m pytest testes --html=report.html --self-contained-html
-
+          
       - name: Upload Test Report
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: test-report
           path: report.html
-
