@@ -26,18 +26,21 @@ jobs:
           pip install -r requirements.txt
           npm install
 
+      - name: Build application
+        run: npm run build
 
       - name: Start application server
         run: |
-          npm run dev &> server.log & # Redireciona logs para server.log e roda em segundo plano
-          sleep 5  # Espera inicial antes de verificar
+          npm run dev -- --production &> server.log &  # Força o uso de produção e redireciona logs
+          sleep 5  # Pausa inicial
           for i in {1..20}; do
             if curl --silent --fail http://localhost:3000; then
               echo "Servidor iniciado com sucesso."
               break
             fi
             echo "Aguardando o servidor iniciar..."
-            sleep 5  # Aumentado o tempo de espera para 5 segundos
+            cat server.log  # Exibe logs atuais para inspeção
+            sleep 5  # Tempo de espera entre verificações
           done
         env:
           PORT: 3000
@@ -56,4 +59,3 @@ jobs:
         with:
           name: test-report
           path: report.html
-
