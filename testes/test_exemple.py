@@ -58,4 +58,4 @@ def test_navigation_to_telegram(driver):
     time.sleep(2)  # Espera para garantir que a página está carregada
     telegram_button = driver.find_element(By.XPATH, "//*[@id='__nuxt']/div/div/div/div[2]/div[3]/a")
     telegram_button.click()
-    time.sleep(3)
+    time.sleep(3) 
