@@ -10,6 +10,11 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16' # Ajuste para a versão necessária para o projeto
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -19,35 +24,38 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          npm install
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'  # ou a versão necessária para sua aplicação
-
-      - name: Install npm dependencies
-        run: npm install
+      - name: Build application
+        run: npm run build
 
       - name: Start application server
-        run: npm run dev &
-        env:
-          PORT: 3000  # define a porta que o servidor usará
-        # Aguarda até que o servidor esteja ativo na porta 3000
-      - name: Wait for server to be ready
         run: |
-          sudo apt-get install -y curl
-          until curl -s http://localhost:3000 > /dev/null; do
+          npm run dev &> server.log & # Redireciona logs para server.log e roda em segundo plano
+          sleep 5  # Espera inicial antes de verificar
+          for i in {1..20}; do
+            if curl --silent --fail http://localhost:3000; then
+              echo "Servidor iniciado com sucesso."
+              break
+            fi
             echo "Aguardando o servidor iniciar..."
-            sleep 2
+            sleep 5  # Aumentado o tempo de espera para 5 segundos
           done
+        env:
+          PORT: 3000
+
+      - name: Show server logs if server fails to start
+        if: failure()
+        run: cat server.log
 
       - name: Run tests with pytest
         run: |
           python -m pytest testes --html=report.html --self-contained-html
-          
+
       - name: Upload Test Report
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: test-report
           path: report.html
+
