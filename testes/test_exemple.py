@@ -2,15 +2,22 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 
 # Fixture para inicializar o WebDriver antes de cada teste e fechar após o teste
 @pytest.fixture
 def driver():
-    driver_path = ChromeDriverManager().install()  # Instala e fornece o caminho do ChromeDriver
+    # Configurações para rodar o Chrome em modo headless
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # Modo headless
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+
+    driver_path = ChromeDriverManager().install()
     service = Service(driver_path)
-    driver = webdriver.Chrome(service=service)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     yield driver
     driver.quit()
 
@@ -37,15 +44,12 @@ def test_navigation_to_register(driver):
     print("Iniciando test_navigation_to_register")
     driver.get("http://localhost:3000")
     time.sleep(2)  # Espera para garantir que a página está carregada
-    
-    # Localiza o botão de cadastro e tenta clicar diretamente ou com JavaScript
     register_button = driver.find_element(By.XPATH, "//*[@id='__nuxt']/div/div/div/div[2]/div[3]/button[3]")
     try:
         register_button.click()
     except:
         driver.execute_script("arguments[0].click();", register_button)
-    
-    time.sleep(3)  # Espera 3 segundos antes de fechar a janela
+    time.sleep(3)
 
 # Teste para verificar o link para o Telegram
 def test_navigation_to_telegram(driver):
@@ -54,4 +58,4 @@ def test_navigation_to_telegram(driver):
     time.sleep(2)  # Espera para garantir que a página está carregada
     telegram_button = driver.find_element(By.XPATH, "//*[@id='__nuxt']/div/div/div/div[2]/div[3]/a")
     telegram_button.click()
-    time.sleep(3)  # Espera 3 segundos antes de fechar a janela
+    time.sleep(3)
