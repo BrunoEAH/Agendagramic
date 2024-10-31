@@ -13,24 +13,26 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.11'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # Instala o Chrome no ambiente de CI
       - name: Install Chrome
         run: |
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
+      # Define o caminho do ChromeDriver para o WebDriver Manager
+      - name: Set Chrome path environment variable
+        run: echo "CHROME_BIN=/usr/bin/google-chrome" >> $GITHUB_ENV
+
       - name: Run tests with pytest
-        env:
-          DISPLAY: :99  # Necessário para rodar o Chrome no ambiente sem GUI
         run: |
-          
-          npm run testes
+          python -m pytest testes --html=report.html --self-contained-html
 
       - name: Upload Test Report
         if: always()
@@ -38,3 +40,4 @@ jobs:
         with:
           name: test-report
           path: report.html
+
