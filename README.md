@@ -79,3 +79,27 @@ BANCO DE DADOS:
     VALUES (1,'@UsuarioTelegram','@UsuarioTelegram',NOW());
 
 - Instalar mariadb ( npm install mariadb --save-dev)
+
+EXECUÇÃO DE TESTES:
+
+- Instalar as dependências:
+pip install selenium pytest pytest-html webdriver-manager
+
+- Verificar se foram instaladas corretamente:
+pip show selenium pytest pytest-html webdriver-manager
+
+- Para executar todos os testes, utilize:
+npm run dev;
+ou
+python -m pytest testes
+
+- Executar um Teste Específico: por exemplo, para rodar apenas test_exemple.py:
+python -m pytest testes/test_exemple.py
+
+- Executar uma Função de Teste específica dentro de um arquivo: Por exemplo, para rodar apenas test_navigation_to_profile dentro de test_exemple.py:
+python -m pytest testes/test_exemple.py::test_navigation_to_profile
+
+
+
+
+
