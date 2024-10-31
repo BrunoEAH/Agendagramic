@@ -77,6 +77,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -87,9 +88,9 @@ const newTeamName = ref('');
 // Estado para armazenar as equipes e seus membros
 const teams = ref([]);
 
-var group_ID = 2;
+var group_ID = uuidv4();
 
-const groupAdmin = "@Usuario"
+const groupAdmin = "@BayernDesSammamia"
 
 
 // Função para redirecionar à página inicial (logado)

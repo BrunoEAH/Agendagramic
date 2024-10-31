@@ -1,4 +1,3 @@
-version: '3'
 services:
   nuxt:
     build: ./Agendagramic-Nuxt
@@ -15,7 +14,7 @@ services:
     build: ./Agendagramic-bot
     container_name: python-bot
     env_file:
-      - Agendagramic-bot/.env
+      - ./Agendagramic-bot/.env
     volumes:
       - ./Agendagramic-bot:/app
     restart: always

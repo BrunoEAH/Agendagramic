@@ -179,23 +179,17 @@ const createTask = async () => {
   localStorage.setItem('tasks', JSON.stringify(tasksData));
 
   try {
-    const { data,error } = await $fetch('/api/addTask', {
+    const { data } = await useFetch('/api/addTask', {
       method: 'POST',
       body: newTask,
     });
-    
-    if (error.value) {
-      throw new Error(error.value); // Handle fetch error
-    }
-
-    console.log('Tarefa adicionada:', data.value);
-
-    // Redireciona de volta para a página do dia
+    message.value = 'User added successfully!';
+    console.log('Insert result:', data.value);
+      // Redireciona de volta para a página do dia
     router.push(`/profile/agenda/day/${day}`);
-
   } catch (error) {
-    console.error('Erro ao adicionar a tarefa:', error);
-    alert('Errado ao adicionar a tarefa.');
+    console.error('Failed to add user:', error);
+    message.value = 'Failed to add user.';
   }
 
 

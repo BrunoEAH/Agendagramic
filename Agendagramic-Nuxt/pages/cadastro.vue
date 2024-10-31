@@ -126,7 +126,7 @@ const handleSignup = async () => {
     password: confirmPassword.value,
     tgUser: tgUser.value
   }
-
+  
   try {
     const { data, error } = await $fetch('/api/registerUser', {
       method: 'POST',
