@@ -1,8 +1,19 @@
-AJUSTES URGENTES (Funcionalidades):
-- Backend [Vini]
-- Banco de Dados [Navarro]
-- Login e Cadastro (depende do Banco de Dados pronto)
-- Sincronização da agenda em tempo real [Vini]
+TAREFAS:
+- Conectar a agenda com o banco de dados:
+    - Login;
+    - Tarefas;
+    - Eventos;
+    - Grupos;
+    - Organizar prioridade das tarefas.
+- Bot do telegram:
+    - Conexão do usuário;
+    - Conexão das tarefas;
+    - Conexão dos eventos;
+    - Listas eventos e tarefas;
+    - Analisar o status do usuário;
+    - Analisar votação;
+    - Analisar a prioridade das tarefas.
+- Deploy do banco de dados.
 
 AJUSTES FUTUROS:
 1. Funcoes para o bot copiar o evento/tarefa do usuario para algum arquivo JSON; 
@@ -46,14 +57,6 @@ docker-compose up
 PARAR O DOCKER:
 
 docker-compose down
-
-
-
-TODO:
-
-- Ajustar bot do telegram para ler inputs do usuário de diferentes formatos, usando 2:00 PM ao invés de 14:00 por exemplo.
-- Fazer API do JSON para a agenda. 
-- Ordenar a lista de tarefas
 
 TESTAR O BOT:
 
