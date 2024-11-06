@@ -1,14 +1,16 @@
 TAREFAS:
 - Conectar a agenda com o banco de dados:
     - Login;
+    - Editar eventos;
+    - Editar tarefas;
     - Tarefas [Bruno Rocha];
     - Eventos [Bruno Rocha];
     - Grupos;
     - Organizar prioridade das tarefas.
 - Bot do telegram:
-    - Conexão do usuário;
-    - Conexão das tarefas;
-    - Conexão dos eventos;
+    - Conexão do usuário [Rafael Navarro];
+    - Conexão das tarefas[Rafael Navarro];
+    - Conexão dos eventos[Rafael Navarro];
     - Listas eventos e tarefas;
     - Analisar o status do usuário [Bruno Hayek];
     - Analisar votação [Bruno Hayek];
