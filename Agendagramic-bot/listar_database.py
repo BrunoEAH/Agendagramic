@@ -49,7 +49,5 @@ def listar_db(user_id):
                         f"{item['fim'].strftime('%Y-%m-%d %H:%M') if item['fim'] else 'N/A'}\n")
         else:
             message += f"{item['tipo']}: {item['Titulo']} - {item['comeco'].date()}\n"
-
-    #connection.close()
         
     return message

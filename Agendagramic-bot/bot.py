@@ -3,6 +3,7 @@ import telebot
 from dotenv import load_dotenv
 from database_agendagramic import get_user_groups,query_group_id,save_task
 from listar_database import listar_db
+from lista_prioridade import listar_prioridade_db
 
 load_dotenv()
 
@@ -39,7 +40,8 @@ def send_menu(message):
         "/menu - Exibe este menu de comandos\n"
         "/event - Marcar um evento\n"
         "/task - Marcar uma tarefa\n"
-        "/list - Listar eventos e tarefas em ordem"
+        "/list - Listar eventos e tarefas em ordem\n"
+        "/list_task_priority - Lista tarefas em ordem de prioridade\n"
         # Adicione outros comandos conforme necessário
     )
     bot.reply_to(message, menu_message)
@@ -140,6 +142,20 @@ def listar_tudo(message):
         bot.reply_to(message, list_message)
     else:
         bot.send_message(message.chat.id, "Eu preciso do seu usuário. Envie novamente.")
+
+@bot.message_handler(commands=['list_task_priority'])
+def pergunta_username(message):
+    msg = bot.send_message(message.chat.id, "Escreva o seu username com o @.")
+    bot.register_next_step_handler(msg, listar_prioridade)
+
+def listar_prioridade(message):
+    username = message.text 
+    if username.startswith("@"):
+        list_message = listar_prioridade_db(username)
+        bot.reply_to(message, list_message)
+    else:
+        bot.send_message(message.chat.id, "Eu preciso do seu usuário. Envie novamente.")
+
 
 # Mantém o bot em funcionamento
 bot.infinity_polling()
