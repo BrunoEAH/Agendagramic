@@ -17,14 +17,6 @@ TAREFAS:
     - Analisar a prioridade das tarefas [Bruno Hayek].
 - Deploy do banco de dados.
 
-AJUSTES FUTUROS:
-1. Funcoes para o bot copiar o evento/tarefa do usuario para algum arquivo JSON; 
-2. API para o a aplicacao ler esse arquivo JSON e mostrar no site;
-3. Bot copiar resultado da pesquisa,processar,responder e armazena no JSON;
-4. Elaborar a interface do site;
-5. Menu do bot; [Bruno]
-6. Elaborar a pagina de login.
-
 EXTENÕES USADAS:
 - Python Telegram Bot API
 - Nuxt.js (Framework principal)
@@ -34,6 +26,7 @@ EXTENÕES USADAS:
 - PostCSS (Para processamento de CSS com Autoprefixer e Tailwind)
 - @types/node (Para garantir a compatibilidade com tipos Node.js)
 - npm install firebase (autenticar usu'rios em json
+- Mariadb
 
 ACESSO AO TELEGRAM
 - Arquivo .env
