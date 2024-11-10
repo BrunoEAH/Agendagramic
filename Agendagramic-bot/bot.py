@@ -2,6 +2,7 @@ import os
 import telebot 
 from dotenv import load_dotenv
 from database_agendagramic import get_user_groups,query_group_id,save_task
+from listar_database import listar_db
 
 load_dotenv()
 
@@ -127,10 +128,18 @@ def event_handler(message):
     sent_msg = bot.send_message(message.chat.id, text, parse_mode="Markdown")
     bot.register_next_step_handler(sent_msg,resposta_event)
 
+@bot.message_handler(commands=['list'])
+def pergunta_username(message):
+    msg = bot.send_message(message.chat.id, "Escreva o seu username com o @.")
+    bot.register_next_step_handler(msg, listar_tudo)
 
-""" @bot.message_handler(commands=['list'])
 def listar_tudo(message):
- """
+    username = message.text 
+    if username.startswith("@"):
+        list_message = listar_db(username)
+        bot.reply_to(message, list_message)
+    else:
+        bot.send_message(message.chat.id, "Eu preciso do seu usuário. Envie novamente.")
 
 # Mantém o bot em funcionamento
 bot.infinity_polling()
