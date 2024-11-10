@@ -37,9 +37,9 @@ def insert_task(username, task_name, due_datetime, priority, status, group_id):
     group_id = "525ff911-c56b-41da-aee4-bbd33784b19a"
 
 
-    cursor.execute('''INSERT INTO Tarefas (task_id, titulo, info_task, esta_completa, prioridade, group_id, responsaveis, criado_por, criado_em)
-                      VALUES (%s, %s, %s, %s, %s, %s, %s, %s, NOW())''', 
-                   (task_id, task_name, info_task, status, priority, group_id, responsaveis, username))
+    cursor.execute('''INSERT INTO Tarefas (task_id, titulo, info_task,data, esta_completa, prioridade, group_id, responsaveis, criado_por, criado_em)
+                      VALUES (UUID(),%s, %s, %s, %s, %s, %s, %s, %s, NOW())''', 
+                   (task_name, info_task,due_datetime, status, priority, group_id, responsaveis, username))
     
     conn.commit() 
     cursor.close()  
