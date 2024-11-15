@@ -68,20 +68,20 @@ const handleLogin = async () => {
       body: newLogin,
     });
 
-    console.log('API Response:', response); // Check the API response
+    console.log('API Response:', response); // Verifica a resposta da API
 
-    if (!response || !response.token) {
-      throw new Error(response?.error || 'Erro inesperado');
+    if (!response || !response.token || !response.userName) {
+      throw new Error(response?.message || 'Erro inesperado');
     }
 
-    // Armazena o token no localStorage e redireciona para o perfil
+    // Armazena o token e o nome do usuário no localStorage e redireciona para o perfil
     localStorage.setItem('token', response.token);
+    localStorage.setItem('userName', response.userName); // Salva o nome do usuário
     router.push('/profile/');
   } catch (error) {
     alert('Erro no login: ' + (error.message || 'Erro inesperado'));
   }
 };
-
 
 const goToHome = () => {
   router.push('/');

@@ -1,85 +1,92 @@
 <template>
   <div class="min-h-screen bg-dark-gray p-6 flex flex-col justify-between border-white border-2">
-    <div class="bg-gradient-green-inverse shadow-green min-h-screen flex flex-col justify-between">
+    <div class="bg-gradient-green shadow-green min-h-screen flex flex-col justify-between rounded-lg overflow-hidden">
       
-      <!-- Barra superior com Nome do Projeto e Logo -->
-      <div class="flex justify-between items-center mb-6 justify-end">
-        <div class="flex items-center space-x-2">
-          <h1 class="text-3xl font-bold text-white">AgendaGramic</h1>
-          <button @click="goToHome" class="bg-white p-2 rounded-full shadow-lg">
-            <img src="@/assets/images/logo.png" alt="Logo" class="w-6 h-6"/>
+      <!-- Cabeçalho com Nome do Projeto e Logo -->
+      <header class="flex justify-between items-center p-4 bg-dark-gray bg-opacity-90">
+        <div class="flex items-center space-x-3">
+          <h1 class="text-3xl font-extrabold text-green-500">AgendaGramic</h1>
+          <button @click="goToHome" class="bg-white p-2 rounded-full shadow-lg hover:scale-105 transition-transform">
+            <img src="@/assets/images/logo.png" alt="Logo" class="w-8 h-8"/>
           </button>
         </div>
-      </div>
+      </header>
 
       <!-- Conteúdo Principal -->
-      <div class="flex flex-col items-center justify-center flex-1 space-y-6">
-        <!-- Caixa de boas-vindas -->
-        <div class="bg-medium-gray p-4 rounded-3xl shadow-md border-lighter-gray border-2 w-full max-w-3xl mx-auto">
-          <h2 class="text-4xl font-bold mb-4 text-center text-white">Bem-vindo ao AgendaGramic!</h2>
+      <main class="flex flex-1 p-6 justify-center items-center space-x-12">
+        <!-- Seção de informações à esquerda -->
+        <div class="flex flex-col space-y-8 w-1/2 max-w-md">
+          <!-- Caixa de boas-vindas -->
+          <section class="bg-medium-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2">
+            <h2 class="text-4xl font-semibold text-green-400 mb-2 text-center">Bem-vindo ao AgendaGramic!</h2>
+            <p class="text-gray-400 text-center">Organize suas tarefas e compromissos de maneira fácil e prática.</p>
+          </section>
+
+          <!-- Caixa de descrição do projeto -->
+          <section class="bg-medium-gray p-8 rounded-3xl shadow-md border-lighter-gray border-2">
+            <h3 class="text-2xl font-semibold text-green-400 text-center">Sobre o AgendaGramic</h3>
+            <p class="text-gray-300 leading-relaxed mt-4 text-center">
+              AgendaGramic é um sistema de gerenciamento de agendas dinâmico, permitindo que você organize suas tarefas e compromissos de forma prática e eficiente.
+            </p>
+            <ul class="text-gray-300 list-disc list-inside mt-4 space-y-2">
+              <li>Login e cadastro de novos usuários.</li>
+              <li>Organização de eventos e compromissos na agenda.</li>
+            </ul>
+            <p class="text-gray-400 italic mt-4 text-center">* Continue acompanhando para mais atualizações e novas funcionalidades!</p>
+          </section>
         </div>
 
-        <!-- Caixa de descrição do projeto -->
-        <div class="bg-medium-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2 w-full max-w-3xl mx-auto">
-          <p class="text-gray-300 mb-4">
-            AgendaGramic é um sistema de gerenciamento de agendas dinâmico, permitindo que você organize suas tarefas e compromissos de forma simples e eficiente. Nossa versão Alpha inclui funcionalidades como:
-          </p>
-          <ul class="list-disc list-inside text-gray-300 mb-4">
-            <li>Possibilidade de login e cadastro de novos usuários.</li>
-            <li>Organização de eventos e compromissos na agenda.</li>
-          </ul>
-          <p class="text-gray-300">
-            Continue acompanhando para mais atualizações e novas funcionalidades!
-          </p>
-        </div>
+        <!-- Barra divisória ao centro -->
+        <div class="divider"></div>
 
-        <!-- Botões alinhados em uma linha -->
-        <div class="flex space-x-4 mt-6">
-          <button @click="goToTest" class="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 border-white border-2">
-            Testes
-          </button>
-          <button @click="goToLogin" class="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 border-white border-2">
-            Login
-          </button>
-          <button @click="goToSignup" class="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 border-white border-2">
-            Cadastro
-          </button>
-          <a href="https://t.me/agendagramic_bot" target="_blank" class="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600 border-white border-2">
-            Telegram
-          </a>
+        <!-- Caixa para botões de ação, ajustada para uma altura menor -->
+        <div class="bg-medium-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2 flex flex-col items-center space-y-4 w-1/4 max-w-xs" style="height: auto; padding-top: 1.5rem; padding-bottom: 1.5rem;">
+          <!-- Botões na ordem solicitada -->
+          <a href="https://t.me/agendagramic_bot" target="_blank" class="action-button bg-blue-500 hover:bg-blue-600">Telegram</a>
+          <button @click="goToLogin" class="action-button bg-gray-600 text-white hover:bg-gray-700">Login</button>
+          <button @click="goToSignup" class="action-button bg-gray-600 text-white hover:bg-gray-700">Cadastro</button>
+          <button @click="goToTest" class="action-button bg-gray-600 text-white hover:bg-gray-700">Testes</button>
+          <button @click="testConnection" class="action-button bg-green-500 hover:bg-green-600">Testar Conexão DB</button>
+          <button @click="clearDatabase" class="action-button bg-green-500 hover:bg-green-600">Limpar Banco de Dados</button>
         </div>
-      </div>
+      </main>
 
       <!-- Rodapé com a versão do projeto -->
-      <div class="text-center text-gray-300 mt-6">
-        AgendaGramic Alpha 0.0.1
-      </div>
+      <footer class="text-center text-gray-400 p-4 bg-dark-gray bg-opacity-90">
+        AgendaGramic Beta 0.1
+      </footer>
     </div>
   </div>
 </template>
 
 <script setup>
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 
-// Função para redirecionar para a página de login
 const router = useRouter();
-const goToLogin = () => {
-  router.push('/login');
+
+// Funções de navegação e ações
+const goToLogin = () => router.push('/login');
+const goToSignup = () => router.push('/cadastro');
+const goToHome = () => router.push('/');
+const goToTest = () => router.push('/profile');
+
+const testConnection = async () => {
+  try {
+    const response = await axios.get('/api/testDbConnection');
+    alert(response.data.message);
+  } catch {
+    alert('Erro ao testar conexão com o banco de dados');
+  }
 };
 
-// Função para redirecionar para a página de cadastro
-const goToSignup = () => {
-  router.push('/cadastro');
-};
-
-// Função para redirecionar para o início da página
-const goToHome = () => {
-  router.push('/');
-};
-
-// Função para redirecionar para a página de teste (profile/index)
-const goToTest = () => {
-  router.push('/profile');
+const clearDatabase = async () => {
+  try {
+    const response = await axios.get('/api/clearDatabase');
+    alert(response.data.message);
+  } catch {
+    alert('Erro ao limpar o banco de dados');
+  }
 };
 </script>
 
@@ -89,21 +96,45 @@ const goToTest = () => {
   background-color: #1e1e1e;
 }
 
-/* Degradê verde de baixo para cima */
-.bg-gradient-green-inverse {
+/* Degradê verde e sombra */
+.bg-gradient-green {
   background: linear-gradient(to top, #32cd32, transparent 50%);
 }
-
-/* Sombra verde */
 .shadow-green {
   box-shadow: 0 10px 15px rgba(50, 205, 50, 0.3);
 }
 
-/* Estilos para caixas de conteúdo */
+/* Estilo para o cabeçalho */
+header {
+  background-color: rgba(0, 0, 0, 0.6);
+  border-bottom: 1px solid #333;
+}
+
+/* Divisória transparente */
+.divider {
+  width: 2px;
+  height: 80%;
+  background-color: rgba(200, 200, 200, 0.3);
+}
+
+/* Estilo para botões de ação */
+.action-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  border: 2px solid white;
+  color: white;
+  transition: background-color 0.3s, transform 0.2s;
+}
+.action-button:hover {
+  transform: scale(1.05);
+}
+
+/* Fundo e cor para caixas de conteúdo */
 .bg-medium-gray {
   background-color: #3c3c3c;
 }
-
 .border-lighter-gray {
   border-color: #5a5a5a;
 }
@@ -112,28 +143,15 @@ const goToTest = () => {
   color: #d1d5db;
 }
 
-/* Estilo arredondado */
-.rounded-3xl {
-  border-radius: 1.5rem;
+.text-gray-400 {
+  color: #9ca3af;
 }
 
-/* Estilos para botões */
-button {
-  border-radius: 5px;
-  padding: 10px 20px;
-  border: 2px solid white;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-button:hover {
-  transform: scale(1.05);
-}
-
-.text-white {
-  color: white;
-}
-
+/* Estilo para bordas e botões */
 .rounded-full {
   border-radius: 9999px;
+}
+.rounded-3xl {
+  border-radius: 3.5rem;
 }
 </style>

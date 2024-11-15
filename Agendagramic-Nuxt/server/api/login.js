@@ -28,8 +28,8 @@ export default defineEventHandler(async (event) => {
     // Gera um token JWT
     const token = jwt.sign({ user_telegram: user.user_telegram, email: user.email }, 'seu-segredo-jwt', { expiresIn: '1h' });
 
-    // Retorna o token
-    return { success: true, token };
+    // Retorna o token e o nome do usuário
+    return { success: true, token, userName: user.nome };
 
   } catch (error) {
     console.error('Erro em buscar os dados:', error);

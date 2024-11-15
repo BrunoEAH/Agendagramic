@@ -1,6 +1,5 @@
 <template>
   <div class="min-h-screen bg-dark-gray p-6 flex flex-col justify-between border-white border-2">
-    <!-- Degradê Verde com Sombra -->
     <div class="bg-gradient-green-inverse shadow-green min-h-screen flex flex-col justify-between">
       <!-- Barra superior com Botão de Início e Nome do Projeto -->
       <div class="flex justify-between items-start mb-6">
@@ -39,8 +38,6 @@
             />
           </div>
 
-
-
           <div class="mb-4">
             <label for="email" class="block text-sm font-medium text-white">Email</label>
             <input
@@ -74,8 +71,9 @@
             />
           </div>
 
-          <p v-if="errorMessage" class="text-red-500 font-semibold text-center mb-4">{{ errorMessage }}</p> <!-- Exibe mensagem de erro -->
-          <p v-if="successMessage" class="text-green-500 font-semibold text-center mb-4">{{ successMessage }}</p> <!-- Exibe mensagem de sucesso -->
+          <!-- Mensagens de Erro ou Sucesso -->
+          <p v-if="errorMessage" class="text-red-500 font-semibold text-center mb-4">{{ errorMessage }}</p>
+          <p v-if="successMessage" class="text-green-500 font-semibold text-center mb-4">{{ successMessage }}</p>
 
           <button type="submit" class="w-full bg-light-gray text-black font-semibold py-2 rounded-full hover:bg-green-500 border-white border-2 transition mb-4">
             Cadastrar
@@ -128,25 +126,23 @@ const handleSignup = async () => {
   }
   
   try {
-    const { data, error } = await $fetch('/api/registerUser', {
+    const response = await $fetch('/api/registerUser', {
       method: 'POST',
       body: newUser,
     });
     
-    if (error.value) {
-      throw new Error(error.value); // Handle fetch error
-    }
-
     // Verifica se o cadastro foi bem-sucedido
-    if (response.data.success) {
-      successMessage.value = 'Cadastro realizado com sucesso!';
-      // Redireciona para o login após um tempo
-      setTimeout(() => router.push('/login'), 2000);
+    if (response.success) {
+      successMessage.value = response.message || 'Cadastro realizado com sucesso!';
+      errorMessage.value = ''; // Limpa a mensagem de erro
+      setTimeout(() => router.push('/login'), 2000); // Redireciona para login
     } else {
-      errorMessage.value = response.data.message || 'Erro ao realizar cadastro.';
+      errorMessage.value = response.message || 'Erro ao realizar cadastro.';
+      successMessage.value = ''; // Limpa a mensagem de sucesso
     }
   } catch (error) {
     errorMessage.value = 'Erro ao conectar com o servidor. Tente novamente mais tarde.';
+    successMessage.value = ''; // Limpa a mensagem de sucesso em caso de erro
   }
 };
 

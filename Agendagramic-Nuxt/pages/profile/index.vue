@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-dark-gray p-6 flex flex-col justify-between border-white border-2">
-    <!-- Degradê Verde com Sombra -->
     <div class="bg-gradient-green-inverse shadow-green min-h-screen flex flex-col justify-between">
+      
       <!-- Barra superior com Botões e Nome do Projeto -->
       <div class="flex justify-between items-start mb-6">
         <!-- Botões do Telegram, Configurações e Logout -->
@@ -33,7 +33,7 @@
       </div>
 
       <!-- TÍTULO PRINCIPAL DA PÁGINA LOGADA -->
-      <h1 class="text-3xl font-bold text-center text-white mb-6">Bem-vindo, {{ userName }}!</h1>
+      <h1 class="text-3xl font-bold text-center text-white mb-6">Bem-vinde, {{ userName }}!</h1>
 
       <!-- LAYOUT VERTICAL PARA AS FUNCIONALIDADES -->
       <div class="flex flex-col space-y-6 max-w-lg mx-auto">
@@ -83,47 +83,57 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 const router = useRouter();
+const userName = ref(''); // Nome do usuário será atualizado com a resposta do backend
 
-// Nome genérico do usuário (isso será substituído por uma chamada ao backend posteriormente)
-const userName = ref('Usuário');
+// Função para carregar o nome do usuário
+const loadUserName = async () => {
+  const token = localStorage.getItem('token');
 
-// Função para exibir o alerta de "Em Desenvolvimento"
+  if (!token) {
+    // Se não houver token, redireciona para a página de login
+    router.push('/login');
+    return;
+  }
+
+  try {
+    // Requisição para buscar o nome do usuário autenticado usando o token
+    const response = await axios.get('/api/getUserName', {
+      headers: {
+        Authorization: `Bearer ${token}`, // Passa o token JWT no cabeçalho
+      },
+    });
+
+    userName.value = response.data.userName; // Atualiza o nome do usuário com a resposta
+  } catch (error) {
+    console.error('Erro ao buscar o nome do usuário:', error);
+    // Redireciona para a página de login em caso de erro
+    router.push('/login');
+  }
+};
+
+// Executa a função para carregar o nome do usuário ao montar o componente
+onMounted(loadUserName);
+
+// Funções de navegação
+const goToTelegram = () => window.open('https://t.me/agendagramic_bot', '_blank');
+const goToSettings = () => router.push('/profile/settings'); 
+const goToTeamManagement = () => router.push('/profile/settings/team-management');
+const goToAgenda = () => router.push('/profile/agenda');
+const goToHome = () => router.push('/');
+
+// Função para mostrar um alerta de desenvolvimento
 const showDevelopmentAlert = () => {
   alert('Calma ai amostradinho, estamos desenvolvendo!');
-};
-
-// Função para redirecionar ao Bot do Telegram
-const goToTelegram = () => {
-  window.open('https://t.me/agendagramic_bot', '_blank');
-};
-
-// Função para redirecionar à página de configurações
-const goToSettings = () => {
-  router.push('/profile/settings'); 
-};
-
-// Função para redirecionar à página de gerenciamento de equipes
-const goToTeamManagement = () => {
-  router.push('/profile/settings/team-management');
-};
-
-// Função para redirecionar à página de agendas
-const goToAgenda = () => {
-  router.push('/profile/agenda');
 };
 
 // Função de logout
 const logout = () => {
   localStorage.removeItem('token');
-  router.push('/');
-};
-
-// Função para redirecionar à página inicial
-const goToHome = () => {
   router.push('/');
 };
 </script>
