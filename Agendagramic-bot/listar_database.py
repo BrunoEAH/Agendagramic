@@ -2,14 +2,8 @@ import mysql.connector
 from datetime import datetime
 import mariadb
 import uuid
+from database_connection import connection
 
-connection = mariadb.connect(
-    user="teste",
-    password="teste",
-    host="localhost",
-    port=3306,
-    database="teste"
-)
 
 cursor = connection.cursor()
 

@@ -1,25 +1,11 @@
 import mysql.connector
 from datetime import datetime
 import uuid
+from database_connection import connection
 
-
-
-def connect_to_database():
-    connection = mysql.connector.connect(
-        host='localhost',
-        port='3306',
-        user='teste',
-        password='teste',
-        database='agendagramic',
-        charset='utf8mb4',
-        collation='utf8mb4_general_ci'
-    )
-    return connection
-
+cursor = connection.cursor()
 
 def insert_task(username, task_name, due_datetime, priority, status, group_id):
-    conn = connect_to_database()
-    cursor = conn.cursor()
     
     task_id = str(uuid.uuid4())
     info_task = "Sem info"
@@ -41,9 +27,9 @@ def insert_task(username, task_name, due_datetime, priority, status, group_id):
                       VALUES (UUID(),%s, %s, %s, %s, %s, %s, %s, %s, NOW())''', 
                    (task_name, info_task,due_datetime, status, priority, group_id, responsaveis, username))
     
-    conn.commit() 
-    cursor.close()  
-    conn.close()  
+    connection.commit() 
+    connection.close()  
+    connection.close()  
 
 
 
@@ -70,17 +56,15 @@ def save_task(task,username,group,priority,status):
 
 
 def get_user_groups(user_id):
-    conn = connect_to_database()
-    cursor = conn.cursor()
+
     cursor.execute("SELECT nome FROM Grupos WHERE admin = %s", (user_id,))
     groups = cursor.fetchall()  
-    conn.close()
+    connection.close()
     return [group[0] for group in groups] 
 
 def query_group_id(user_id,group):
-    conn = connect_to_database()
-    cursor = conn.cursor()
+
     cursor.execute('SELECT group_id FROM Grupos WHERE admin = %s AND nome = %s',(user_id,group))
     group_id = cursor.fetchall()  
-    conn.close()
-    return group_id[0]
+    connection.close()
+    return group_id

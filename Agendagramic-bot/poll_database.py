@@ -2,20 +2,13 @@ import mysql.connector
 from datetime import datetime
 import mariadb
 import uuid
-
-connection = mariadb.connect(
-    user="teste",
-    password="teste",
-    host="localhost",
-    port=3306,
-    database="teste"
-)
+from database_connection import connection
 
 cursor = connection.cursor()
 
-def verficiar_grupo(poll_data):
+def verificar_grupo(group_name,username):
     query = "SELECT group_id FROM Grupos WHERE nome = %s AND admin = %s"
-    cursor.execute(query, (poll_data["grupo"], poll_data["username"]))
+    cursor.execute(query, (group_name, username))
     result = cursor.fetchone()
 
     if result: 

@@ -3,21 +3,13 @@ from datetime import datetime
 import mariadb
 import uuid
 from enum import IntEnum
-
+from database_connection import connection
 
 class Prioridade(IntEnum):
     Alta = 0
     Media = 1
     Baixa = 2
 
-
-connection = mariadb.connect(
-    user="teste",
-    password="teste",
-    host="localhost",
-    port=3306,
-    database="teste"
-)
 
 cursor = connection.cursor()
 

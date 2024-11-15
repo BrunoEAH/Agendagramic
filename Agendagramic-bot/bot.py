@@ -4,7 +4,8 @@ from dotenv import load_dotenv
 from database_agendagramic import get_user_groups,query_group_id,save_task
 from listar_database import listar_db
 from lista_prioridade import listar_prioridade_db
-from poll_database import verficiar_grupo,armazenar_task
+from poll_database import verificar_grupo,armazenar_task
+from telebot.types import Poll
 
 load_dotenv()
 
@@ -18,15 +19,8 @@ bot = telebot.TeleBot(BOT_TOKEN)
 #Dicionario para armazenar detalhes da votacao
 poll_data = {}
 completed_polls = {}
+user_data = {}
  
-#Variaveis globais
-user_id = None
-username = None
-task = None
-group = None
-priority = None
-status = None
-
 agenda_type = None #Variavel para definir se é uma tarefa ou evento
 
 
@@ -59,79 +53,81 @@ def send_menu(message):
 
 @bot.message_handler(commands=['task'])
 def task_handler(message):
-    global task
+    user_id = message.from_user.id
+    user_data[user_id] = {}
     text = "Escreva a tarefa da seguinte maneira: Nome da Tarefa, DD/MM/AAAA, HH:MM"
     sent_msg = bot.send_message(message.chat.id, text, parse_mode="Markdown")
     bot.register_next_step_handler(sent_msg,ask_priority)
 
 def ask_priority(message):
-    global priority,task 
+    user_id = message.from_user.id
     task = message.text.strip()
+    user_data[user_id]['task'] = task
 
     markup = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
     markup.add('Baixa', 'Media', 'Alta')
-    bot.send_message(message.chat.id, "Selecione a prioridade da tarefa:", reply_markup=markup)
-    bot.register_next_step_handler(message, ask_status)
+    sent_msg = bot.send_message(message.chat.id, "Selecione a prioridade da tarefa:", reply_markup=markup)
+    bot.register_next_step_handler(sent_msg, ask_status)
 
 
 def ask_status(message):
-    global status,priority
+    user_id = message.from_user.id
     priority = message.text.strip()
-
+    user_data[user_id]['priority'] = priority
 
     markup = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
     markup.add('Pendente', 'Em progresso', 'Completa')
-    bot.send_message(message.chat.id, "Selecione o status da tarefa:", reply_markup=markup)
-    bot.register_next_step_handler(message, ask_username)
+    sent_msg = bot.send_message(message.chat.id, "Selecione o status da tarefa:", reply_markup=markup)
+    bot.register_next_step_handler(sent_msg, ask_username)
 
 def ask_username(message):
-    global user_id,username,status
-    
-    status = message.text.strip()
-    status_map = {'Pendente': 0, 'Em progresso': 1, 'Completa': 2}
-    status = status_map.get(message.text,1) # Default em progresso
-    
-    print(status)
     user_id = message.from_user.id
-    text = "Escreva o seu username com o @"
-    sent_msg = bot.send_message(message.chat.id, text, parse_mode="Markdown")
-    bot.register_next_step_handler(sent_msg,ask_group)
+    status_map = {'Pendente': 0, 'Em progresso': 1, 'Completa': 2}
+    status = status_map.get(message.text.strip(), 1)
+    
+    user_data[user_id]['status'] = status
+    
+    sent_msg = bot.send_message(message.chat.id, "Escreva o seu username com o @", parse_mode="Markdown")
+    bot.register_next_step_handler(sent_msg, ask_group)
 
 def ask_group(message):
-    global group,username  
+    user_id = message.from_user.id
     username = message.text.strip()
-    markup = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
+    user_data[user_id]['username'] = username
 
     user_groups = get_user_groups(username)
 
     if not user_groups:
         bot.send_message(message.chat.id, "Você não faz parte de um grupo.")
-        group = "Nenhum" 
+        user_data[user_id]['group'] = "Nenhum"
+
+        group = user_data[user_id]['group']
+        task = user_data[user_id]['task']
+        priority = user_data[user_id]['priority']
+        status = user_data[user_id]['status']
+        username = user_data[user_id]['username']
+
         save_task(task,username,group,priority,status)
         return
 
     group_buttons = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
-   
+    
     for grp in user_groups:
-        group_buttons.add(f"Grupo {grp}")
+        group_buttons.add(grp)
 
     group_buttons.add(f"Nenhum")
 
-    bot.send_message(message.chat.id, "Selecione o grupo:", reply_markup=markup)
-    bot.register_next_step_handler(message, handle_group_selection)
+    sent_msg = bot.send_message(message.chat.id, "Selecione o grupo:", reply_markup=group_buttons)
+    bot.register_next_step_handler(sent_msg, handle_group_selection)
 
 def handle_group_selection(message):
-    global group
-    group = message.text 
+    user_id = message.from_user.id
+    group = message.text.strip()
+    user_data[user_id]['group'] = group
 
-    if group == "Nenhum":
-        bot.send_message(message.chat.id, "Você selecionou nenhum grupo.")
-        
-        group_id = None  
-        save_task(task,username,group_id,priority,status) 
-    else:
-        group_id = query_group_id(message.from_user.id, group)
-        save_task(task,username,group_id,priority,status) 
+    save_task(user_data[user_id])
+
+    bot.send_message(message.chat.id, "Tarefa salva com sucesso!")
 
 
 @bot.message_handler(commands=['event'])
@@ -168,7 +164,7 @@ def listar_prioridade(message):
 
 
 @bot.message_handler(commands=['create_poll_task'])
-def ask_username(message):
+def ask_username_poll(message):
     chat_id = message.chat.id
     user_id = message.from_user.id
     
@@ -185,7 +181,7 @@ def receive_username(message):
         bot.register_next_step_handler(msg, receive_username)
         return
 
-    poll_data[user_id] = {"username": username, "group": "","group_id": "", "type": "Tarefa", "question": "", "options": []}
+    poll_data[user_id] = {"username": username, "group_name": "","group_id": "", "type": "Tarefa", "question": "", "options": []}
     msg = bot.send_message(chat_id, "Por favor, entre o nome do grupo.")
     bot.register_next_step_handler(msg, receive_group_name)
 
@@ -194,18 +190,19 @@ def receive_group_name(message):
     user_id = message.from_user.id
     group_name = message.text
     
-    poll_data[user_id]["group"] = group_name
+    poll_data[user_id]["group_name"] = group_name
+    username = poll_data[user_id]["username"]
 
-    grupo_id = verficiar_grupo(poll_data)
-    if not existe_grupo:
+    grupo_id = verificar_grupo(group_name,username)
+
+    if not grupo_id:
         bot.send_message(chat_id, "Você não é admin deste grupo.")
         return
 
-    poll_data[user_id]["group_id"]
+    poll_data[user_id]["group_id"] = grupo_id
 
     msg = bot.send_message(chat_id, "Escreva o título da tarefa e a prioridade (TITULO - PRIORIDADE)  para ser decidido na votacao:")
     bot.register_next_step_handler(msg, receive_poll_question)
-
 
 def receive_poll_question(message):
 
@@ -215,7 +212,7 @@ def receive_poll_question(message):
     poll_data[user_id]["question"] = message.text
     
     msg = bot.send_message(chat_id, "Escreva os horarios para a tarefa. Envie /done quando acabar de adicionar os horarios.")
-    bot.register_next_step_handler(msg, recebe_opcoes)
+    bot.register_next_step_handler(msg, recebe_opcao)
 
 def recebe_opcao(message):
     chat_id = message.chat.id
@@ -235,7 +232,6 @@ def recebe_opcao(message):
     msg = bot.send_message(chat_id, "Envie outra opcao ou envie /done para terminar.")
     bot.register_next_step_handler(msg, recebe_opcao)
 
-
 def criar_poll(chat_id, user_id):
     question = poll_data[user_id]["question"]
     options = poll_data[user_id]["options"]
@@ -246,7 +242,7 @@ def criar_poll(chat_id, user_id):
     completed_polls[sent_poll.id] = {
         "user_id": user_id, 
         "question": question,
-        "group": poll_data[user_id]["group"],
+        "group_name": poll_data[user_id]["group_name"],
         "group_id": poll_data[user_id]["group_id"],
         "username": poll_data[user_id]["username"],
         "options": options
@@ -265,13 +261,6 @@ def resultados_polls(poll: Poll):
     top_option_text = top_option.text
     top_votes = top_option.voter_count
 
-    completed_polls[poll_id] = {
-        "Tarefa": question,
-        "Data": top_option_text,
-        "Autor": poll_data[user_id]["username"],
-        "Grupo": poll_data[user_id]["group"],
-        "group_id": poll_data[user_id]["group_id"]
-    }
 
     username_poll = completed_polls[poll_id]["Autor"]
     group_poll = completed_polls[poll_id]["Grupo"]
