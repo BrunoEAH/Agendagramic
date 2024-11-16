@@ -64,7 +64,7 @@ def insert_event(username,event,group):
 
     parts = event.split(", ",4)
     if len(parts) != 5:
-        raise ValueError("Formato inválido. Por favor use: DD/MM/AAAA, HH:MM, DD/MM/AAAA, HH:MM, Titulo do Evento")
+        raise ValueError("Formato inválido. Por favor use: DD/MM/AAAA, HH:MM, DD/MM/AAAA, HH:MM")
 
     comeco_datastr = parts[0] + ", " + parts[1]
     fim_datastr = parts[2] + ", " + parts[3]

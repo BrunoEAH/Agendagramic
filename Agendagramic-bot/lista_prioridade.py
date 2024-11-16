@@ -5,20 +5,19 @@ import uuid
 from enum import IntEnum
 from database_connection import connection
 
+cursor = connection.cursor()
+
 class Prioridade(IntEnum):
     Alta = 0
     Media = 1
     Baixa = 2
 
 
-cursor = connection.cursor()
-
 
 def listar_prioridade_db(user_id):
     cursor.execute("SELECT titulo, data, prioridade FROM Tarefas WHERE criado_por = ?", (user_id,))
     tasks = cursor.fetchall()
 
-    connection.close()
 
     tasks_data = [
         {
