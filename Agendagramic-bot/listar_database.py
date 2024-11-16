@@ -15,7 +15,6 @@ def listar_db(user_id):
     cursor.execute("SELECT titulo, data FROM Tarefas WHERE criado_por = ? ORDER BY data ASC", (user_id,))
     tasks = cursor.fetchall()
 
-    connection.close()
 
     combined_data = [
         {

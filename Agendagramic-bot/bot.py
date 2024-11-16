@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from database_agendagramic import get_user_groups,query_group_id,insert_task,insert_event
 from listar_database import listar_db
 from lista_prioridade import listar_prioridade_db
-from poll_database import verificar_grupo,armazenar_task
+from poll_database import verificar_grupo,armazenar_task,armazenar_evento
 from telebot.types import Poll
 
 load_dotenv()
@@ -20,8 +20,47 @@ bot = telebot.TeleBot(BOT_TOKEN)
 poll_data = {}
 completed_polls = {}
 user_data = {}
- 
-agenda_type = None #Variavel para definir se é uma tarefa ou evento
+
+tipo = ""  #Variavel global para checar se é um evento ou tarefa
+
+
+def handle_poll_results(poll: Poll, poll_type: str):
+    global tipo
+    poll_id = poll.id
+    question = poll.question
+    options = poll.options
+
+    top_option = max(options, key=lambda opt: opt.voter_count)
+    top_option_text = top_option.text
+    top_votes = top_option.voter_count
+
+    tipo = "" # Global vazia
+
+    username_poll = completed_polls[poll_id]["username"]
+    group_poll = completed_polls[poll_id]["group_name"]
+    group_id_poll = completed_polls[poll_id]["group_id"]
+    chat_id = completed_polls[poll_id]["chat_id"]
+
+    
+    if poll_type == 'event':
+        titulo_poll = completed_polls[poll_id]["question"]
+    elif poll_type == 'task':
+        titulo_poll = completed_polls[poll_id]["question"]
+    
+    total_eleitores = sum(opt.voter_count for opt in options)
+    expected_voters = int(completed_polls[poll_id]["voters"])
+
+    if total_eleitores >= expected_voters:
+        if poll_type == 'event':
+            armazenar_evento(group_id_poll, username_poll, group_poll, titulo_poll, top_option_text)
+        elif poll_type == 'task':
+            armazenar_task(group_id_poll, username_poll, group_poll, titulo_poll, top_option_text)
+
+        bot.send_message(chat_id, f"Resultado da votacao: {question}\n"
+                    f"Vencedor: {top_option_text} com {top_votes} votos.")
+        del completed_polls[poll_id]
+    else:
+        bot.send_message(chat_id, f"Aguardando mais votos. {total_eleitores}/{expected_voters} votaram até agora.")
 
 
 # Função para exibir a mensagem de boas-vindas
@@ -246,12 +285,6 @@ def listar_tudo(message):
 
 
 
-
-
-
-
-
-
 ######################################
 #                                    #
 #                                    #
@@ -276,8 +309,6 @@ def listar_prioridade(message):
 
 
 
-
-
 #################################
 #                               #
 #                               #
@@ -285,61 +316,69 @@ def listar_prioridade(message):
 #                               #
 #################################
 
-
-
-
 @bot.message_handler(commands=['create_poll_task'])
-def ask_username_poll(message):
+def ask_username_poll_task(message):
     chat_id = message.chat.id
     user_id = message.from_user.id
     
     msg = bot.send_message(chat_id, "Escreva o seu usuario com o @.")
-    bot.register_next_step_handler(msg, receive_username)
+    bot.register_next_step_handler(msg, receive_username_task)
 
-def receive_username(message):
+def receive_username_task(message):
     chat_id = message.chat.id
     user_id = message.from_user.id
     username = message.text
     
     if not username.startswith("@"):
         msg = bot.send_message(chat_id, "Por favor entre um usuario valido comecando com '@'.")
-        bot.register_next_step_handler(msg, receive_username)
+        bot.register_next_step_handler(msg, receive_username_task)
         return
 
     poll_data[user_id] = {"username": username, "group_name": "","group_id": "", "type": "Tarefa", "question": "", "options": []}
     msg = bot.send_message(chat_id, "Por favor, entre o nome do grupo.")
-    bot.register_next_step_handler(msg, receive_group_name)
+    bot.register_next_step_handler(msg, receive_group_name_task)
 
-def receive_group_name(message):
+def receive_group_name_task(message):
     chat_id = message.chat.id
     user_id = message.from_user.id
     group_name = message.text
     
     poll_data[user_id]["group_name"] = group_name
     username = poll_data[user_id]["username"]
+    group_name = poll_data[user_id]["group_name"]
 
     grupo_id = verificar_grupo(group_name,username)
 
     if not grupo_id:
         bot.send_message(chat_id, "Você não é admin deste grupo.")
+        
         return
 
     poll_data[user_id]["group_id"] = grupo_id
 
-    msg = bot.send_message(chat_id, "Escreva o título da tarefa e a prioridade (TITULO - PRIORIDADE)  para ser decidido na votacao:")
-    bot.register_next_step_handler(msg, receive_poll_question)
+    msg = bot.send_message(chat_id, "Escreva o número de pessoas que poderão votar. ")
+    bot.register_next_step_handler(msg, receive_number_voters_task)
 
-def receive_poll_question(message):
+def receive_number_voters_task(message):
+    chat_id = message.chat.id
+    user_id = message.from_user.id
+
+    poll_data[user_id]["voters"] = message.text
+
+    msg = bot.send_message(chat_id, "Escreva o título da tarefa e a prioridade (TITULO - PRIORIDADE)  para ser decidido na votacao:")
+    bot.register_next_step_handler(msg, receive_poll_question_task)
+
+def receive_poll_question_task(message):
 
     chat_id = message.chat.id
     user_id = message.from_user.id
 
     poll_data[user_id]["question"] = message.text
     
-    msg = bot.send_message(chat_id, "Escreva os horarios para a tarefa. Envie /done quando acabar de adicionar os horarios.")
-    bot.register_next_step_handler(msg, recebe_opcao)
+    msg = bot.send_message(chat_id, "Escreva a data e o horario para a tarefa (DD/MM/AAAA - HH:MM). Envie /done quando acabar de adicionar os horarios.")
+    bot.register_next_step_handler(msg, recebe_opcao_task)
 
-def recebe_opcao(message):
+def recebe_opcao_task(message):
     chat_id = message.chat.id
     user_id = message.from_user.id
     
@@ -347,36 +386,159 @@ def recebe_opcao(message):
         # Ve se duas opcoes foram adicionadas
         if len(poll_data[user_id]["options"]) < 2:
             msg = bot.send_message(chat_id, "Por favor escreva pelo menos duas opcoes.")
-            bot.register_next_step_handler(msg, recebe_opcao)
+            bot.register_next_step_handler(msg, recebe_opcao_task)
         else:
-            criar_poll(chat_id, user_id)
+            criar_poll_task(chat_id, user_id)
         return
     
     # Adicionando opcoes
     poll_data[user_id]["options"].append(message.text)
     msg = bot.send_message(chat_id, "Envie outra opcao ou envie /done para terminar.")
-    bot.register_next_step_handler(msg, recebe_opcao)
+    bot.register_next_step_handler(msg, recebe_opcao_task)
 
-def criar_poll(chat_id, user_id):
+def criar_poll_task(chat_id, user_id):
+    global tipo
     question = poll_data[user_id]["question"]
     options = poll_data[user_id]["options"]
 
     # Envia a votacao para o chat
     votacao = bot.send_poll(chat_id, question=question, options=options, is_anonymous=False)
 
-    completed_polls[sent_poll.id] = {
+    completed_polls[votacao.poll.id] = {
         "user_id": user_id, 
         "question": question,
         "group_name": poll_data[user_id]["group_name"],
         "group_id": poll_data[user_id]["group_id"],
         "username": poll_data[user_id]["username"],
-        "options": options
+        "voters": poll_data[user_id]["voters"]
     }
+
+    completed_polls[votacao.poll.id]["chat_id"] = chat_id
+
+    tipo = "Task"
 
     del poll_data[user_id]
 
 @bot.poll_handler(func=lambda poll: True)
-def resultados_polls(poll: Poll):
+def resultados_polls_task(poll: Poll):
+    global tipo
+    if tipo == "Task":
+        handle_poll_results(poll, poll_type='task')
+    else:
+        handle_poll_results(poll, poll_type='event')
+
+#################################
+#                               #
+#                               #
+#   CRIAR ENQUETE - EVENTOS     #
+#                               #
+#################################
+
+@bot.message_handler(commands=['create_poll_event'])
+def ask_username_poll_event(message):
+    chat_id = message.chat.id
+    user_id = message.from_user.id
+    
+    msg = bot.send_message(chat_id, "Escreva o seu usuario com o @.")
+    bot.register_next_step_handler(msg, receive_username_event)
+
+def receive_username_event(message):
+    chat_id = message.chat.id
+    user_id = message.from_user.id
+    username = message.text
+    
+    if not username.startswith("@"):
+        msg = bot.send_message(chat_id, "Por favor entre um usuario valido comecando com '@'.")
+        bot.register_next_step_handler(msg, receive_username_event)
+        return
+
+    poll_data[user_id] = {"username": username, "group_name": "","group_id": "", "type": "Tarefa", "question": "", "options": []}
+    msg = bot.send_message(chat_id, "Por favor, entre o nome do grupo.")
+    bot.register_next_step_handler(msg, receive_group_name_event)
+
+def receive_group_name_event(message):
+    chat_id = message.chat.id
+    user_id = message.from_user.id
+    group_name = message.text
+    
+    poll_data[user_id]["group_name"] = group_name
+    username = poll_data[user_id]["username"]
+    group_name = poll_data[user_id]["group_name"]
+
+    grupo_id = verificar_grupo(group_name,username)
+
+    if not grupo_id:
+        bot.send_message(chat_id, "Você não é admin deste grupo.")
+        
+        return
+
+    poll_data[user_id]["group_id"] = grupo_id
+
+    msg = bot.send_message(chat_id, "Escreva o número de pessoas que poderão votar. ")
+    bot.register_next_step_handler(msg, receive_number_voters_event)
+
+def receive_number_voters_event(message):
+    chat_id = message.chat.id
+    user_id = message.from_user.id
+
+    poll_data[user_id]["voters"] = message.text
+
+    msg = bot.send_message(chat_id, "Escreva o título do evento para ser decidido na votacao:")
+    bot.register_next_step_handler(msg, receive_poll_question_event)
+
+def receive_poll_question_event(message):
+
+    chat_id = message.chat.id
+    user_id = message.from_user.id
+
+    poll_data[user_id]["question"] = message.text
+    
+    msg = bot.send_message(chat_id, "Escreva a data e o horario de começo e a data e o horario de termino (DD/MM/AAAA, HH:MM, DD/MM/AAAA, HH:MM). Envie /done quando acabar de adicionar os horarios.")
+    bot.register_next_step_handler(msg, recebe_opcao_event)
+
+def recebe_opcao_event(message):
+    chat_id = message.chat.id
+    user_id = message.from_user.id
+    
+    if message.text.lower() == "/done":
+        # Ve se duas opcoes foram adicionadas
+        if len(poll_data[user_id]["options"]) < 2:
+            msg = bot.send_message(chat_id, "Por favor escreva pelo menos duas opcoes.")
+            bot.register_next_step_handler(msg, recebe_opcao_event)
+        else:
+            criar_poll_event(chat_id, user_id)
+        return
+    
+    # Adicionando opcoes
+    poll_data[user_id]["options"].append(message.text)
+    msg = bot.send_message(chat_id, "Envie outra opcao ou envie /done para terminar.")
+    bot.register_next_step_handler(msg, recebe_opcao_event)
+
+def criar_poll_event(chat_id, user_id):
+    global tipo
+    question = poll_data[user_id]["question"]
+    options = poll_data[user_id]["options"]
+
+    # Envia a votacao para o chat
+    votacao = bot.send_poll(chat_id, question=question, options=options, is_anonymous=False)
+
+    completed_polls[votacao.poll.id] = {
+        "user_id": user_id, 
+        "question": question,
+        "group_name": poll_data[user_id]["group_name"],
+        "group_id": poll_data[user_id]["group_id"],
+        "username": poll_data[user_id]["username"],
+        "options": options,
+        "voters": poll_data[user_id]["voters"]
+    }
+
+    completed_polls[votacao.poll.id]["chat_id"] = chat_id
+
+    tipo = "Evento"
+
+    del poll_data[user_id]
+
+""" def resultados_polls_event(poll: Poll):
     poll_id = poll.id
     question = poll.question
     options = poll.options
@@ -387,19 +549,27 @@ def resultados_polls(poll: Poll):
     top_votes = top_option.voter_count
 
 
-    username_poll = completed_polls[poll_id]["Autor"]
-    group_poll = completed_polls[poll_id]["Grupo"]
-    titulo_prioridade_poll = completed_polls[poll_id]["Tarefa"]
-    data_poll = completed_polls[poll_id]["Data"]
+    username_poll = completed_polls[poll_id]["username"]
+    group_poll = completed_polls[poll_id]["group_name"]
+    titulo_poll = completed_polls[poll_id]["question"]
     group_id_poll = completed_polls[poll_id]["group_id"]
+    chat_id = completed_polls[poll_id]["chat_id"]
 
-    armazenar_task(group_id_poll,username_poll,group_poll,titulo_prioridade_poll,data_poll)
 
-    bot.send_message(poll.chat.id, f"Resultado da votacao: {question}\n"
+    total_eleitores = sum(opt.voter_count for opt in options)
+    expected_voters = int(completed_polls[poll_id]["voters"])
+
+    if total_eleitores >= expected_voters:
+        armazenar_evento(group_id_poll,username_poll,group_poll,titulo_poll,top_option_text)
+
+        bot.send_message(chat_id, f"Resultado da votacao: {question}\n"
                     f"Vencedor: {top_option_text} com {top_votes} votos.")
     
-    del completed_polls[poll_id]
+        del completed_polls[poll_id]
 
+    else:
+        bot.send_message(chat_id, f"Aguardando mais votos. {total_eleitores}/{expected_voters} votaram até agora.")
+ """
 
 # Mantém o bot em funcionamento
 bot.infinity_polling()
