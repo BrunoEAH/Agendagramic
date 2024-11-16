@@ -1,7 +1,7 @@
 import os
 import telebot 
 from dotenv import load_dotenv
-from database_agendagramic import get_user_groups,query_group_id,save_task
+from database_agendagramic import get_user_groups,query_group_id,insert_task,insert_event
 from listar_database import listar_db
 from lista_prioridade import listar_prioridade_db
 from poll_database import verificar_grupo,armazenar_task
@@ -42,13 +42,25 @@ def send_menu(message):
         "/menu - Exibe este menu de comandos\n"
         "/event - Marcar um evento\n"
         "/task - Marcar uma tarefa\n"
-        "/list - Listar eventos e tarefas em ordem\n"
+        "/list - Listar eventos e tarefas em ordem de data\n"
         "/list_task_priority - Lista tarefas em ordem de prioridade\n"
         "/create_poll_task - Criar votação para tarefa\n"
         "/create_poll_event - Criar votação para evento\n"
         # Adicione outros comandos conforme necessário
     )
     bot.reply_to(message, menu_message)
+
+
+
+
+
+
+#################################
+#                               #
+#                               #
+#   INSERIR TAREFAS             #
+#                               #
+#################################
 
 
 @bot.message_handler(commands=['task'])
@@ -107,7 +119,9 @@ def ask_group(message):
         status = user_data[user_id]['status']
         username = user_data[user_id]['username']
 
-        save_task(task,username,group,priority,status)
+        insert_task(username,task,priority,status,group)
+        bot.send_message(message.chat.id, "Tarefa salva com sucesso!")
+
         return
 
     group_buttons = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
@@ -125,16 +139,97 @@ def handle_group_selection(message):
     group = message.text.strip()
     user_data[user_id]['group'] = group
 
-    save_task(user_data[user_id])
+    group = user_data[user_id]['group']
+    task = user_data[user_id]['task']
+    priority = user_data[user_id]['priority']
+    status = user_data[user_id]['status']
+    username = user_data[user_id]['username']
+
+    insert_task(username,task,priority,status,group)
 
     bot.send_message(message.chat.id, "Tarefa salva com sucesso!")
 
 
+
+
+
+#################################
+#                               #
+#                               #
+#   INSERIR EVENTOS             #
+#                               #
+#################################
+
+
 @bot.message_handler(commands=['event'])
 def event_handler(message):
-    text = "Escreva a data (DD/MM/YYYY), o horário (HH:MM - HH:MM) e o evento que será realizada."
+    user_id = message.from_user.id
+    user_data[user_id] = {}
+    text = "Escreva a data inicial (DD/MM/YYYY), o horário de comeco (HH:MM), a data final, o horario final e o evento que será realizada."
     sent_msg = bot.send_message(message.chat.id, text, parse_mode="Markdown")
-    bot.register_next_step_handler(sent_msg,resposta_event)
+    bot.register_next_step_handler(sent_msg,ask_username_event)
+
+def ask_username_event(message):
+    user_id = message.from_user.id
+    event = message.text.strip()
+    user_data[user_id]['event'] = event
+
+    sent_msg = bot.send_message(message.chat.id, "Escreva o seu username com o @", parse_mode="Markdown")
+    bot.register_next_step_handler(sent_msg, ask_group_event)
+
+def ask_group_event(message):
+    user_id = message.from_user.id
+    username = message.text.strip()
+    user_data[user_id]['username'] = username
+
+    user_groups = get_user_groups(username)
+
+    if not user_groups:
+        bot.send_message(message.chat.id, "Você não faz parte de um grupo.")
+        user_data[user_id]['group'] = "Nenhum"
+
+        group = user_data[user_id]['group']
+        event = user_data[user_id]['event']
+        username = user_data[user_id]['username']
+
+        insert_event(username,event,group)
+        bot.send_message(message.chat.id, "Evento salva com sucesso!")
+
+        return
+
+    group_buttons = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
+    
+    for grp in user_groups:
+        group_buttons.add(grp)
+
+    group_buttons.add(f"Nenhum")
+
+    sent_msg = bot.send_message(message.chat.id, "Selecione o grupo:", reply_markup=group_buttons)
+    bot.register_next_step_handler(sent_msg, handle_group_event)
+
+def handle_group_event(message):
+    user_id = message.from_user.id
+    group = message.text.strip()
+    user_data[user_id]['group'] = group
+
+    group = user_data[user_id]['group']
+    event = user_data[user_id]['event']
+    username = user_data[user_id]['username']
+
+    insert_event(username,event,group)
+
+    bot.send_message(message.chat.id, "Evento salvo com sucesso!")
+
+
+
+
+
+#################################
+#                               #
+#                               #
+#   LISTAR EVENTOS E TAREFAS    #
+#                               #
+#################################
 
 @bot.message_handler(commands=['list'])
 def pergunta_username(message):
@@ -149,6 +244,22 @@ def listar_tudo(message):
     else:
         bot.send_message(message.chat.id, "Eu preciso do seu usuário. Envie novamente.")
 
+
+
+
+
+
+
+
+
+######################################
+#                                    #
+#                                    #
+#   LISTAR TAREFAS POR PRIORIDADE    #
+#                                    #
+######################################
+
+
 @bot.message_handler(commands=['list_task_priority'])
 def pergunta_username(message):
     msg = bot.send_message(message.chat.id, "Escreva o seu username com o @.")
@@ -161,6 +272,20 @@ def listar_prioridade(message):
         bot.reply_to(message, list_message)
     else:
         bot.send_message(message.chat.id, "Eu preciso do seu usuário. Envie novamente.")
+
+
+
+
+
+
+#################################
+#                               #
+#                               #
+#   CRIAR ENQUETE - TAREFAS     #
+#                               #
+#################################
+
+
 
 
 @bot.message_handler(commands=['create_poll_task'])
