@@ -2,8 +2,8 @@
     <div class="min-h-screen bg-dark-gray p-6 flex flex-col justify-center items-center border-white border-2">
       <div class="bg-gradient-green-inverse shadow-green flex flex-col justify-center items-center p-6 rounded-lg">
         <!-- Error message -->
-        <h1 class="text-4xl font-bold text-white mb-4">Opa! Alguma coisa deu errada.</h1>
-        <p class="text-xl text-gray-300 mb-6">Não conseguimos te encaminhar para a página.</p>
+        <h1 class="text-4xl font-bold text-white mb-4">SEU BIZONHO.</h1>
+        <p class="text-xl text-gray-300 mb-6">ALGUMA COISA DE ERRADO NÃO ESTÁ CERTA.</p>
   
         <!-- Button to return home -->
         <button @click="goToHome" class="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600 border-white border-2">
@@ -13,7 +13,7 @@
   
       <!-- Footer with version -->
       <div class="text-center text-gray-300 mt-6">
-        AgendaGramic Alpha 0.0.1
+        AgendaGramic Beta 0.1
       </div>
     </div>
   </template>

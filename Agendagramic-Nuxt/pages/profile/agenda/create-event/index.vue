@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-gradient-green-inverse flex flex-col justify-between">
     <!-- Cabeçalho -->
     <header class="flex justify-between items-center px-8 py-4">
-      <h1 class="text-4xl font-bold text-white">Criar Evento</h1>
+      <h1 class="text-4xl font-bold text-white">Criar Novo Evento</h1>
       <h3 class="text-3xl font-semibold text-white">AgendaGramic</h3>
     </header>
 
@@ -19,7 +19,7 @@
             id="eventTitle"
             type="text"
             placeholder="Digite o título do evento"
-            class="bg-input-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            class="bg-input-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white"
           />
         </div>
 
@@ -31,104 +31,67 @@
             id="eventDescription"
             rows="4"
             placeholder="Descreva o evento"
-            class="bg-input-gray shadow appearance-none border rounded-lg w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            class="bg-input-gray shadow appearance-none border rounded-lg w-full py-2 px-3 text-white"
           ></textarea>
+        </div>
+
+        <!-- Local do Evento -->
+        <div class="mb-4">
+          <label for="eventLocation" class="block text-white text-sm font-bold mb-2">Local do Evento</label>
+          <input
+            v-model="eventLocation"
+            id="eventLocation"
+            type="text"
+            placeholder="Digite o local do evento"
+            class="bg-input-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white"
+          />
         </div>
 
         <!-- Data do Evento -->
         <div class="mb-4">
-          <label for="eventBeginDate" class="block text-white text-sm font-bold mb-2">Data do Evento</label>
+          <label for="eventDate" class="block text-white text-sm font-bold mb-2">Data do Evento</label>
           <input
-            v-model="eventBeginDate"
-            id="eventBeginDate"
+            v-model="eventDate"
+            id="eventDate"
             type="date"
-            class="bg-input-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            class="bg-input-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white"
           />
         </div>
 
-        <!-- Checkbox para evento de vários dias -->
-        <div class="mb-4 flex items-center">
-          <input
-            v-model="showField"
-            type="checkbox"
-            id="additionalInfo"
-            class="mr-2 h-5 w-5 text-blue-500 rounded focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
-          />
-          <label for="additionalInfo" class="text-white text-sm font-semibold">Evento com duração maior que um dia.</label>
-        </div>
-
-        <!-- Data Final -->
-        <div v-if="showField" class="mb-4">
-          <label for="eventEndDate" class="block text-white text-sm font-bold mb-2">Data Final</label>
-          <input
-            v-model="eventEndDate"
-            id="eventEndDate"
-            type="date"
-            class="bg-input-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
-
-        <!-- Horário de Início -->
+        <!-- Horário do Evento -->
         <div class="mb-4">
-          <label for="eventBeginTime" class="block text-white text-sm font-bold mb-2">Horário de Início</label>
+          <label for="eventTime" class="block text-white text-sm font-bold mb-2">Horário do Evento</label>
           <input
-            v-model="eventBeginTime"
-            id="eventBeginTime"
+            v-model="eventTime"
+            id="eventTime"
             type="time"
-            class="bg-input-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            class="bg-input-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white"
           />
         </div>
 
-        <!-- Horário de Término -->
+        <!-- ID do Grupo -->
         <div class="mb-4">
-          <label for="eventEndTime" class="block text-white text-sm font-bold mb-2">Horário de Término</label>
+          <label for="eventGroup" class="block text-white text-sm font-bold mb-2">ID do Grupo</label>
           <input
-            v-model="eventEndTime"
-            id="eventEndTime"
-            type="time"
-            class="bg-input-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
-
-        <!-- Status do Evento -->
-        <div class="mb-4">
-          <label for="eventStatus" class="block text-white text-sm font-bold mb-2">Status do Evento</label>
-          <select
-            v-model="eventStatus"
-            id="eventStatus"
-            class="bg-input-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-          >
-            <option :value="0">Pendente</option>
-            <option :value="1">Em Progresso</option>
-            <option :value="2">Concluído</option>
-          </select>
-        </div>
-
-        <!-- Grupo do Evento -->
-        <div class="mb-4">
-          <label for="eventGroup" class="block text-white text-sm font-bold mb-2">Grupo do Evento</label>
-          <select
             v-model="eventGroup"
             id="eventGroup"
-            class="bg-input-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-          >
-            <option :value="0">Nenhum</option>
-            <option :value="1">Grupo 1</option>
-            <option :value="2">Grupo 2</option>
-          </select>
+            type="text"
+            placeholder="Digite o ID do grupo"
+            class="bg-input-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white"
+          />
         </div>
 
         <!-- Botões -->
-        <div class="text-center space-x-4">
+        <div class="flex flex-col space-y-4">
           <button
             @click="createEvent"
-            class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full border-white border-2 transition"
+            class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full"
           >
             Criar Evento
           </button>
           <button
             @click="testConnection"
-            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full border-white border-2 transition"
+            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full"
           >
             Testar Conexão DB
           </button>
@@ -140,7 +103,7 @@
     <footer class="flex justify-between items-center px-8 py-4">
       <button
         @click="goBack"
-        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full border-white border-2 transition"
+        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-full"
       >
         Voltar
       </button>
@@ -153,58 +116,71 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
-
-const router = useRouter();
-const route = useRoute();
-const day = route.params.id; // Obtém o dia da URL
-
-const showField = ref(false); // Exibe o campo de data final
 
 const eventTitle = ref('');
 const eventDescription = ref('');
-const eventBeginDate = ref('');
-const eventEndDate = ref('');
-const eventBeginTime = ref('');
-const eventEndTime = ref('');
-const eventStatus = ref(0);
-const eventGroup = ref(0);
+const eventLocation = ref('');
+const eventDate = ref('');
+const eventTime = ref('');
+const eventGroup = ref('');
+const eventCreator = ref('default_user');
 
-const createEvent = () => {
-  if (!showField.value) eventEndDate.value = eventBeginDate.value;
-
-  const eventBeginDateTime = `${eventBeginDate.value} ${eventBeginTime.value}`;
-  const eventEndDateTime = `${eventEndDate.value} ${eventEndTime.value}`;
+// Criar evento
+const createEvent = async () => {
+  if (!eventTitle.value || !eventDate.value || !eventGroup.value) {
+    alert('Por favor, preencha todos os campos obrigatórios.');
+    return;
+  }
 
   const newEvent = {
     eventTitle: eventTitle.value,
-    eventDescription: eventDescription.value,
-    eventBeginDateTime,
-    eventEndDateTime,
-    eventStatus: eventStatus.value,
+    eventDescription: eventDescription.value || null,
+    eventLocation: eventLocation.value || null,
+    eventDate: eventDate.value,
+    eventTime: eventTime.value || null,
     eventGroup: eventGroup.value,
+    eventCreator: eventCreator.value,
   };
 
-  const eventsData = JSON.parse(localStorage.getItem('events')) || {};
-  if (!eventsData[day]) eventsData[day] = [];
-  eventsData[day].push(newEvent);
-  localStorage.setItem('events', JSON.stringify(eventsData));
-
-  router.push(`/profile/agenda/day/${day}`);
-};
-
-const goBack = () => {
-  router.push(`/profile/agenda/day/${day}`);
-};
-
-const testConnection = async () => {
   try {
-    const response = await axios.get('/api/testDbConnection');
-    alert('Conexão bem-sucedida: ' + response.data.message);
+    const response = await axios.post('/api/addEvent', newEvent);
+
+    if (response.data.success) {
+      alert(`Evento criado com sucesso! ID do Evento: ${response.data.insertId}`);
+    } else {
+      alert('Erro ao criar o evento.');
+    }
   } catch (error) {
+    console.error('Erro ao criar evento:', error);
+    alert('Erro ao criar evento no banco.');
+  }
+};
+
+// Testar conexão com o banco
+const testConnection = async () => {
+  const dateToTest = eventDate.value || new Date().toISOString().split('T')[0]; // Usar a data de hoje se não fornecida
+
+  try {
+    const response = await axios.get('/api/getEvents', {
+      params: { userTelegram: eventCreator.value, selectedDate: dateToTest },
+    });
+
+    if (response.data.success) {
+      console.log('Eventos encontrados:', response.data.events);
+      alert(`Conexão bem-sucedida! Eventos encontrados: ${response.data.events.length}`);
+    } else {
+      alert('Erro ao conectar ao banco de dados.');
+    }
+  } catch (error) {
+    console.error('Erro ao testar conexão com o banco:', error);
     alert('Erro ao conectar ao banco de dados.');
   }
+};
+
+// Voltar para a página anterior
+const goBack = () => {
+  window.history.back();
 };
 </script>
 
@@ -238,8 +214,20 @@ button {
   background-color: #28a745;
 }
 
-.bg-blue-500:hover {
-  background-color: #2563eb;
+.bg-blue-500 {
+  background-color: #007bff;
+}
+
+.bg-blue-600:hover {
+  background-color: #0056b3;
+}
+
+.bg-gray-500 {
+  background-color: #6c757d;
+}
+
+.bg-gray-600:hover {
+  background-color: #5a6268;
 }
 
 .rounded-full {

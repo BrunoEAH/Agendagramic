@@ -1,12 +1,10 @@
 <template>
   <div class="min-h-screen bg-gradient-green-inverse flex flex-col justify-between">
-    <!-- Cabeçalho -->
     <header class="flex justify-between items-center px-8 py-4">
       <h1 class="text-4xl font-bold text-white">Criar Nova Tarefa</h1>
       <h3 class="text-3xl font-semibold text-white">AgendaGramic</h3>
     </header>
 
-    <!-- Formulário de criação de tarefa -->
     <main class="flex flex-col items-center flex-1 px-6">
       <div class="bg-medium-gray shadow-green w-full max-w-4xl rounded-3xl p-8 border-white border-2">
         <h2 class="text-2xl font-semibold mb-4 text-white">Detalhes da Tarefa</h2>
@@ -16,7 +14,7 @@
           <label for="taskName" class="block text-white text-sm font-bold mb-2">Nome da Tarefa</label>
           <input
             v-model="taskName"
-            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white"
             id="taskName"
             type="text"
             placeholder="Digite o nome da tarefa"
@@ -28,7 +26,7 @@
           <label for="taskDescription" class="block text-white text-sm font-bold mb-2">Descrição</label>
           <textarea
             v-model="taskDescription"
-            class="bg-light-gray shadow appearance-none border rounded-lg w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            class="bg-light-gray shadow appearance-none border rounded-lg w-full py-2 px-3 text-white"
             id="taskDescription"
             rows="4"
             placeholder="Descreva a tarefa"
@@ -40,7 +38,7 @@
           <label for="dueDate" class="block text-white text-sm font-bold mb-2">Data de Conclusão</label>
           <input
             v-model="dueDate"
-            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white"
             id="dueDate"
             type="date"
           />
@@ -51,7 +49,7 @@
           <label for="taskPriority" class="block text-white text-sm font-bold mb-2">Prioridade da Tarefa</label>
           <select
             v-model="taskPriority"
-            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white"
             id="taskPriority"
           >
             <option value="alta">Alta</option>
@@ -60,60 +58,43 @@
           </select>
         </div>
 
-        <!-- Status da Tarefa -->
+        <!-- Grupo -->
         <div class="mb-4">
-          <label for="taskStatus" class="block text-white text-sm font-bold mb-2">Status da Tarefa</label>
-          <select
-            v-model="taskStatus"
-            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-            id="taskStatus"
-          >
-            <option :value="0">Pendente</option>
-            <option :value="1">Em Progresso</option>
-            <option :value="2">Concluída</option>
-          </select>
+          <label for="group" class="block text-white text-sm font-bold mb-2">Grupo</label>
+          <input
+            v-model="taskGroup"
+            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white"
+            id="group"
+            type="text"
+            placeholder="Digite o ID do grupo"
+          />
         </div>
 
         <!-- Responsáveis -->
         <div class="mb-4">
-          <label for="taskMembers" class="block text-white text-sm font-bold mb-2">Responsáveis pela tarefa</label>
-          <textarea
+          <label for="taskMembers" class="block text-white text-sm font-bold mb-2">Responsáveis</label>
+          <input
             v-model="taskMembers"
-            class="bg-light-gray shadow appearance-none border rounded-lg w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white"
             id="taskMembers"
-            rows="4"
-            placeholder="Escreva o nome dos responsáveis"
-          ></textarea>
-        </div>
-
-        <!-- Grupo -->
-        <div class="mb-4">
-          <label for="group" class="block text-white text-sm font-bold mb-2">Grupo</label>
-          <select
-            v-model="taskGroup"
-            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-            id="group"
-          >
-            <option value="" disabled>Selecione um grupo</option>
-            <option v-for="group in groups" :key="group.group_id" :value="group.group_id">
-              {{ group.group_name }}
-            </option>
-          </select>
+            type="text"
+            placeholder="Digite os responsáveis separados por vírgulas"
+          />
         </div>
 
         <!-- Botões -->
-        <div class="flex justify-between items-center">
+        <div class="flex flex-col space-y-4">
           <button
-            @click="createTask"
-            class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full border-white border-2 transition"
+            @click="validateAndCreateTask"
+            class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full"
           >
             Criar Tarefa
           </button>
           <button
-            @click="testDatabaseConnection"
-            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full border-white border-2 transition"
+            @click="testConnection"
+            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full"
           >
-            Testar Banco de Dados
+            Testar Conexão com Tarefas
           </button>
         </div>
       </div>
@@ -123,7 +104,7 @@
     <footer class="flex justify-between items-center px-8 py-4">
       <button
         @click="goBack"
-        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-full border-white border-2 transition"
+        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-full"
       >
         Voltar
       </button>
@@ -135,77 +116,63 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import axios from 'axios';
 
 const taskName = ref('');
-const taskPriority = ref('');
 const taskDescription = ref('');
 const dueDate = ref('');
-const taskStatus = ref(0);
+const taskPriority = ref('');
 const taskGroup = ref('');
 const taskMembers = ref('');
-const groups = ref([]);
 const userTelegram = ref('default_user');
 
-onMounted(() => {
-  if (process.client) {
-    const storedTelegram = localStorage.getItem('userTelegram');
-    if (storedTelegram) {
-      userTelegram.value = storedTelegram;
-    }
+// Criar tarefa
+const validateAndCreateTask = async () => {
+  if (!taskName.value || !dueDate.value || !taskPriority.value || !taskGroup.value) {
+    alert('Por favor, preencha todos os campos obrigatórios.');
+    return;
   }
-  loadGroups();
-});
 
-// Carregar usuários e grupos
-const loadGroups = async () => {
-  try {
-        const response = await axios.get(`/api/getGroups?userTelegram=${userTelegram}`);
-        groups.value = response.data.groups || [];
-      } catch (error) {
-        console.error('Erro ao carregar grupos:', error);
-      }
-};
-
-// Criar tarefa no banco de dados
-const createTask = async () => {
   const newTask = {
     taskName: taskName.value,
-    taskDescription: taskDescription.value,
+    taskDescription: taskDescription.value || null,
     dueDate: dueDate.value,
-    taskStatus: taskStatus.value,
     taskPriority: taskPriority.value,
-    taskGroup: taskGroup.value || null,
-    taskMembers: taskMembers.value,
+    taskGroup: taskGroup.value,
+    taskMembers: taskMembers.value || null,
     taskCreator: userTelegram.value,
   };
 
   try {
     const response = await axios.post('/api/addTask', newTask);
+
     if (response.data.success) {
-      alert('Tarefa criada com sucesso!');
-      goBack();
+      alert(`Tarefa criada com sucesso! ID da Tarefa: ${response.data.insertId}`);
     } else {
-      alert('Erro ao criar a tarefa no banco de dados.');
+      alert('Erro ao criar a tarefa.');
     }
   } catch (error) {
     console.error('Erro ao criar tarefa:', error);
+    alert('Erro ao criar tarefa no banco.');
   }
 };
 
-// Testar conexão com o banco de dados
-const testDatabaseConnection = async () => {
+// Testar conexão com a tabela tarefas
+const testConnection = async () => {
   try {
-    const response = await axios.get('/api/getTasks');
-    if (response.status === 200) {
-      alert('Conexão com o banco de dados bem-sucedida!');
+    const response = await axios.get('/api/getTasks', {
+      params: { userTelegram: userTelegram.value },
+    });
+
+    if (response.data.success) {
+      alert(`Conexão com a tabela de tarefas bem-sucedida! Tarefas encontradas: ${response.data.tasks.length}`);
     } else {
-      alert('Erro ao conectar ao banco de dados.');
+      alert('Erro ao conectar à tabela de tarefas.');
     }
   } catch (error) {
-    console.error('Erro ao testar conexão com o banco:', error);
-    alert('Erro ao conectar ao banco de dados.');
+    console.error('Erro ao testar conexão:', error);
+    alert('Erro ao conectar à tabela de tarefas.');
   }
 };
 
@@ -213,7 +180,6 @@ const testDatabaseConnection = async () => {
 const goBack = () => {
   window.history.back();
 };
-
 </script>
 
 <style scoped>
@@ -226,6 +192,7 @@ const goBack = () => {
 }
 .bg-light-gray {
   background-color: #2e2e2e;
+  color: white; /* Cor do texto ajustada */
 }
 
 /* Sombra */
@@ -243,12 +210,16 @@ button {
 .bg-green-600:hover {
   background-color: #28a745;
 }
-.bg-blue-500:hover {
-  background-color: #2563eb;
+.bg-blue-500 {
+  background-color: #007bff;
 }
-
-/* Bordas */
-.rounded-3xl {
-  border-radius: 1.5rem;
+.bg-blue-600:hover {
+  background-color: #0056b3;
+}
+.bg-gray-500 {
+  background-color: #6c757d;
+}
+.bg-gray-600:hover {
+  background-color: #5a6268;
 }
 </style>
