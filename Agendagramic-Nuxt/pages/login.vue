@@ -77,6 +77,9 @@ const handleLogin = async () => {
     // Armazena o token e o nome do usuário no localStorage e redireciona para o perfil
     localStorage.setItem('token', response.token);
     localStorage.setItem('userName', response.userName); // Salva o nome do usuário
+    if (response.userTelegram) {
+      localStorage.setItem('userTelegram', response.userTelegram);
+    }
     router.push('/profile/');
   } catch (error) {
     alert('Erro no login: ' + (error.message || 'Erro inesperado'));

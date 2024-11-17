@@ -146,16 +146,21 @@ const taskStatus = ref(0);
 const taskGroup = ref('');
 const taskMembers = ref('');
 const groups = ref([]);
-const userTelegram = ref('');
+const userTelegram = ref('default_user');
 
 onMounted(() => {
+  if (process.client) {
+    const storedTelegram = localStorage.getItem('userTelegram');
+    if (storedTelegram) {
+      userTelegram.value = storedTelegram;
+    }
+  }
   loadGroups();
 });
 
 // Carregar usuários e grupos
 const loadGroups = async () => {
   try {
-        const userTelegram = localStorage.getItem('userTelegram') || 'default_user';
         const response = await axios.get(`/api/getGroups?userTelegram=${userTelegram}`);
         groups.value = response.data.groups || [];
       } catch (error) {
@@ -171,7 +176,7 @@ const createTask = async () => {
     dueDate: dueDate.value,
     taskStatus: taskStatus.value,
     taskPriority: taskPriority.value,
-    taskGroup: taskGroup.value,
+    taskGroup: taskGroup.value || null,
     taskMembers: taskMembers.value,
     taskCreator: userTelegram.value,
   };
@@ -208,7 +213,6 @@ const testDatabaseConnection = async () => {
 const goBack = () => {
   window.history.back();
 };
-
 
 </script>
 

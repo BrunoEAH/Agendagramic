@@ -99,7 +99,7 @@ const testConnection = async () => {
 
 // Redirecionar para criar novo evento
 const goToCreateEvent = () => {
-  router.push('/profile/eventos/create-event');
+  router.push('/profile/agenda/create-event');
 };
 
 // Função de voltar

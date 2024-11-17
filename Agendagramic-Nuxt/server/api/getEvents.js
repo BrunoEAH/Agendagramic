@@ -1,22 +1,14 @@
 import { defineEventHandler, getQuery } from 'h3';
-import db from '../config/database.js';
+import pool from '../config/database.js';
 
 export default defineEventHandler(async (event) => {
   const { userTelegram } = getQuery(event);
+  let connection;
 
   try {
-    // Consulta ajustada com os nomes corretos das colunas
-    const [events] = await db.execute(
-      `SELECT 
-        event_id, 
-        titulo AS name, 
-        descricao AS description, 
-        local AS location, 
-        data AS eventDate, 
-        horario AS eventTime, 
-        criado_em AS createdAt 
-      FROM Eventos 
-      WHERE criado_por = ?`,
+    connection = await pool.getConnection(); // Obtenha uma conexão do pool
+    const [events] = await connection.query(
+      'SELECT event_id, titulo AS name,info_evento AS description,comeco AS date_begin,fim AS date_end, group_id AS id_group, criada_em AS createdAt FROM Eventos WHERE criado_por = ?',
       [userTelegram]
     );
     return { success: true, events };

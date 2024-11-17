@@ -1,7 +1,8 @@
 import pool from '~/server/config/database';
 
 export default defineEventHandler(async (event) => {
-  const userTelegram = getQuery(event).userTelegram;
+
+  const userTelegram = getQuery(event);
 
   if (!userTelegram) {
     throw createError({

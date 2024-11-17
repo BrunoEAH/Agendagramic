@@ -1,12 +1,12 @@
 import { defineEventHandler, getQuery } from 'h3';
-import db from '../config/database.js';
+import pool from '../config/database.js';
 
 export default defineEventHandler(async (event) => {
   const { userTelegram } = getQuery(event);
   let connection;
 
   try {
-    connection = await db.getConnection(); // Obtenha uma conexão do pool
+    connection = await pool.getConnection(); // Obtenha uma conexão do pool
     const [tasks] = await connection.query(
       'SELECT task_id, titulo AS name, info_task AS description, data, esta_completa, prioridade FROM Tarefas WHERE criado_por = ?',
       [userTelegram]
