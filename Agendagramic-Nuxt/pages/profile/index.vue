@@ -1,84 +1,72 @@
 <template>
-  <div class="min-h-screen bg-dark-gray p-6 flex flex-col justify-between border-white border-2">
-    <div class="bg-gradient-green-inverse shadow-green min-h-screen flex flex-col justify-between">
-      
-      <!-- Barra superior com Botões e Nome do Projeto -->
-      <div class="flex justify-between items-start mb-6">
-        <!-- Botões do Telegram, Configurações e Logout -->
-        <div class="flex flex-col space-y-2">
-          <button 
-            @click="goToTelegram" 
-            class="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600 border-white border-2">
-            Bot do Telegram
-          </button>
-          <button 
-            @click="goToSettings" 
-            class="bg-gray-500 text-white py-2 px-4 rounded-full hover:bg-gray-600 border-white border-2">
-            Configurações
-          </button>
-          <button 
-            @click="logout" 
-            class="bg-gray-500 text-white py-2 px-4 rounded-full hover:bg-gray-600 border-white border-2">
-            Logout
-          </button>
-        </div>
+  <div class="min-h-screen bg-gradient-green-inverse flex flex-col justify-between">
+    <!-- Cabeçalho -->
+    <header class="flex justify-between items-center px-8 py-4">
+      <h1 class="text-4xl font-bold text-white">AgendaGramic</h1>
+    </header>
 
-        <!-- Logo e Nome do Projeto -->
-        <div class="flex items-center">
-          <h1 class="text-2xl font-bold text-white mr-2">AgendaGramic</h1>
-          <button @click="goToHome" class="bg-white p-2 rounded-full shadow-lg flex items-center justify-center logo-button">
-            <img src="@/assets/images/logo.png" alt="Logo" class="logo-image">
-          </button>
+    <!-- Conteúdo principal -->
+    <main class="flex flex-col items-center justify-center flex-1 px-6">
+      <div class="bg-medium-gray shadow-green w-full max-w-2xl rounded-3xl overflow-hidden p-8 border-white border-2">
+        <header class="text-center mb-8">
+          <h1 class="text-4xl font-bold text-white">Bem-vindo, {{ userName }}</h1>
+        </header>
+
+        <div class="space-y-6">
+          <!-- Gerenciamento de Tarefas -->
+          <section class="bg-dark-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2">
+            <h2 class="text-2xl font-semibold text-white mb-4 text-center">Gerenciamento de Tarefas</h2>
+            <p class="text-gray-300 mb-4 text-center">Crie, edite e acompanhe suas tarefas diárias.</p>
+            <button @click="goToTasks" class="bg-light-gray text-black py-2 px-4 rounded-full hover:bg-gray-300 border-white border-2 transition">
+              Acessar Tarefas
+            </button>
+          </section>
+
+          <!-- Gerenciamento de Eventos -->
+          <section class="bg-dark-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2">
+            <h2 class="text-2xl font-semibold text-white mb-4 text-center">Gerenciamento de Eventos</h2>
+            <p class="text-gray-300 mb-4 text-center">Organize, visualize e gerencie todos os seus eventos em um só lugar.</p>
+            <button @click="goToEvents" class="bg-light-gray text-black py-2 px-4 rounded-full hover:bg-gray-300 border-white border-2 transition">
+              Acessar Eventos
+            </button>
+          </section>
+
+          <!-- Compromissos e Agendas -->
+          <section class="bg-dark-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2">
+            <h2 class="text-2xl font-semibold text-white mb-4 text-center">Compromissos e Agendas</h2>
+            <p class="text-gray-300 mb-4 text-center">Visualize, compartilhe e gerencie seus compromissos de forma prática.</p>
+            <button @click="goToSchedules" class="bg-light-gray text-black py-2 px-4 rounded-full hover:bg-gray-300 border-white border-2 transition">
+              Acessar Agendas
+            </button>
+          </section>
+
+          <!-- Gerenciamento de Equipes -->
+          <section class="bg-dark-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2">
+            <h2 class="text-2xl font-semibold text-white mb-4 text-center">Gerenciamento de Equipes</h2>
+            <p class="text-gray-300 mb-4 text-center">Adicione ou remova membros da sua equipe com facilidade!</p>
+            <button @click="goToTeams" class="bg-light-gray text-black py-2 px-4 rounded-full hover:bg-gray-300 border-white border-2 transition">
+              Acessar Equipes
+            </button>
+          </section>
+
+          <!-- Configurações da Conta -->
+          <section class="bg-dark-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2">
+            <h2 class="text-2xl font-semibold text-white mb-4 text-center">Configurações da Conta</h2>
+            <p class="text-gray-300 mb-4 text-center">Gerencie suas informações e preferências de conta.</p>
+            <button @click="goToSettings" class="bg-light-gray text-black py-2 px-4 rounded-full hover:bg-gray-300 border-white border-2 transition">
+              Acessar Configurações
+            </button>
+          </section>
         </div>
       </div>
+    </main>
 
-      <!-- TÍTULO PRINCIPAL DA PÁGINA LOGADA -->
-      <h1 class="text-3xl font-bold text-center text-white mb-6">Bem-vinde, {{ userName }}!</h1>
-
-      <!-- LAYOUT VERTICAL PARA AS FUNCIONALIDADES -->
-      <div class="flex flex-col space-y-6 max-w-lg mx-auto">
-        
-        <!-- CARD DE GERENCIAMENTO DE TAREFAS -->
-        <div class="bg-medium-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2">
-          <h2 class="text-2xl font-semibold mb-4 text-white">Gerenciamento de Tarefas</h2>
-          <p class="text-gray-300 mb-4">
-            Crie, edite e acompanhe suas tarefas diárias. Mantenha o controle de suas atividades e receba lembretes automáticos.
-          </p>
-          <p class="text-red-500 font-semibold mb-4">*Em breve</p>
-          <button @click="showDevelopmentAlert" class="bg-light-gray text-black py-2 px-4 rounded-full hover:bg-green-500 border-white border-2 transition">
-            Acessar Tarefas
-          </button>
-        </div>
-
-        <!-- CARD DE COMPROMISSOS E AGENDAS -->
-        <div class="bg-medium-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2">
-          <h2 class="text-2xl font-semibold mb-4 text-white">Compromissos e Agendas</h2>
-          <p class="text-gray-300 mb-4">
-            Visualize, compartilhe e gerencie seus compromissos. Sincronize sua agenda de forma fácil.
-          </p>
-          <button @click="goToAgenda" class="bg-light-gray text-black py-2 px-4 rounded-full hover:bg-green-500 border-white border-2 transition">
-            Acessar Agendas
-          </button>
-        </div>
-
-        <!-- CARD DE GERENCIAMENTO DE EQUIPES -->
-        <div class="bg-medium-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2">
-          <h2 class="text-2xl font-semibold mb-4 text-white">Gerenciamento de Equipes</h2>
-          <p class="text-gray-300 mb-4">
-            Adicione ou remova membros da sua equipe!
-          </p>
-          <button @click="goToTeamManagement" class="bg-light-gray text-black py-2 px-4 rounded-full hover:bg-green-500 border-white border-2 transition">
-            Acessar Equipes
-          </button>
-        </div>
-        
-      </div>
-
-      <!-- Rodapé com a versão do Projeto -->
-      <div class="text-center text-gray-300 mt-6">
-        AgendaGramic Alpha 0.0.1
-      </div>
-    </div>
+    <!-- Rodapé -->
+    <footer class="flex justify-start items-center px-8 py-4">
+      <button @click="goToHome" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-full border-white border-2 transition">
+        Voltar
+      </button>
+    </footer>
   </div>
 </template>
 
@@ -88,131 +76,83 @@ import { useRouter } from 'vue-router';
 import axios from 'axios';
 
 const router = useRouter();
-const userName = ref(''); // Nome do usuário será atualizado com a resposta do backend
+const userName = ref('');
 
-// Função para carregar o nome do usuário
+// Carregar o nome do usuário
 const loadUserName = async () => {
   const token = localStorage.getItem('token');
-
   if (!token) {
-    // Se não houver token, redireciona para a página de login
     router.push('/login');
     return;
   }
-
   try {
-    // Requisição para buscar o nome do usuário autenticado usando o token
     const response = await axios.get('/api/getUserName', {
-      headers: {
-        Authorization: `Bearer ${token}`, // Passa o token JWT no cabeçalho
-      },
+      headers: { Authorization: `Bearer ${token}` },
     });
-
-    userName.value = response.data.userName; // Atualiza o nome do usuário com a resposta
+    userName.value = response.data.userName;
   } catch (error) {
-    console.error('Erro ao buscar o nome do usuário:', error);
-    // Redireciona para a página de login em caso de erro
     router.push('/login');
   }
 };
 
-// Executa a função para carregar o nome do usuário ao montar o componente
 onMounted(loadUserName);
 
 // Funções de navegação
-const goToTelegram = () => window.open('https://t.me/agendagramic_bot', '_blank');
-const goToSettings = () => router.push('/profile/settings'); 
-const goToTeamManagement = () => router.push('/profile/settings/team-management');
-const goToAgenda = () => router.push('/profile/agenda');
+const goToTasks = () => router.push('/profile/tarefas');
+const goToEvents = () => router.push('/profile/eventos');
+const goToSchedules = () => router.push('/profile/agenda');
+const goToTeams = () => router.push('/profile/settings/team-management');
+const goToSettings = () => router.push('/profile/settings');
 const goToHome = () => router.push('/');
-
-// Função para mostrar um alerta de desenvolvimento
-const showDevelopmentAlert = () => {
-  alert('Calma ai amostradinho, estamos desenvolvendo!');
-};
-
-// Função de logout
-const logout = () => {
-  localStorage.removeItem('token');
-  router.push('/');
-};
 </script>
 
 <style scoped>
-/* Fundo cinza escuro */
-.bg-dark-gray {
-  background-color: #1e1e1e;
-}
-
-/* Degradê verde de baixo para cima */
 .bg-gradient-green-inverse {
-  background: linear-gradient(to top, #32cd32, transparent 50%);
+  background: linear-gradient(to bottom, #32cd32, #1e1e1e);
 }
 
-/* Sombra verde */
 .shadow-green {
   box-shadow: 0 10px 15px rgba(50, 205, 50, 0.3);
 }
 
-/* Botão da logo com formato circular */
-button.logo-button {
-  height: 48px;
-  width: 48px;
-  border-radius: 50%;
-  transition: transform 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: white;
-  overflow: hidden;
-}
-
-button.logo-button:hover {
-  transform: scale(1.05);
-}
-
-/* Ajuste para a imagem da logo */
-.logo-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Estilo para caixas e botões */
 .bg-medium-gray {
   background-color: #3c3c3c;
 }
 
-.text-gray-300 {
-  color: #d1d5db;
+.bg-dark-gray {
+  background-color: #1e1e1e;
 }
 
 .border-lighter-gray {
   border-color: #5a5a5a;
 }
 
-.bg-light-gray {
-  background-color: #d1d5db;
+.text-gray-300 {
+  color: #d1d5db;
 }
 
-button, .form-checkbox {
+button {
   transition: background-color 0.3s, border-color 0.3s;
 }
 
-.bg-green-500:hover {
-  background-color: #32cd32;
+.bg-light-gray {
+  background-color: #d4d4d4;
 }
 
-.shadow-md {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+.bg-light-gray:hover {
+  background-color: #e0e0e0;
 }
 
-/* Estilo arredondado */
-.rounded-full {
-  border-radius: 9999px;
+.bg-gray-500:hover {
+  background-color: #4a5568;
 }
 
 .rounded-3xl {
   border-radius: 1.5rem;
 }
+
+.rounded-full {
+  border-radius: 9999px;
+}
 </style>
+

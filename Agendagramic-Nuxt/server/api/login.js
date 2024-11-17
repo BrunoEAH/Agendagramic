@@ -7,6 +7,11 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event); 
   const { email, password } = body;
 
+  if (!email || !password) {
+    return { statusCode: 400, message: 'Email e senha são obrigatórios' };
+  }
+
+
   let connection;
   try {
     connection = await pool.getConnection();
@@ -26,10 +31,14 @@ export default defineEventHandler(async (event) => {
     }
 
     // Gera um token JWT
-    const token = jwt.sign({ user_telegram: user.user_telegram, email: user.email }, 'seu-segredo-jwt', { expiresIn: '1h' });
+    const token = jwt.sign({ userTelegram: user.user_telegram, email: user.email }, 'seu-segredo-jwt', { expiresIn: '1h' });
 
     // Retorna o token e o nome do usuário
-    return { success: true, token, userName: user.nome };
+    return { success: true, 
+              token, 
+              userName: user.nome, 
+              userTelegram: user.user_telegram 
+            };
 
   } catch (error) {
     console.error('Erro em buscar os dados:', error);

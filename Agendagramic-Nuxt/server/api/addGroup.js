@@ -3,7 +3,7 @@ import pool from '~/server/config/database';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); 
-  const {group_ID,groupName,groupAdmin} = body;
+  const {groupName,groupAdmin} = body;
 
   let connection;
   try {
@@ -11,11 +11,11 @@ export default defineEventHandler(async (event) => {
     connection = await pool.getConnection();
 
     const result = await connection.query(
-      'INSERT INTO Grupos (group_id,nome,admin,criado_em) VALUES (?,?,?,NOW())',
-      [group_ID,groupName,groupAdmin]
+      'INSERT INTO Grupos (group_id,nome,admin,criado_em) VALUES (UUID(),?,?,NOW())',
+      [groupName,groupAdmin]
     );
 
-    return { success: true, insertId: result.insertId };
+    return { success: true, insertId: result.insertId.toString() };
   } catch (error) {
     console.error('Error inserting data:', error);
     throw createError({

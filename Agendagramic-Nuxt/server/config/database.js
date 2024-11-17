@@ -6,8 +6,8 @@ const pool = mariadb.createPool({
   user: 'root',
   password: '29052672', 
   database: 'agendagramic',
-  connectionLimit: 1,      // Limite de conexões reduzido
-  acquireTimeout: 5000,    // Tempo limite menor para teste, 5 segundos
+  connectionLimit: 100,      // Limite de conexões reduzido
+  acquireTimeout: 50000,    // Tempo limite menor para teste, 5 segundos
 });
 
 export default pool;

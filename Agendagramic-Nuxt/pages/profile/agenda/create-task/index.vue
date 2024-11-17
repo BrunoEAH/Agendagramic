@@ -1,21 +1,14 @@
 <template>
-  <div class="min-h-screen bg-dark-gray p-6 flex flex-col justify-between border-white border-2">
-    <div class="bg-gradient-green-inverse shadow-green min-h-screen flex flex-col justify-between">
-      <!-- Cabeçalho da página com AgendaGramic -->
-      <div class="flex justify-between items-center mb-6">
-        <!-- Título da página -->
-        <div>
-          <h1 class="text-4xl font-bold text-white">Criar Nova Tarefa</h1>
-        </div>
+  <div class="min-h-screen bg-gradient-green-inverse flex flex-col justify-between">
+    <!-- Cabeçalho -->
+    <header class="flex justify-between items-center px-8 py-4">
+      <h1 class="text-4xl font-bold text-white">Criar Nova Tarefa</h1>
+      <h3 class="text-3xl font-semibold text-white">AgendaGramic</h3>
+    </header>
 
-        <!-- Nome do Projeto com fonte maior -->
-        <div class="text-center">
-          <h3 class="text-3xl font-semibold text-white">AgendaGramic</h3>
-        </div>
-      </div>
-
-      <!-- Formulário de criação de tarefa -->
-      <div class="bg-medium-gray p-6 rounded-lg shadow-md border-lighter-gray border-2 mb-6">
+    <!-- Formulário de criação de tarefa -->
+    <main class="flex flex-col items-center flex-1 px-6">
+      <div class="bg-medium-gray shadow-green w-full max-w-4xl rounded-3xl p-8 border-white border-2">
         <h2 class="text-2xl font-semibold mb-4 text-white">Detalhes da Tarefa</h2>
 
         <!-- Nome da Tarefa -->
@@ -53,6 +46,20 @@
           />
         </div>
 
+        <!-- Prioridade da Tarefa -->
+        <div class="mb-4">
+          <label for="taskPriority" class="block text-white text-sm font-bold mb-2">Prioridade da Tarefa</label>
+          <select
+            v-model="taskPriority"
+            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            id="taskPriority"
+          >
+            <option value="alta">Alta</option>
+            <option value="media">Média</option>
+            <option value="baixa">Baixa</option>
+          </select>
+        </div>
+
         <!-- Status da Tarefa -->
         <div class="mb-4">
           <label for="taskStatus" class="block text-white text-sm font-bold mb-2">Status da Tarefa</label>
@@ -67,36 +74,7 @@
           </select>
         </div>
 
-        <!-- Prioridade da Tarefa -->
-                <div class="mb-4">
-          <label for="taskPriority" class="block text-white text-sm font-bold mb-2">Prioridade da Tarefa</label>
-          <select
-            v-model="taskPriority"
-            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-            id="taskPriority"
-          >
-            <option value="alta">Alta</option>
-            <option value="media">Média</option>
-            <option value="baixa">Baixa</option>
-          </select>
-        </div>
-
-        <!-- Grupo para Tarefa -->
-                <div class="mb-4">
-          <label for="taskGroup" class="block text-white text-sm font-bold mb-2">Grupo da Tarefa</label>
-          <select
-            v-model="taskGroup"
-            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-            id="taskGroup"
-          >
-            <option :value="0">Nenhum</option>
-            <option :value="1">Grupo 1</option>
-            <option :value="2">Grupo 2</option>
-          </select>
-        </div>
-
-
-        <!-- Descrição da Tarefa -->
+        <!-- Responsáveis -->
         <div class="mb-4">
           <label for="taskMembers" class="block text-white text-sm font-bold mb-2">Responsáveis pela tarefa</label>
           <textarea
@@ -108,145 +86,169 @@
           ></textarea>
         </div>
 
-        <!-- Botão para criar a tarefa -->
-        <button
-          @click="createTask"
-          class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline border-white border-2"
-        >
-          Criar Tarefa
-        </button>
-      </div>
+        <!-- Grupo -->
+        <div class="mb-4">
+          <label for="group" class="block text-white text-sm font-bold mb-2">Grupo</label>
+          <select
+            v-model="taskGroup"
+            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            id="group"
+          >
+            <option value="" disabled>Selecione um grupo</option>
+            <option v-for="group in groups" :key="group.group_id" :value="group.group_id">
+              {{ group.group_name }}
+            </option>
+          </select>
+        </div>
 
-      <!-- Botão Voltar no canto inferior esquerdo -->
-      <div class="mt-6 flex justify-start">
-        <button @click="goBack" class="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600 border-white border-2">
-          Voltar
-        </button>
+        <!-- Botões -->
+        <div class="flex justify-between items-center">
+          <button
+            @click="createTask"
+            class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full border-white border-2 transition"
+          >
+            Criar Tarefa
+          </button>
+          <button
+            @click="testDatabaseConnection"
+            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full border-white border-2 transition"
+          >
+            Testar Banco de Dados
+          </button>
+        </div>
       </div>
+    </main>
 
-      <!-- Rodapé com versão -->
-      <div class="text-center text-gray-300 mt-4">
+    <!-- Footer -->
+    <footer class="flex justify-between items-center px-8 py-4">
+      <button
+        @click="goBack"
+        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-full border-white border-2 transition"
+      >
+        Voltar
+      </button>
+      <div class="text-gray-300">
         AgendaGramic Alpha 0.0.1
       </div>
-    </div>
+    </footer>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 
-const router = useRouter();
-const route = useRoute();
-const day = route.params.id;
-
-var task_ID = 0;
 const taskName = ref('');
+const taskPriority = ref('');
 const taskDescription = ref('');
 const dueDate = ref('');
 const taskStatus = ref(0);
-const taskPriority = ref('alta');
-const taskGroup = ref(0);
-const taskCreator = "@SeuUsuario";
+const taskGroup = ref('');
 const taskMembers = ref('');
+const groups = ref([]);
+const userTelegram = ref('default_user');
 
-// Função para criar uma nova tarefa
+onMounted(() => {
+  if (process.client) {
+    const storedTelegram = localStorage.getItem('userTelegram');
+    if (storedTelegram) {
+      userTelegram.value = storedTelegram;
+    }
+  }
+  loadGroups();
+});
+
+// Carregar usuários e grupos
+const loadGroups = async () => {
+  try {
+        const response = await axios.get(`/api/getGroups?userTelegram=${userTelegram}`);
+        groups.value = response.data.groups || [];
+      } catch (error) {
+        console.error('Erro ao carregar grupos:', error);
+      }
+};
+
+// Criar tarefa no banco de dados
 const createTask = async () => {
   const newTask = {
-    task_ID: task_ID++,
     taskName: taskName.value,
     taskDescription: taskDescription.value,
     dueDate: dueDate.value,
     taskStatus: taskStatus.value,
     taskPriority: taskPriority.value,
-    taskGroup : taskGroup.value,
+    taskGroup: taskGroup.value || null,
     taskMembers: taskMembers.value,
-    taskCreator: taskCreator,
+    taskCreator: userTelegram.value,
   };
 
-  // Pega as tarefas existentes no localStorage ou cria uma nova estrutura
-  let tasksData = JSON.parse(localStorage.getItem('tasks')) || {};
-
-  // Verifica se há tarefas para o dia, se não, cria um array vazio para esse dia
-  if (!tasksData[day]) {
-    tasksData[day] = [];
-  }
-
-  // Adiciona a nova tarefa ao array do dia
-  tasksData[day].push(newTask);
-
-  // Atualiza o localStorage com os novos dados
-  localStorage.setItem('tasks', JSON.stringify(tasksData));
-
   try {
-    const { data } = await useFetch('/api/addTask', {
-      method: 'POST',
-      body: newTask,
-    });
-    message.value = 'User added successfully!';
-    console.log('Insert result:', data.value);
-      // Redireciona de volta para a página do dia
-    router.push(`/profile/agenda/day/${day}`);
+    const response = await axios.post('/api/addTask', newTask);
+    if (response.data.success) {
+      alert('Tarefa criada com sucesso!');
+      goBack();
+    } else {
+      alert('Erro ao criar a tarefa no banco de dados.');
+    }
   } catch (error) {
-    console.error('Failed to add user:', error);
-    message.value = 'Failed to add user.';
+    console.error('Erro ao criar tarefa:', error);
   }
-
-
 };
 
-// Função para voltar à página de agenda
+// Testar conexão com o banco de dados
+const testDatabaseConnection = async () => {
+  try {
+    const response = await axios.get('/api/getTasks');
+    if (response.status === 200) {
+      alert('Conexão com o banco de dados bem-sucedida!');
+    } else {
+      alert('Erro ao conectar ao banco de dados.');
+    }
+  } catch (error) {
+    console.error('Erro ao testar conexão com o banco:', error);
+    alert('Erro ao conectar ao banco de dados.');
+  }
+};
+
+// Voltar para a página anterior
 const goBack = () => {
-  router.push(`/profile/agenda/day/${day}`);
+  window.history.back();
 };
+
 </script>
 
 <style scoped>
-/* Fundo cinza escuro */
-.bg-dark-gray {
-  background-color: #1e1e1e;
-}
-
-/* Degradê verde de baixo para cima */
+/* Gradiente e fundos */
 .bg-gradient-green-inverse {
-  background: linear-gradient(to top, #32cd32, transparent 50%);
+  background: linear-gradient(to bottom, #32cd32, #1e1e1e);
+}
+.bg-medium-gray {
+  background-color: #3c3c3c;
+}
+.bg-light-gray {
+  background-color: #2e2e2e;
 }
 
-/* Sombra verde */
+/* Sombra */
 .shadow-green {
   box-shadow: 0 10px 15px rgba(50, 205, 50, 0.3);
 }
 
-/* Contêiner com cor cinza médio */
-.bg-medium-gray {
-  background-color: #3c3c3c;
-}
-
-.border-lighter-gray {
-  border-color: #5a5a5a;
-}
-
-/* Campos de entrada */
-.bg-light-gray {
-  background-color: #2e2e2e;
-  color: white;
-}
-
-/* Botões arredondados */
+/* Botões */
 button {
   transition: background-color 0.3s;
-  border-radius: 9999px;
+}
+.bg-green-500 {
+  background-color: #32cd32;
+}
+.bg-green-600:hover {
+  background-color: #28a745;
+}
+.bg-blue-500:hover {
+  background-color: #2563eb;
 }
 
-/* Estilo de sombra */
-.shadow-md {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+/* Bordas */
+.rounded-3xl {
+  border-radius: 1.5rem;
 }
-
-/* Estilo para o ícone do calendário dentro do campo de data */
-input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1); /* Inverte as cores para branco */
-  opacity: 0.8;
-}
-
 </style>
