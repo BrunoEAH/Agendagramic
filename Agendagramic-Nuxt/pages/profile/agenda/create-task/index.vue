@@ -46,6 +46,20 @@
           />
         </div>
 
+        <!-- Prioridade da Tarefa -->
+        <div class="mb-4">
+          <label for="taskPriority" class="block text-white text-sm font-bold mb-2">Prioridade da Tarefa</label>
+          <select
+            v-model="taskPriority"
+            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            id="taskPriority"
+          >
+            <option value="alta">Alta</option>
+            <option value="media">Média</option>
+            <option value="baixa">Baixa</option>
+          </select>
+        </div>
+
         <!-- Status da Tarefa -->
         <div class="mb-4">
           <label for="taskStatus" class="block text-white text-sm font-bold mb-2">Status da Tarefa</label>
@@ -62,17 +76,14 @@
 
         <!-- Responsáveis -->
         <div class="mb-4">
-          <label for="responsibles" class="block text-white text-sm font-bold mb-2">Responsáveis</label>
-          <select
+          <label for="taskMembers" class="block text-white text-sm font-bold mb-2">Responsáveis pela tarefa</label>
+          <textarea
             v-model="taskMembers"
-            multiple
             class="bg-light-gray shadow appearance-none border rounded-lg w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-            id="responsibles"
-          >
-            <option v-for="user in users" :key="user.userTelegram" :value="user.userTelegram">
-              {{ user.name }}
-            </option>
-          </select>
+            id="taskMembers"
+            rows="4"
+            placeholder="Escreva o nome dos responsáveis"
+          ></textarea>
         </div>
 
         <!-- Grupo -->
@@ -84,8 +95,8 @@
             id="group"
           >
             <option value="" disabled>Selecione um grupo</option>
-            <option v-for="group in groups" :key="group.groupId" :value="group.groupId">
-              {{ group.groupName }}
+            <option v-for="group in groups" :key="group.group_id" :value="group.group_id">
+              {{ group.group_name }}
             </option>
           </select>
         </div>
@@ -128,41 +139,41 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 const taskName = ref('');
+const taskPriority = ref('');
 const taskDescription = ref('');
 const dueDate = ref('');
 const taskStatus = ref(0);
 const taskGroup = ref('');
-const taskMembers = ref([]);
-const users = ref([]);
+const taskMembers = ref('');
 const groups = ref([]);
-const userTelegram = localStorage.getItem('userTelegram') || 'default_user';
+const userTelegram = ref('');
+
+onMounted(() => {
+  loadGroups();
+});
 
 // Carregar usuários e grupos
-const loadUsersAndGroups = async () => {
+const loadGroups = async () => {
   try {
-    const [usersResponse, groupsResponse] = await Promise.all([
-      axios.get('/api/getUsers'),
-      axios.get('/api/getGroups'),
-    ]);
-
-    users.value = usersResponse.data.users || [];
-    groups.value = groupsResponse.data.groups || [];
-  } catch (error) {
-    console.error('Erro ao carregar usuários ou grupos:', error);
-  }
+        const userTelegram = localStorage.getItem('userTelegram') || 'default_user';
+        const response = await axios.get(`/api/getGroups?userTelegram=${userTelegram}`);
+        groups.value = response.data.groups || [];
+      } catch (error) {
+        console.error('Erro ao carregar grupos:', error);
+      }
 };
 
 // Criar tarefa no banco de dados
 const createTask = async () => {
   const newTask = {
-    taskId: crypto.randomUUID(),
     taskName: taskName.value,
     taskDescription: taskDescription.value,
     dueDate: dueDate.value,
     taskStatus: taskStatus.value,
+    taskPriority: taskPriority.value,
     taskGroup: taskGroup.value,
     taskMembers: taskMembers.value,
-    taskCreator: userTelegram,
+    taskCreator: userTelegram.value,
   };
 
   try {
@@ -198,10 +209,7 @@ const goBack = () => {
   window.history.back();
 };
 
-// Carregar usuários e grupos ao montar o componente
-onMounted(() => {
-  loadUsersAndGroups();
-});
+
 </script>
 
 <style scoped>

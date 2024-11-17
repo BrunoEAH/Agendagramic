@@ -91,7 +91,6 @@
 
 <script setup>
 import { ref } from 'vue';
-import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -102,8 +101,7 @@ const newTeamName = ref('');
 // Estado para armazenar as equipes e seus membros
 const teams = ref([]);
 
-var group_ID = uuidv4();
-const groupAdmin = "@BayernDesSammamia";
+const groupAdmin = localStorage.getItem('userTelegram') || 'default_user';
 
 // Função para redirecionar à página inicial (logado)
 const goToHome = () => {
@@ -118,21 +116,23 @@ const goBack = () => {
 // Função para criar uma nova equipe
 const createTeam = async () => {
   if (newTeamName.value) {
-    const newTeam = { group_ID, groupName: newTeamName.value, groupAdmin };
+    const newTeam = {groupName: newTeamName.value, groupAdmin };
 
     try {
-      const { data, error } = await $fetch('/api/addGroup', {
+      const response = await $fetch('/api/addGroup', {
         method: 'POST',
         body: newTeam,
       });
 
-      if (error) {
-        throw new Error(error); // Handle fetch error
-      }
+      console.log('Response:', response);
 
-      teams.value.push({ name: newTeamName.value, members: [] });
-      newTeamName.value = ''; // Limpa o campo após criar a equipe
-      console.log('Grupo adicionado:', data.value);
+      if (response.success) {
+        teams.value.push({ name: newTeamName.value, members: [] });
+        newTeamName.value = ''; // Clear the input field after team creation
+        console.log('Grupo adicionado:', response); // Log the response data
+      } else {
+        throw new Error('Erro ao adicionar o grupo.'); // If not successful, throw error
+      }
     } catch (error) {
       console.error('Erro ao adicionar o grupo:', error);
       alert('Erro ao adicionar o grupo.');
