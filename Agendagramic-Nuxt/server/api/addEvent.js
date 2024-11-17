@@ -4,7 +4,7 @@ import pool from '~/server/config/database';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event); 
-  const { event_ID,eventTitle,eventDescription,eventBeginDateTime,eventEndDateTime,eventGroup,eventCreator,eventStatus} = body;
+  const {eventTitle,eventDescription,eventBeginDateTime,eventEndDateTime,eventGroup,eventCreator,eventStatus} = body;
 
   let connection;
   try {
@@ -12,8 +12,8 @@ export default defineEventHandler(async (event) => {
     connection = await pool.getConnection();
 
     const result = await connection.query(
-      'INSERT INTO Eventos (event_id,titulo,info_evento,comeco,fim,grupo_id,criado_por,esta_completa,criada_em) VALUES (?,?,?,?,?,?,?,?,NOW())',
-      [event_ID,eventTitle,eventDescription,eventBeginDateTime,eventEndDateTime,eventGroup,eventCreator,eventStatus]
+      'INSERT INTO Eventos (event_id,titulo,info_evento,comeco,fim,grupo_id,criado_por,esta_completa,criada_em) VALUES (UUID(),?,?,?,?,?,?,?,NOW())',
+      [eventTitle,eventDescription,eventBeginDateTime,eventEndDateTime,eventGroup,eventCreator,eventStatus]
     );
 
     return { success: true, insertId: result.insertId };

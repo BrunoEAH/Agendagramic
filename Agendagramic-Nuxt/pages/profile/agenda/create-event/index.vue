@@ -113,8 +113,9 @@
             class="bg-input-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
           >
             <option :value="0">Nenhum</option>
-            <option :value="1">Grupo 1</option>
-            <option :value="2">Grupo 2</option>
+            <option v-for="group in groups" :key="group.group_id" :value="group.group_id">
+            {{ group.group_name }}
+            </option>
           </select>
         </div>
 
@@ -170,6 +171,24 @@ const eventBeginTime = ref('');
 const eventEndTime = ref('');
 const eventStatus = ref(0);
 const eventGroup = ref(0);
+const userTelegram = ref('default_user');
+
+
+onMounted(async () => {
+  if (process.client) {
+    const storedTelegram = localStorage.getItem('userTelegram');
+    if (storedTelegram) {
+      userTelegram.value = storedTelegram;
+    }
+  }
+  try {
+    const response = await axios.get(`/api/getGroups?userTelegram=${telegramUser.value}`);
+    groups.value = response.data.groups;
+  } catch (error) {
+    console.error('Error fetching groups:', error);
+  }
+});
+
 
 const createEvent = () => {
   if (!showField.value) eventEndDate.value = eventBeginDate.value;
@@ -184,6 +203,7 @@ const createEvent = () => {
     eventEndDateTime,
     eventStatus: eventStatus.value,
     eventGroup: eventGroup.value,
+    eventCreator: userTelegram.value
   };
 
   const eventsData = JSON.parse(localStorage.getItem('events')) || {};
