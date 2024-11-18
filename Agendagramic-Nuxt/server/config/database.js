@@ -10,4 +10,13 @@ const pool = mariadb.createPool({
   acquireTimeout: 50000,    // Tempo limite menor para teste, 5 segundos
 });
 
+pool.getConnection()
+  .then(conn => {
+    console.log("Conexão bem-sucedida!");
+    conn.release(); // Libere a conexão após o teste
+  })
+  .catch(err => {
+    console.error("Erro ao conectar ao banco de dados:", err);
+  });
+
 export default pool;

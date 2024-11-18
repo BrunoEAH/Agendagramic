@@ -1,8 +1,7 @@
 <template>
   <div class="min-h-screen bg-gradient-green-inverse flex flex-col justify-between">
-    <!-- Barra superior com botões de navegação e Nome do Projeto -->
+    <!-- Header -->
     <header class="flex justify-between items-start px-8 py-4">
-      <!-- Botões de "Página Inicial" e "Voltar" -->
       <div class="flex flex-col space-y-2">
         <button 
           @click="goToHome" 
@@ -15,170 +14,200 @@
           Voltar
         </button>
       </div>
-      <!-- Nome do projeto -->
       <h1 class="text-3xl font-bold text-white">AgendaGramic</h1>
     </header>
 
-    <!-- Quadro de Desenvolvimento -->
+    <!-- Main Content -->
     <main class="flex flex-col items-center px-6">
       <div class="bg-white p-4 rounded-3xl shadow-md w-full max-w-md text-center mb-6">
-        <p class="text-lg font-semibold text-black">*Em Desenvolvimento*</p>
+        <p class="text-lg font-semibold text-black">Gerenciamento de Equipes</p>
       </div>
 
-      <!-- Conteúdo Principal da Página de Gerenciamento de Equipe -->
+      <!-- Groups Management -->
       <div class="flex flex-col space-y-6 max-w-lg w-full">
-        <!-- Caixa de Gerenciar Equipes -->
+        <!-- Existing Groups -->
         <section class="bg-medium-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2">
-          <h2 class="text-2xl font-semibold text-white mb-4">Equipes Atuais</h2>
-          <div v-if="teams.length" class="space-y-4">
+          <h2 class="text-2xl font-semibold text-white mb-4">Grupos Atuais</h2>
+          <div v-if="teams.length > 0" class="space-y-4">
             <div 
               v-for="(team, index) in teams" 
-              :key="index" 
+              :key="team.group_id" 
               class="bg-light-gray p-4 rounded-3xl border-white border-2"
             >
-              <h3 class="text-xl font-semibold text-black mb-2">{{ team.name }}</h3>
-              <ul class="space-y-2">
-                <li 
-                  v-for="(member, memberIndex) in team.members" 
-                  :key="memberIndex" 
-                  class="flex justify-between items-center bg-gray-300 p-2 rounded-full"
-                >
-                  <span class="text-black">{{ member }}</span>
-                  <button 
-                    @click="removeMember(index, memberIndex)" 
-                    class="bg-red-500 text-white py-1 px-2 rounded-full transition hover:bg-red-600"
-                  >
-                    Remover
-                  </button>
-                </li>
+              <h3 class="text-xl font-semibold text-black mb-2">{{ team.group_name }}</h3>
+              <ul>
+                <li class="text-gray-400">Grupo ID: {{ team.group_id }}</li>
               </ul>
-              <button 
-                @click="addMemberToTeam(index)" 
-                class="bg-green-500 text-white py-2 px-4 mt-4 rounded-full transition hover:bg-green-600 w-full"
-              >
-                Adicionar Membro
-              </button>
             </div>
           </div>
-          <p v-else class="text-gray-300">Nenhuma equipe criada ainda.</p>
+          <p v-else class="text-gray-300">Nenhum grupo criado ainda.</p>
         </section>
 
-        <!-- Caixa para Criar Nova Equipe -->
+        <!-- Create New Group -->
         <section class="bg-medium-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2">
-          <h2 class="text-2xl font-semibold text-white mb-4">Criar Nova Equipe</h2>
+          <h2 class="text-2xl font-semibold text-white mb-4">Criar Novo Grupo</h2>
           <input
-            v-model="newTeamName"
+            v-model="newGroupName"
             class="bg-light-gray text-black py-2 px-4 mb-4 rounded-full border-white border-2 w-full"
             type="text"
-            placeholder="Digite o nome da equipe"
+            placeholder="Digite o nome do grupo"
           />
           <button 
             @click="createTeam" 
             class="bg-light-gray text-black py-2 px-4 rounded-full border-white border-2 transition hover:bg-green-500 w-full"
           >
-            Criar Equipe
+            Criar Grupo
           </button>
+        </section>
+
+        <!-- Test Buttons -->
+        <section class="bg-medium-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2">
+          <h2 class="text-2xl font-semibold text-white mb-4">Testar Funcionalidades</h2>
+          <div class="flex flex-col space-y-4">
+            <button 
+              @click="testConnection" 
+              class="bg-blue-500 text-white py-2 px-4 rounded-full border-white border-2 transition hover:bg-blue-600 w-full"
+            >
+              Testar Conexão com Grupos
+            </button>
+            <button 
+              @click="manualLoadGroups" 
+              class="bg-yellow-500 text-white py-2 px-4 rounded-full border-white border-2 transition hover:bg-yellow-600 w-full"
+            >
+              Carregar Grupos Manualmente
+            </button>
+          </div>
         </section>
       </div>
     </main>
 
-    <!-- Rodapé com a versão do site -->
     <footer class="text-center text-gray-300 py-4">
-      AgendaGramic Alpha 0.0.1
+      AgendaGramic Beta 0.1
     </footer>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-
-// Estado para armazenar o nome da nova equipe
-const newTeamName = ref('');
-
-// Estado para armazenar as equipes e seus membros
+const newGroupName = ref('');
 const teams = ref([]);
+const groupAdmin = ref('default_user');
 
-const groupAdmin = localStorage.getItem('userTelegram') || 'default_user';
+// Garantir que userTelegram está definido corretamente
+if (process.client) {
+  const savedUserTelegram = localStorage.getItem('userTelegram');
+  if (savedUserTelegram) {
+    groupAdmin.value = savedUserTelegram;
+  } else {
+    alert('UserTelegram não encontrado. Certifique-se de fazer login.');
+    localStorage.setItem('userTelegram', '@teste'); // Ajuste conforme necessário
+    groupAdmin.value = '@teste';
+  }
+  console.log('Valor de groupAdmin:', groupAdmin.value);
+}
 
-// Função para redirecionar à página inicial (logado)
-const goToHome = () => {
-  router.push('/profile');
+// Navegar para a página inicial
+const goToHome = () => router.push('/profile');
+
+// Voltar para a página anterior
+const goBack = () => router.back();
+
+// Carregar Grupos
+const loadGroups = async () => {
+  try {
+    console.log('Iniciando carregamento dos grupos...');
+    const response = await $fetch('/api/getGroups', {
+      method: 'GET',
+      params: { userTelegram: groupAdmin.value },
+    });
+
+    console.log('Resposta completa da API:', response);
+
+    if (response.groups && Array.isArray(response.groups)) {
+      teams.value = response.groups.map((group) => ({
+        group_id: group.group_id,
+        group_name: group.group_name,
+      }));
+      console.log('Grupos formatados para exibição:', teams.value);
+    } else {
+      teams.value = [];
+      console.warn('Nenhum grupo encontrado ou formato inesperado:', response.groups);
+    }
+  } catch (error) {
+    console.error('Erro ao carregar grupos:', error.message, error);
+    alert('Erro ao carregar grupos. Verifique sua conexão.');
+  }
 };
 
-// Função para voltar para a página anterior
-const goBack = () => {
-  router.back();
-};
-
-// Função para criar uma nova equipe
+// Criar Novo Grupo
 const createTeam = async () => {
-  if (newTeamName.value) {
-    const newTeam = {groupName: newTeamName.value, groupAdmin };
+  if (!newGroupName.value.trim()) {
+    alert('Por favor, insira um nome válido para o grupo.');
+    return;
+  }
 
-    try {
-      const response = await $fetch('/api/addGroup', {
-        method: 'POST',
-        body: newTeam,
-      });
+  try {
+    console.log('Criando novo grupo...');
+    const response = await $fetch('/api/addGroup', {
+      method: 'POST',
+      body: { groupName: newGroupName.value, groupAdmin: groupAdmin.value },
+    });
 
-      console.log('Response:', response);
+    console.log('Resposta da API ao criar grupo:', response);
 
-      if (response.success) {
-        teams.value.push({ name: newTeamName.value, members: [] });
-        newTeamName.value = ''; // Clear the input field after team creation
-        console.log('Grupo adicionado:', response); // Log the response data
-      } else {
-        throw new Error('Erro ao adicionar o grupo.'); // If not successful, throw error
-      }
-    } catch (error) {
-      console.error('Erro ao adicionar o grupo:', error);
-      alert('Erro ao adicionar o grupo.');
+    if (response.success) {
+      alert('Grupo criado com sucesso!');
+      newGroupName.value = ''; // Limpar entrada
+      await loadGroups(); // Recarregar lista de grupos
+    } else {
+      alert('Erro ao criar o grupo.');
     }
-  } else {
-    alert('Por favor, insira um nome válido para a equipe.');
+  } catch (error) {
+    console.error('Erro ao criar grupo:', error.message, error);
+    alert('Erro ao criar o grupo. Tente novamente mais tarde.');
   }
 };
 
-// Função para adicionar um membro a uma equipe
-const addMemberToTeam = async (teamIndex) => {
-  const email = prompt('Digite o email do membro:');
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex para email
-  if (emailRegex.test(email)) {
-    try {
-      const response = await fetch(`/api/checkEmail?email=${encodeURIComponent(email)}`);
-      const data = await response.json();
+// Testar Conexão
+const testConnection = async () => {
+  try {
+    const response = await $fetch('/api/getGroups', {
+      method: 'GET',
+      params: { userTelegram: groupAdmin.value },
+    });
 
-      if (data.exists) {
-        teams.value[teamIndex].members.push(email);
-        alert('Membro adicionado com sucesso!');
-      } else {
-        alert('Email não encontrado no banco de dados. Por favor, verifique o email.');
-      }
-    } catch (error) {
-      console.error('Erro ao checar o email:', error);
-      alert('Erro ao verificar o email. Tente novamente mais tarde.');
+    if (response.groups) {
+      alert('Conexão com a tabela de grupos bem-sucedida!');
+    } else {
+      alert('Não foi possível conectar à tabela de grupos.');
     }
-  } else {
-    alert('Por favor, insira um email válido.');
+  } catch (error) {
+    console.error('Erro ao testar conexão:', error.message, error);
+    alert('Erro ao conectar à tabela de grupos.');
   }
 };
 
-// Função para remover um membro da equipe
-const removeMember = (teamIndex, memberIndex) => {
-  teams.value[teamIndex].members.splice(memberIndex, 1);
+// Carregar Grupos Manualmente
+const manualLoadGroups = async () => {
+  console.log('Carregando grupos manualmente...');
+  await loadGroups();
+  alert(`Grupos carregados manualmente: ${teams.value.length}`);
 };
+
+// Carregar grupos ao montar o componente
+onMounted(() => {
+  console.log('Montando o componente e carregando grupos...');
+  loadGroups();
+});
 </script>
 
 <style scoped>
-/* Fundo com gradiente de baixo para cima */
 .bg-gradient-green-inverse {
   background: linear-gradient(to bottom, #32cd32, #1e1e1e);
 }
-
-/* Estilos gerais */
 .bg-medium-gray {
   background-color: #3c3c3c;
 }
@@ -188,34 +217,25 @@ const removeMember = (teamIndex, memberIndex) => {
 .border-lighter-gray {
   border-color: #5a5a5a;
 }
-.text-gray-300 {
-  color: #d1d5db;
-}
-
-/* Botões */
 button {
   transition: background-color 0.3s, border-color 0.3s;
 }
 .bg-green-500:hover {
   background-color: #32cd32;
 }
+.bg-blue-500:hover {
+  background-color: #2563eb;
+}
+.bg-yellow-500:hover {
+  background-color: #facc15;
+}
 .bg-red-500:hover {
   background-color: #dc2626;
 }
-
-/* Bordas */
 .rounded-full {
   border-radius: 9999px;
 }
 .rounded-3xl {
   border-radius: 1.5rem;
-}
-
-/* Sombra */
-.shadow-green {
-  box-shadow: 0 10px 15px rgba(50, 205, 50, 0.3);
-}
-.shadow-md {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 </style>

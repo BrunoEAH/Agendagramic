@@ -1,19 +1,43 @@
-import { defineEventHandler, getQuery } from 'h3';
-import pool from '../config/database.js';
+import pool from '~/server/config/database';
 
 export default defineEventHandler(async (event) => {
-  const { userTelegram } = getQuery(event);
-  let connection;
+  const { userTelegram, selectedDate } = getQuery(event);
 
+  if (!userTelegram || !selectedDate) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Parâmetros obrigatórios ausentes',
+    });
+  }
+
+  let connection;
   try {
-    connection = await pool.getConnection(); // Obtenha uma conexão do pool
-    const [events] = await connection.query(
-      'SELECT event_id, titulo AS name,info_evento AS description,comeco AS date_begin,fim AS date_end, group_id AS id_group, criada_em AS createdAt FROM Eventos WHERE criado_por = ?',
-      [userTelegram]
-    );
-    return { success: true, events };
+    connection = await pool.getConnection();
+    console.log('Conexão com o banco de dados estabelecida.');
+
+    const query = `
+      SELECT 
+        event_id, titulo, descricao, local, data, horario, criado_por, criado_em
+      FROM Eventos
+      WHERE criado_por = ? AND DATE(data) = ?
+    `;
+
+    const [events] = await connection.query(query, [userTelegram, selectedDate]);
+
+    console.log('Eventos retornados do banco de dados:', events);
+
+    return { success: true, events: events || [] }; // Garante um array vazio
   } catch (error) {
     console.error('Erro ao buscar eventos:', error);
-    throw createError({ statusCode: 500, message: 'Erro ao buscar eventos.' });
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Erro ao buscar eventos.',
+      data: error.message,
+    });
+  } finally {
+    if (connection) {
+      connection.release();
+      console.log('Conexão com o banco de dados liberada.');
+    }
   }
 });
