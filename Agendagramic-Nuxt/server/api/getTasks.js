@@ -2,13 +2,23 @@ import { defineEventHandler, getQuery } from 'h3';
 import pool from '../config/database.js';
 
 export default defineEventHandler(async (event) => {
-  const { userTelegram } = getQuery(event);
+  const query = getQuery(event);
+  const userTelegram = query.userTelegram;
+  
   let connection;
 
+
+  if (!userTelegram) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'UserTelegram is missing',
+    });
+  }
+
   try {
-    connection = await pool.getConnection(); // Obtenha uma conexão do pool
+    connection = await pool.getConnection();
     const [tasks] = await connection.query(
-      'SELECT task_id, titulo AS name, info_task AS description, data, esta_completa, prioridade FROM Tarefas WHERE criado_por = ?',
+      'SELECT task_id, titulo AS name, info_task AS description, data as date, esta_completa AS status, prioridade AS priority FROM Tarefas WHERE criado_por = ?',
       [userTelegram]
     );
     return { success: true, tasks };
@@ -16,6 +26,6 @@ export default defineEventHandler(async (event) => {
     console.error('Erro ao buscar tarefas:', error);
     throw createError({ statusCode: 500, message: 'Erro ao buscar tarefas.' });
   } finally {
-    if (connection) connection.release(); // Libere a conexão após o uso
+    if (connection) connection.release(); 
   }
 });
