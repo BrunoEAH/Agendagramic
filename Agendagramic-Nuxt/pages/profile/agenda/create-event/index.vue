@@ -112,8 +112,7 @@
             id="eventGroup"
             class="bg-input-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
           >
-            <option :value="0">Nenhum</option>
-            <option v-for="group in groups" :key="group.group_id" :value="group.group_id">
+            <option v-for="group in eventGroups" :key="group.group_id" :value="group.group_id">
             {{ group.group_name }}
             </option>
           </select>
@@ -170,7 +169,7 @@ const eventEndDate = ref('');
 const eventBeginTime = ref('');
 const eventEndTime = ref('');
 const eventStatus = ref(0);
-const eventGroup = ref(0);
+const eventGroup = ref([]); 
 const userTelegram = ref('default_user');
 
 
@@ -181,16 +180,20 @@ onMounted(async () => {
       userTelegram.value = storedTelegram;
     }
   }
+  loadGroups();
+});
+
+const loadGroups = async () => {
   try {
-    const response = await axios.get(`/api/getGroups?userTelegram=${telegramUser.value}`);
-    groups.value = response.data.groups;
+    const response = await axios.get(`/api/getGroups?userTelegram=${userTelegram.value}`);
+    eventGroup.value = response.data.groups || [];
   } catch (error) {
     console.error('Error fetching groups:', error);
   }
-});
+};
 
 
-const createEvent = () => {
+const createEvent = async () => {
   if (!showField.value) eventEndDate.value = eventBeginDate.value;
 
   const eventBeginDateTime = `${eventBeginDate.value} ${eventBeginTime.value}`;
@@ -202,20 +205,25 @@ const createEvent = () => {
     eventBeginDateTime,
     eventEndDateTime,
     eventStatus: eventStatus.value,
-    eventGroup: eventGroup.value,
+    eventGroup: eventGroup.value || null,
     eventCreator: userTelegram.value
   };
 
-  const eventsData = JSON.parse(localStorage.getItem('events')) || {};
-  if (!eventsData[day]) eventsData[day] = [];
-  eventsData[day].push(newEvent);
-  localStorage.setItem('events', JSON.stringify(eventsData));
-
-  router.push(`/profile/agenda/day/${day}`);
+  try {
+    const response = await axios.post('/api/addEvent', newEvent);
+    if (response.data.success) {
+      alert('Evento criado com sucesso!');
+      goBack();
+    } else {
+      alert('Erro ao criar o evento no banco de dados.');
+    }
+  } catch (error) {
+    console.error('Erro ao criar evento:', error);
+  }
 };
 
 const goBack = () => {
-  router.push(`/profile/agenda/day/${day}`);
+  router.push(`/profile/agenda/`);
 };
 
 const testConnection = async () => {
