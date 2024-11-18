@@ -157,7 +157,9 @@ const goBack = () => {
 // Função para criar uma nova equipe
 const createTeam = async () => {
   if (newTeamName.value) {
-    const newTeam = {groupName: newTeamName.value, groupAdmin };
+    const userTelegram = groupAdmin.value;
+
+    const newTeam = {groupName: newTeamName.value, userTelegram };
 
     try {
       const response = await $fetch('/api/addGroup', {

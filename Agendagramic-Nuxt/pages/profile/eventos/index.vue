@@ -104,8 +104,9 @@ const loadEvents = async () => {
 // Função para testar a conexão com o banco de dados
 const testConnection = async () => {
   try {
-    const response = await axios.get('/api/getEvents', {
-      params: { userTelegram: 'test_user' }, // Usuário fictício para teste
+    const userTelegram = user.value;
+    const response = await axios.get('/api/getEventsName', {
+      params: { userTelegram: userTelegram }, // Usuário fictício para teste
     });
     if (response.status === 200) {
       if (response.data.events && response.data.events.length > 0) {
