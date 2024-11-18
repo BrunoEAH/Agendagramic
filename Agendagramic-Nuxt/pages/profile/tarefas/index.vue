@@ -11,17 +11,23 @@
         </header>
         <div class="bg-dark-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2 mb-6">
           <h2 class="text-2xl font-semibold text-white mb-4 text-center">Tarefas do Usuário</h2>
-          <div v-if="tasks.length > 0" class="space-y-4">
+          <div v-if="Usertasks.length > 0" class="space-y-4">
             <div
-              v-for="(task, index) in tasks"
+              v-for="(task, index) in Usertasks"
               :key="index"
               class="p-4 rounded-lg bg-light-gray shadow-lg"
             >
               <h3 class="text-xl font-semibold text-white">{{ task.name }}</h3>
               <p class="text-gray-300">{{ task.description }}</p>
-              <p class="text-gray-400 text-sm">Prioridade: {{ task.prioridade }}</p>
-              <p class="text-gray-400 text-sm">Data: {{ new Date(task.data).toLocaleString() }}</p>
-              <p class="text-gray-400 text-sm">Completa: {{ task.esta_completa ? 'Sim' : 'Não' }}</p>
+              <p class="text-gray-400 text-sm">Prioridade: {{ task.priority }}</p>
+              <p class="text-gray-400 text-sm">Data: {{ new Date(task.date).toLocaleString() }}</p>
+              <p class="text-gray-400 text-sm">
+              Status: 
+              <span v-if="task.status === 0">Pendente</span>
+              <span v-else-if="task.status === 1">Em Progresso</span>
+              <span v-else-if="task.status === 2">Completa</span>
+              <span v-else>Desconhecido</span>
+            </p>
             </div>
           </div>
           <div v-else class="text-center">
@@ -63,19 +69,41 @@ import { useRouter } from 'vue-router';
 import axios from 'axios';
 
 const router = useRouter();
-const tasks = ref([]);
+const Usertasks = ref([]);
+const user = ref('default_user');
+
 
 // Função para carregar tarefas do backend
 const loadTasks = async () => {
   try {
-    const response = await axios.get('/api/getTasks', {
-      params: { userTelegram: localStorage.getItem('userTelegram') },
-    });
-    tasks.value = response.data.tasks || [];
+    const userTelegram = user.value;
+    const response = await $fetch(`/api/getTasks?userTelegram=${encodeURIComponent(userTelegram)}`);
+    console.log('API Response:', response);
+
+    if (response.success) {
+      let task_arr = [];
+
+      if (response.tasks && typeof response.tasks === 'object') {
+        task_arr = [response.tasks];
+      } else if (Array.isArray(response.tasks)) {
+        task_arr = response.tasks;
+      }
+
+      Usertasks.value = task_arr.map(task => ({
+        name: task.name || 'Sem nome',
+        description: task.description || 'Sem descrição', 
+        priority: task.priority || 'Não especificado',
+        date: task.date,
+        status: task.status, // Assuming 1 means completed
+      }));
+    } else {
+      console.error('Failed to fetch tasks.');
+    }
   } catch (error) {
-    console.error('Erro ao carregar tarefas:', error);
+    console.error('Error fetching tasks:', error);
   }
 };
+
 
 // Função para testar a conexão com o banco de dados usando o mesmo endpoint
 const testConnection = async () => {
@@ -116,7 +144,21 @@ const goBack = () => {
 };
 
 // Carregar tarefas ao montar o componente
-onMounted(loadTasks);
+onMounted(async () => {
+  if (process.client) {
+    const storedTelegram = localStorage.getItem('userTelegram');
+    if (storedTelegram) {
+      user.value = storedTelegram;
+      await loadTasks();
+    } else {
+      console.warn('No Telegram ID found in local storage.');
+    }
+  }
+});
+
+
+
+
 </script>
 
 <style scoped>

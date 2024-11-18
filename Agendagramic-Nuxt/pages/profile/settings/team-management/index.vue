@@ -25,6 +25,21 @@
         <p class="text-lg font-semibold text-black">*Em Desenvolvimento*</p>
       </div>
 
+        <section class="bg-medium-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2">
+    <h2 class="text-2xl font-semibold text-white mb-4">Suas Equipes</h2>
+    <div v-if="userGroups.length" class="space-y-4">
+      <div 
+        v-for="(group, index) in userGroups" 
+        :key="index" 
+        class="bg-light-gray p-4 rounded-3xl border-white border-2"
+      >
+        <h3 class="text-xl font-semibold text-black mb-2">{{ group.name }}</h3>
+      </div>
+    </div>
+    <p v-else class="text-gray-300">Você ainda não está registrado em nenhuma equipe.</p>
+  </section>
+
+
       <!-- Conteúdo Principal da Página de Gerenciamento de Equipe -->
       <div class="flex flex-col space-y-6 max-w-lg w-full">
         <!-- Caixa de Gerenciar Equipes -->
@@ -92,6 +107,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useFetch } from '#app';
 
 const router = useRouter();
 
@@ -101,7 +117,32 @@ const newTeamName = ref('');
 // Estado para armazenar as equipes e seus membros
 const teams = ref([]);
 
-const groupAdmin = localStorage.getItem('userTelegram') || 'default_user';
+const groupAdmin = ref('default_user');
+
+const userGroups = ref([]);
+
+
+const fetchUserGroups = async () => {
+  try {
+
+    const userTelegram = groupAdmin.value;
+
+    const response = await $fetch(`/api/getGroupsName?userTelegram=${encodeURIComponent(userTelegram)}`);
+    console.log('API Response:', response);
+    
+    if (response.success) {
+      const groups = Array.isArray(response.groups) ? response.groups : [response.groups];
+      userGroups.value = groups.map(group => ({
+        name: group.group_name,
+      }));
+    } else {
+      console.error('Failed to fetch user groups.');
+    }
+  } catch (error) {
+    console.error('Error fetching user groups:', error);
+  }
+};
+
 
 // Função para redirecionar à página inicial (logado)
 const goToHome = () => {
@@ -170,6 +211,20 @@ const addMemberToTeam = async (teamIndex) => {
 const removeMember = (teamIndex, memberIndex) => {
   teams.value[teamIndex].members.splice(memberIndex, 1);
 };
+
+onMounted(async () => {
+  if (process.client) {
+    const storedTelegram = localStorage.getItem('userTelegram');
+    if (storedTelegram) {
+      groupAdmin.value = storedTelegram;
+      await fetchUserGroups();
+    } else {
+      console.warn('No Telegram ID found in local storage.');
+    }
+  }
+});
+
+
 </script>
 
 <style scoped>

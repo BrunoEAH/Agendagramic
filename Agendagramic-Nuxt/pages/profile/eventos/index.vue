@@ -11,18 +11,23 @@
         </header>
         <div class="bg-dark-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2 mb-6">
           <h2 class="text-2xl font-semibold text-white mb-4 text-center">Eventos do Usuário</h2>
-          <div v-if="events.length > 0" class="space-y-4">
+          <div v-if="Userevents.length > 0" class="space-y-4">
             <div
-              v-for="(event, index) in events"
+              v-for="(event, index) in Userevents"
               :key="index"
               class="p-4 rounded-lg bg-light-gray shadow-lg"
             >
               <h3 class="text-xl font-semibold text-white">{{ event.name }}</h3>
-              <p class="text-gray-300">Local: {{ event.location }}</p>
-              <p class="text-gray-300">Data: {{ event.eventDate }}</p>
-              <p class="text-gray-300">Horário: {{ event.eventTime }}</p>
               <p class="text-gray-300">{{ event.description }}</p>
-              <p class="text-gray-400 text-sm">Criado em: {{ event.createdAt }}</p>
+              <p class="text-gray-300">Data de inicio: {{ new Date(event.date_begin).toLocaleString() }}</p>
+              <p class="text-gray-300">Data de termino: {{ new Date(event.date_end).toLocaleString() }}</p>
+              <p class="text-gray-400 text-sm">
+              Status: 
+              <span v-if="event.status === 0">Pendente</span>
+              <span v-else-if="event.status === 1">Em Progresso</span>
+              <span v-else-if="event.status === 2">Completa</span>
+              <span v-else>Desconhecido</span>
+            </p>
             </div>
           </div>
           <div v-else class="text-center">
@@ -62,17 +67,37 @@ import { useRouter } from 'vue-router';
 import axios from 'axios';
 
 const router = useRouter();
-const events = ref([]);
+const Userevents = ref([]);
+const user = ref('default_user');
 
 // Função para carregar eventos do backend
 const loadEvents = async () => {
   try {
-    const response = await axios.get('/api/getEvents', {
-      params: { userTelegram: localStorage.getItem('userTelegram') },
-    });
-    events.value = response.data.events || [];
+    const userTelegram = user.value;
+    const response = await $fetch(`/api/getEvents?userTelegram=${encodeURIComponent(userTelegram)}`);
+    console.log('API Response:', response);
+
+    if (response.success) {
+      let event_arr = [];
+
+      if (response.events && typeof response.events === 'object') {
+        event_arr = [response.events];
+      } else if (Array.isArray(response.events)) {
+        event_arr = response.events;
+      }
+
+      Userevents.value = event_arr.map(event => ({
+        name: event.name || 'Sem nome',
+        description: event.description || 'Sem descrição',
+        date_begin : event.date_begin,
+        date_end : event.date_end,
+        status: event.status, // Assuming 1 means completed
+      }));
+    } else {
+      console.error('Failed to fetch tasks.');
+    }
   } catch (error) {
-    console.error('Erro ao carregar eventos:', error);
+    console.error('Error fetching tasks:', error);
   }
 };
 
@@ -108,7 +133,18 @@ const goBack = () => {
 };
 
 // Carregar eventos ao montar o componente
-onMounted(loadEvents);
+onMounted(async () => {
+  if (process.client) {
+    const storedTelegram = localStorage.getItem('userTelegram');
+    if (storedTelegram) {
+      user.value = storedTelegram;
+      await loadEvents();
+    } else {
+      console.warn('No Telegram ID found in local storage.');
+    }
+  }
+});
+
 </script>
 
 <style scoped>
