@@ -161,7 +161,7 @@ onMounted(() => {
 // Carregar usuários e grupos
 const loadGroups = async () => {
   try {
-        const response = await axios.get(`/api/getGroups?userTelegram=${userTelegram}`);
+        const response = await axios.get(`/api/getGroupsName?userTelegram=${userTelegram}`);
         groups.value = response.data.groups || [];
       } catch (error) {
         console.error('Erro ao carregar grupos:', error);
