@@ -17,7 +17,7 @@
               :key="index"
               class="p-4 rounded-lg bg-light-gray shadow-lg"
             >
-              <h3 class="text-xl font-semibold text-white">{{ event.name }}</h3>
+              <h3 class="text-xl font-semibold text-white">{{ event.nome }}</h3>
               <p class="text-gray-300">{{ event.description }}</p>
               <p class="text-gray-300">Data de inicio: {{ new Date(event.date_begin).toLocaleString() }}</p>
               <p class="text-gray-300">Data de termino: {{ new Date(event.date_end).toLocaleString() }}</p>
@@ -28,6 +28,7 @@
               <span v-else-if="event.status === 2">Completa</span>
               <span v-else>Desconhecido</span>
             </p>
+            <p class="text-gray-300">Grupo: {{event.grupo || 'Sem Grupo'}}</p>
             </div>
           </div>
           <div v-else class="text-center">
@@ -73,32 +74,27 @@ const user = ref('default_user');
 // Função para carregar eventos do backend
 const loadEvents = async () => {
   try {
-    const userTelegram = user.value;
-    const response = await $fetch(`/api/getEvents?userTelegram=${encodeURIComponent(userTelegram)}`);
-    console.log('API Response:', response);
-
-    if (response.success) {
-      let event_arr = [];
-
-      if (response.events && typeof response.events === 'object') {
-        event_arr = [response.events];
-      } else if (Array.isArray(response.events)) {
-        event_arr = response.events;
+        const response = await axios.get(`http://localhost:5000/api/events`, {
+          params: {
+            userTelegram: user.value,
+          },
+        });
+        console.log('API Response:', response.data);
+        if (response.data.success) {
+          Userevents.value = response.data.eventos.map(event => ({
+            nome: event.name,
+            descricao: event.description, 
+            date_begin: event.date_begin,
+            date_end: event.date_end, 
+            status: event.status, 
+            grupo: event.group_name, 
+          }));
+        } else {
+          console.error('Failed to fetch groups:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
-
-      Userevents.value = event_arr.map(event => ({
-        name: event.name || 'Sem nome',
-        description: event.description || 'Sem descrição',
-        date_begin : event.date_begin,
-        date_end : event.date_end,
-        status: event.status, // Assuming 1 means completed
-      }));
-    } else {
-      console.error('Failed to fetch tasks.');
-    }
-  } catch (error) {
-    console.error('Error fetching tasks:', error);
-  }
 };
 
 // Função para testar a conexão com o banco de dados

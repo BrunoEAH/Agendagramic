@@ -6,12 +6,24 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event); 
   const {eventTitle,eventDescription,eventBeginDateTime,eventEndDateTime,eventGroup,eventCreator,eventStatus} = body;
 
-  const groupId = eventGroup && eventGroup.length > 0 ? eventGroup : null;
-
   let connection;
+  let groupId = null;
+  console.log(eventGroup);
   try {
     // Conexao
     connection = await pool.getConnection();
+
+    if(eventGroup){
+      const [groupResult] = await connection.query(
+        'SELECT group_id AS id_group FROM Grupos WHERE admin = ? AND nome = ?',
+        [eventCreator,eventGroup]
+      );
+      console.log(groupResult)
+      groupId = groupResult.id_group;
+      
+    }
+
+    console.log(groupId);
 
     const result = await connection.query(
       'INSERT INTO Eventos (event_id,titulo,info_evento,comeco,fim,group_id,criado_por,esta_completa,criada_em) VALUES (UUID(),?,?,?,?,?,?,?,NOW())',

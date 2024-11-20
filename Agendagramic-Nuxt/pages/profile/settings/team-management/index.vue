@@ -108,6 +108,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useFetch } from '#app';
+import axios from 'axios';
 
 const router = useRouter();
 
@@ -121,27 +122,26 @@ const groupAdmin = ref('default_user');
 
 const userGroups = ref([]);
 
-
-const fetchUserGroups = async () => {
-  try {
-
-    const userTelegram = groupAdmin.value;
-
-    const response = await $fetch(`/api/getGroupsName?userTelegram=${encodeURIComponent(userTelegram)}`);
-    console.log('API Response:', response);
-    
-    if (response.success) {
-      const groups = Array.isArray(response.groups) ? response.groups : [response.groups];
-      userGroups.value = groups.map(group => ({
-        name: group.group_name,
-      }));
-    } else {
-      console.error('Failed to fetch user groups.');
-    }
-  } catch (error) {
-    console.error('Error fetching user groups:', error);
-  }
+const fetchUserGroups = async() => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/groups`, {
+          params: {
+            userTelegram: groupAdmin.value,
+          },
+        });
+        console.log('API Response:', response.data);
+        if (response.data.success) {
+          userGroups.value = response.data.groups.map(group => ({
+          name: group[0],
+          }));
+        } else {
+          console.error('Failed to fetch groups:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
 };
+
 
 
 // Função para redirecionar à página inicial (logado)
@@ -156,10 +156,20 @@ const goBack = () => {
 
 // Função para criar uma nova equipe
 const createTeam = async () => {
-  if (newTeamName.value) {
-    const userTelegram = groupAdmin.value;
 
-    const newTeam = {groupName: newTeamName.value, userTelegram };
+  const storedTelegram = localStorage.getItem('userTelegram');
+
+  if (!storedTelegram) {
+    alert('Telegram ID não encontrado. Por favor, faça login.');
+    return;
+  }
+  
+  groupAdmin.value = storedTelegram; 
+  const userTelegram = groupAdmin.value;
+
+  if (newTeamName.value) {
+
+    const newTeam = {groupName: newTeamName.value, groupAdmin: userTelegram };
 
     try {
       const response = await $fetch('/api/addGroup', {
@@ -171,10 +181,10 @@ const createTeam = async () => {
 
       if (response.success) {
         teams.value.push({ name: newTeamName.value, members: [] });
-        newTeamName.value = ''; // Clear the input field after team creation
-        console.log('Grupo adicionado:', response); // Log the response data
+        newTeamName.value = '';
+        console.log('Grupo adicionado:', response); 
       } else {
-        throw new Error('Erro ao adicionar o grupo.'); // If not successful, throw error
+        throw new Error('Erro ao adicionar o grupo.');
       }
     } catch (error) {
       console.error('Erro ao adicionar o grupo:', error);
@@ -187,31 +197,77 @@ const createTeam = async () => {
 
 // Função para adicionar um membro a uma equipe
 const addMemberToTeam = async (teamIndex) => {
-  const email = prompt('Digite o email do membro:');
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex para email
-  if (emailRegex.test(email)) {
+  const usuario_telegram = prompt('Digite o telegram do membro:');
+  const tgRegex = /^@[A-Za-z0-9_]{5,32}$/; // Regex para user do telegram
+  if (tgRegex.test(usuario_telegram)) {
     try {
-      const response = await fetch(`/api/checkEmail?email=${encodeURIComponent(email)}`);
+
+      const storedTelegram = localStorage.getItem('userTelegram');
+      groupAdmin.value = storedTelegram;
+      const admin = groupAdmin.value;
+      const response = await fetch(`/api/checkTgUser?user=${encodeURIComponent(usuario_telegram)}`);
       const data = await response.json();
+      console.log(newTeamName.value)
 
       if (data.exists) {
-        teams.value[teamIndex].members.push(email);
-        alert('Membro adicionado com sucesso!');
+        teams.value[teamIndex].members.push(usuario_telegram);
+
+        const nome_grupo = teams.value[teamIndex].name;
+
+        const memberData = {nomeGrupo:nome_grupo,userMember:usuario_telegram,admin:admin};
+
+        const addMemberResponse = await $fetch('/api/addMembers', {
+          method: 'POST',
+          body: memberData,
+        });
+
+        if (addMemberResponse.success) {
+          alert('Membro adicionado com sucesso!');
+        } else {
+          alert('Erro ao adicionar o membro.');
+        }
       } else {
-        alert('Email não encontrado no banco de dados. Por favor, verifique o email.');
+        alert('Usuario não encontrado no banco de dados. Por favor, verifique o @.');
       }
     } catch (error) {
-      console.error('Erro ao checar o email:', error);
-      alert('Erro ao verificar o email. Tente novamente mais tarde.');
+      console.error('Erro ao checar o usuario:', error);
+      alert('Erro ao verificar o usuario. Tente novamente mais tarde.');
     }
   } else {
-    alert('Por favor, insira um email válido.');
+    alert('Por favor, insira um usuario válido.');
   }
 };
 
 // Função para remover um membro da equipe
-const removeMember = (teamIndex, memberIndex) => {
+const removeMember = async (teamIndex, memberIndex) => {
+  const memberToRemove = teams.value[teamIndex].members[memberIndex];
+  
+  const confirmation = confirm(`Tem certeza que deseja remover ${memberToRemove} da equipe?`);
+  if (!confirmation) return;
+
   teams.value[teamIndex].members.splice(memberIndex, 1);
+  
+  const teamName = teams.value[teamIndex].name;
+  const admin = groupAdmin.value;
+
+  const removeData = { nomeGrupo: teamName, userMember: memberToRemove, admin: admin };
+
+  try {
+    const response = await $fetch('/api/removeMember', {
+      method: 'POST',
+      body: removeData,
+    });
+
+    if (response.success) {
+      alert(`${memberToRemove} removido da equipe com sucesso!`);
+    } else {
+      throw new Error('Erro ao remover o membro.');
+    }
+  } catch (error) {
+    console.error('Erro ao remover o membro:', error);
+    alert('Erro ao remover o membro. Tente novamente.');
+  }
+
 };
 
 onMounted(async () => {
