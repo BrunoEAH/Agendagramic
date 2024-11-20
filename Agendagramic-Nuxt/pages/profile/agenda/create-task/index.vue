@@ -91,15 +91,17 @@
           <label for="group" class="block text-white text-sm font-bold mb-2">Grupo</label>
           <select
             v-model="taskGroup"
-            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+            class="bg-light-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline max-h-60 overflow-y-auto"
             id="group"
           >
-            <option value="" disabled>Selecione um grupo</option>
-            <option v-for="group in groups" :key="group.group_id" :value="group.group_id">
-              {{ group.group_name }}
+            <option value="" disabled selected>Selecione um grupo</option> <!-- Empty value for no group -->
+            <option value="null">Sem Grupo</option> <!-- "No group" option without disabled -->
+            <option v-for="group in groups" :key="group.name" :value="group.name">
+              {{ group.name }}
             </option>
           </select>
         </div>
+
 
         <!-- Botões -->
         <div class="flex justify-between items-center">
@@ -158,14 +160,27 @@ onMounted(() => {
   loadGroups();
 });
 
-// Carregar usuários e grupos
+// Carregar grupos
 const loadGroups = async () => {
   try {
-        const response = await axios.get(`/api/getGroupsName?userTelegram=${userTelegram}`);
-        groups.value = response.data.groups || [];
+        const response = await axios.get(`http://localhost:5000/api/groups`, {
+          params: {
+            userTelegram: userTelegram.value,
+          },
+        });
+        console.log('API Response:', response.data);
+        if (response.data.success) {
+          groups.value = response.data.groups.map(group => ({
+          name: group[0],
+          }));
+        } else {
+          console.error('Failed to fetch groups:', response.data.message);
+        }
       } catch (error) {
-        console.error('Erro ao carregar grupos:', error);
+        console.error('Error fetching data:', error);
       }
+      console.log(groups.value);
+
 };
 
 // Criar tarefa no banco de dados
@@ -176,7 +191,7 @@ const createTask = async () => {
     dueDate: dueDate.value,
     taskStatus: taskStatus.value,
     taskPriority: taskPriority.value,
-    taskGroup: taskGroup.value || null,
+    taskGroup: taskGroup.value === 'null' ? null : taskGroup.value,
     taskMembers: taskMembers.value,
     taskCreator: userTelegram.value,
   };

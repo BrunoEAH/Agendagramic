@@ -1,20 +1,8 @@
 TAREFAS:
 - Conectar a agenda com o banco de dados:
-    - Login;
     - Editar eventos;
     - Editar tarefas;
-    - Tarefas [Bruno Rocha];
-    - Eventos [Bruno Rocha];
-    - Grupos;
-    - Organizar prioridade das tarefas.
-- Bot do telegram:
-    - Conexão do usuário [Rafael Navarro];
-    - Conexão das tarefas[Rafael Navarro];
-    - Conexão dos eventos[Rafael Navarro];
-    - Listas eventos e tarefas;
-    - Analisar o status do usuário [Bruno Hayek];
-    - Analisar votação [Bruno Hayek];
-    - Analisar a prioridade das tarefas [Bruno Hayek].
+    - Listar tarefas e eventos na agenda.
 - Deploy do banco de dados.
 
 EXTENÕES USADAS:
@@ -27,6 +15,7 @@ EXTENÕES USADAS:
 - @types/node (Para garantir a compatibilidade com tipos Node.js)
 - npm install firebase (autenticar usu'rios em json
 - Mariadb
+- Python FLASK
 
 ACESSO AO TELEGRAM
 - Arquivo .env
@@ -97,7 +86,8 @@ python -m pytest testes/test_exemple.py
 - Executar uma Função de Teste específica dentro de um arquivo: Por exemplo, para rodar apenas test_navigation_to_profile dentro de test_exemple.py:
 python -m pytest testes/test_exemple.py::test_navigation_to_profile
 
-
+LISTAR TAREFAS, EVENTOS E GRUPOS:
+- python Agendagramic-Nuxt/server/api/getGTE.py
 
 
 

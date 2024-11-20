@@ -104,19 +104,22 @@
           </select>
         </div>
 
-        <!-- Grupo do Evento -->
-        <div class="mb-4">
-          <label for="eventGroup" class="block text-white text-sm font-bold mb-2">Grupo do Evento</label>
-          <select
-            v-model="eventGroup"
-            id="eventGroup"
-            class="bg-input-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
-          >
-            <option v-for="group in eventGroups" :key="group.group_id" :value="group.group_id">
-            {{ group.group_name }}
-            </option>
-          </select>
-        </div>
+          <!-- Grupo -->
+          <div class="mb-4">
+            <label for="group" class="block text-white text-sm font-bold mb-2">Grupo</label>
+            <select
+              v-model="eventGroup"
+              class="bg-input-gray shadow appearance-none border rounded-full w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline max-h-60 overflow-y-auto"
+              id="group"
+            >
+              <option value="" disabled selected>Selecione um grupo</option> <!-- Empty value for no group -->
+              <option value="null">Sem Grupo</option> <!-- "No group" option without disabled -->
+              <option v-for="group in groups" :key="group.name" :value="group.name">
+                {{ group.name }}
+              </option>
+            </select>
+          </div>
+
 
         <!-- Botões -->
         <div class="text-center space-x-4">
@@ -169,7 +172,8 @@ const eventEndDate = ref('');
 const eventBeginTime = ref('');
 const eventEndTime = ref('');
 const eventStatus = ref(0);
-const eventGroup = ref([]); 
+const eventGroup = ref('');
+const groups = ref([]);
 const userTelegram = ref('default_user');
 
 
@@ -183,13 +187,27 @@ onMounted(async () => {
   loadGroups();
 });
 
+// Carregar grupos
 const loadGroups = async () => {
   try {
-    const response = await axios.get(`/api/getGroups?userTelegram=${userTelegram.value}`);
-    eventGroup.value = response.data.groups || [];
-  } catch (error) {
-    console.error('Error fetching groups:', error);
-  }
+        const response = await axios.get(`http://localhost:5000/api/groups`, {
+          params: {
+            userTelegram: userTelegram.value,
+          },
+        });
+        console.log('API Response:', response.data);
+        if (response.data.success) {
+          groups.value = response.data.groups.map(group => ({
+          name: group[0],
+          }));
+        } else {
+          console.error('Failed to fetch groups:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+      console.log(groups.value);
+
 };
 
 
@@ -205,7 +223,7 @@ const createEvent = async () => {
     eventBeginDateTime,
     eventEndDateTime,
     eventStatus: eventStatus.value,
-    eventGroup: eventGroup.value || null,
+    eventGroup: eventGroup.value === 'null' ? null : eventGroup.value,
     eventCreator: userTelegram.value
   };
 
@@ -223,7 +241,7 @@ const createEvent = async () => {
 };
 
 const goBack = () => {
-  router.push(`/profile/agenda/`);
+  window.history.back();
 };
 
 const testConnection = async () => {
@@ -270,7 +288,7 @@ button {
   background-color: #2563eb;
 }
 
-.rounded-full {
-  border-radius: 9999px;
+.rounded-3xl {
+  border-radius: 1.5rem;
 }
 </style>

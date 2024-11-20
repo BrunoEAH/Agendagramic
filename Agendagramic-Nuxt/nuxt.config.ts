@@ -27,9 +27,11 @@ export default defineNuxtConfig({
     },
   },
 
+  
   compatibilityDate: '2024-10-30', // Compatibilidade com o projeto
 
   nitro: {
     plugins: ['~/server/api/getTasks.js'], // Adiciona o plugin para acessar tarefas
   },
+  
 });

@@ -15,14 +15,13 @@ export default defineEventHandler(async (event) => {
   try {
     connection = await pool.getConnection();
     const [groups] = await connection.query(
-      'SELECT nome AS group_name FROM Grupos WHERE admin = ? LIMIT 10',
+      'SELECT nome AS group_name FROM Grupos WHERE admin = ?',
       [userTelegram]
     );
-
     console.log('Query result:', groups);
 
     // Return groups to the client
-    return { success: true, groups };
+    return { success: true, groups: Array.isArray(groups) ? groups : [groups] };
   } catch (error) {
     console.error('Error fetching groups:', error); // Log error on the server
     throw createError({
