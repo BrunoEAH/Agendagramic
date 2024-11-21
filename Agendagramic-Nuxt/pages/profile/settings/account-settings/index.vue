@@ -89,7 +89,7 @@
 
     <!-- Rodapé -->
     <footer class="text-center text-gray-300 py-4">
-      AgendaGramic Alpha 0.0.1
+      AgendaGramic
     </footer>
   </div>
 </template>

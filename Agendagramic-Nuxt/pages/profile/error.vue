@@ -13,7 +13,7 @@
   
       <!-- Footer with version -->
       <div class="text-center text-gray-300 mt-6">
-        AgendaGramic Alpha 0.0.1
+        AgendaGramic
       </div>
     </div>
   </template>

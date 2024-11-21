@@ -111,12 +111,12 @@
           >
             Criar Tarefa
           </button>
-          <button
+          <!-- <button
             @click="testDatabaseConnection"
             class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full border-white border-2 transition"
           >
             Testar Banco de Dados
-          </button>
+          </button> -->
         </div>
       </div>
     </main>
@@ -130,7 +130,7 @@
         Voltar
       </button>
       <div class="text-gray-300">
-        AgendaGramic Alpha 0.0.1
+        AgendaGramic
       </div>
     </footer>
   </div>
@@ -210,19 +210,19 @@ const createTask = async () => {
 };
 
 // Testar conexão com o banco de dados
-const testDatabaseConnection = async () => {
-  try {
-    const response = await axios.get('/api/getTasks');
-    if (response.status === 200) {
-      alert('Conexão com o banco de dados bem-sucedida!');
-    } else {
-      alert('Erro ao conectar ao banco de dados.');
-    }
-  } catch (error) {
-    console.error('Erro ao testar conexão com o banco:', error);
-    alert('Erro ao conectar ao banco de dados.');
-  }
-};
+// const testDatabaseConnection = async () => {
+//   try {
+//     const response = await axios.get('/api/getTasks');
+//     if (response.status === 200) {
+//       alert('Conexão com o banco de dados bem-sucedida!');
+//     } else {
+//       alert('Erro ao conectar ao banco de dados.');
+//     }
+//   } catch (error) {
+//     console.error('Erro ao testar conexão com o banco:', error);
+//     alert('Erro ao conectar ao banco de dados.');
+//   }
+// };
 
 // Voltar para a página anterior
 const goBack = () => {

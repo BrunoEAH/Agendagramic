@@ -31,6 +31,7 @@
             <ul class="text-gray-300 list-disc list-inside mt-4 space-y-2">
               <li>Login e cadastro de novos usuários.</li>
               <li>Organização de eventos e compromissos na agenda.</li>
+              <li>Integração de eventos,tarefas e grupos com o bot do telegram.</li>
             </ul>
             <p class="text-gray-400 italic mt-4 text-center">* Continue acompanhando para mais atualizações e novas funcionalidades!</p>
           </section>
@@ -45,9 +46,9 @@
           <a href="https://t.me/agendagramic_bot" target="_blank" class="action-button bg-blue-500 hover:bg-blue-600">Telegram</a>
           <button @click="goToLogin" class="action-button bg-gray-600 text-white hover:bg-gray-700">Login</button>
           <button @click="goToSignup" class="action-button bg-gray-600 text-white hover:bg-gray-700">Cadastro</button>
-          <button @click="goToTest" class="action-button bg-gray-600 text-white hover:bg-gray-700">Testes</button>
+          <!-- <button @click="goToTest" class="action-button bg-gray-600 text-white hover:bg-gray-700">Testes</button>
           <button @click="testConnection" class="action-button bg-green-500 hover:bg-green-600">Testar Conexão DB</button>
-          <button @click="clearDatabase" class="action-button bg-green-500 hover:bg-green-600">Limpar Banco de Dados</button>
+          <button @click="clearDatabase" class="action-button bg-green-500 hover:bg-green-600">Limpar Banco de Dados</button> -->
         </div>
       </main>
 
@@ -69,25 +70,25 @@ const router = useRouter();
 const goToLogin = () => router.push('/login');
 const goToSignup = () => router.push('/cadastro');
 const goToHome = () => router.push('/');
-const goToTest = () => router.push('/profile');
+// const goToTest = () => router.push('/profile');
 
-const testConnection = async () => {
-  try {
-    const response = await axios.get('/api/testDbConnection');
-    alert(response.data.message);
-  } catch {
-    alert('Erro ao testar conexão com o banco de dados');
-  }
-};
+// const testConnection = async () => {
+//   try {
+//     const response = await axios.get('/api/testDbConnection');
+//     alert(response.data.message);
+//   } catch {
+//     alert('Erro ao testar conexão com o banco de dados');
+//   }
+// };
 
-const clearDatabase = async () => {
-  try {
-    const response = await axios.get('/api/clearDatabase');
-    alert(response.data.message);
-  } catch {
-    alert('Erro ao limpar o banco de dados');
-  }
-};
+// const clearDatabase = async () => {
+//   try {
+//     const response = await axios.get('/api/clearDatabase');
+//     alert(response.data.message);
+//   } catch {
+//     alert('Erro ao limpar o banco de dados');
+//   }
+// };
 </script>
 
 <style scoped>

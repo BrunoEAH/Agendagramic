@@ -42,12 +42,12 @@
           >
             Criar Novo Evento
           </button>
-          <button
+          <!-- <button
             @click="testConnection"
             class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full border-white border-2 transition"
           >
             Testar Conexão
-          </button>
+          </button> -->
         </div>
       </div>
     </main>
@@ -98,26 +98,26 @@ const loadEvents = async () => {
 };
 
 // Função para testar a conexão com o banco de dados
-const testConnection = async () => {
-  try {
-    const userTelegram = user.value;
-    const response = await axios.get('/api/getEventsName', {
-      params: { userTelegram: userTelegram }, // Usuário fictício para teste
-    });
-    if (response.status === 200) {
-      if (response.data.events && response.data.events.length > 0) {
-        alert('Conexão bem-sucedida! Eventos encontrados.');
-      } else {
-        alert('Conexão bem-sucedida, mas nenhum evento foi encontrado.');
-      }
-    } else {
-      alert('Conexão falhou!');
-    }
-  } catch (error) {
-    alert('Erro ao testar conexão com o banco de dados.');
-    console.error(error);
-  }
-};
+// const testConnection = async () => {
+//   try {
+//     const userTelegram = user.value;
+//     const response = await axios.get('/api/getEventsName', {
+//       params: { userTelegram: userTelegram }, // Usuário fictício para teste
+//     });
+//     if (response.status === 200) {
+//       if (response.data.events && response.data.events.length > 0) {
+//         alert('Conexão bem-sucedida! Eventos encontrados.');
+//       } else {
+//         alert('Conexão bem-sucedida, mas nenhum evento foi encontrado.');
+//       }
+//     } else {
+//       alert('Conexão falhou!');
+//     }
+//   } catch (error) {
+//     alert('Erro ao testar conexão com o banco de dados.');
+//     console.error(error);
+//   }
+// };
 
 // Redirecionar para criar novo evento
 const goToCreateEvent = () => {

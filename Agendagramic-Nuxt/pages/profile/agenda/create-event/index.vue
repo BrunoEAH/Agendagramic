@@ -129,12 +129,12 @@
           >
             Criar Evento
           </button>
-          <button
+          <!-- <button
             @click="testConnection"
             class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-full border-white border-2 transition"
           >
             Testar Conexão DB
-          </button>
+          </button> -->
         </div>
       </div>
     </main>
@@ -148,7 +148,7 @@
         Voltar
       </button>
       <div class="text-gray-300">
-        AgendaGramic Alpha 0.0.1
+        AgendaGramic
       </div>
     </footer>
   </div>
@@ -244,14 +244,14 @@ const goBack = () => {
   window.history.back();
 };
 
-const testConnection = async () => {
-  try {
-    const response = await axios.get('/api/testDbConnection');
-    alert('Conexão bem-sucedida: ' + response.data.message);
-  } catch (error) {
-    alert('Erro ao conectar ao banco de dados.');
-  }
-};
+// const testConnection = async () => {
+//   try {
+//     const response = await axios.get('/api/testDbConnection');
+//     alert('Conexão bem-sucedida: ' + response.data.message);
+//   } catch (error) {
+//     alert('Erro ao conectar ao banco de dados.');
+//   }
+// };
 </script>
 
 <style scoped>

@@ -21,9 +21,9 @@
 
     <!-- Quadro de Desenvolvimento -->
     <main class="flex flex-col items-center px-6">
-      <div class="bg-white p-4 rounded-3xl shadow-md w-full max-w-md text-center mb-6">
+      <!-- <div class="bg-white p-4 rounded-3xl shadow-md w-full max-w-md text-center mb-6">
         <p class="text-lg font-semibold text-black">*Em Desenvolvimento*</p>
-      </div>
+      </div> -->
 
     <section class="bg-medium-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2">
     <h2 class="text-2xl font-semibold text-white mb-4">Suas Equipes</h2>
@@ -114,7 +114,7 @@
 
     <!-- Rodapé com a versão do site -->
     <footer class="text-center text-gray-300 py-4">
-      AgendaGramic Alpha 0.0.1
+      AgendaGramic
     </footer>
   </div>
 </template>

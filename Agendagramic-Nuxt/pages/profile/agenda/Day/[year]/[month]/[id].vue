@@ -69,7 +69,7 @@
         Voltar
       </button>
       <div class="text-gray-300">
-        AgendaGramic Alpha 0.0.1
+        AgendaGramic
       </div>
     </footer>
   </div>
@@ -127,12 +127,12 @@ const loadTasksAndEvents = async() => {
 
 // Navega para a criação de tarefas
 const goToCreateTask = () => {
-  router.push(`/profile/agenda/create-task?day=${day}`);
+  router.push(`/profile/agenda/create-task`);
 };
 
 // Navega para a criação de eventos
 const goToCreateEvent = () => {
-  router.push(`/profile/agenda/create-event?day=${day}`);
+  router.push(`/profile/agenda/create-event`);
 };
 
 

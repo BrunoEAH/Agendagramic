@@ -45,12 +45,12 @@
           >
             Criar Nova Tarefa
           </button>
-          <button
+          <!-- <button
             @click="testConnection"
             class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full border-white border-2 transition"
           >
             Testar Conexão
-          </button>
+          </button> -->
         </div>
       </div>
     </main>
@@ -104,32 +104,32 @@ const loadTasks = async () => {
 
 
 // Função para testar a conexão com o banco de dados usando o mesmo endpoint
-const testConnection = async () => {
-  try {
-    const response = await axios.get('/api/getTasks', {
-      params: { userTelegram: 'test_user' }, // Usuário fictício para teste
-    });
+// const testConnection = async () => {
+//   try {
+//     const response = await axios.get('/api/getTasks', {
+//       params: { userTelegram: 'test_user' }, // Usuário fictício para teste
+//     });
 
-    if (response.status === 200) {
-      if (response.data.tasks && response.data.tasks.length > 0) {
-        alert('Conexão bem-sucedida! Tarefas encontradas.');
-      } else {
-        alert('Conexão bem-sucedida, mas nenhuma tarefa foi encontrada.');
-      }
-    } else {
-      alert('Conexão falhou!');
-    }
-  } catch (error) {
-    if (error.response?.data?.message?.includes('Unknown column')) {
-      alert(
-        'Erro: Verifique a estrutura da tabela no banco de dados.'
-      );
-    } else {
-      alert('Erro ao testar conexão com o banco de dados.');
-    }
-    console.error(error);
-  }
-};
+//     if (response.status === 200) {
+//       if (response.data.tasks && response.data.tasks.length > 0) {
+//         alert('Conexão bem-sucedida! Tarefas encontradas.');
+//       } else {
+//         alert('Conexão bem-sucedida, mas nenhuma tarefa foi encontrada.');
+//       }
+//     } else {
+//       alert('Conexão falhou!');
+//     }
+//   } catch (error) {
+//     if (error.response?.data?.message?.includes('Unknown column')) {
+//       alert(
+//         'Erro: Verifique a estrutura da tabela no banco de dados.'
+//       );
+//     } else {
+//       alert('Erro ao testar conexão com o banco de dados.');
+//     }
+//     console.error(error);
+//   }
+// };
 
 // Redirecionar para criar nova tarefa
 const goToCreateTask = () => {
