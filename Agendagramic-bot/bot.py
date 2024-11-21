@@ -6,6 +6,7 @@ from listar_database import listar_db
 from lista_prioridade import listar_prioridade_db
 from poll_database import verificar_grupo,armazenar_task,armazenar_evento
 from telebot.types import Poll
+from delete_task_event import query_event,deletedb_event,query_task,deletedb_task
 
 load_dotenv()
 
@@ -85,6 +86,8 @@ def send_menu(message):
         "/list_task_priority - Lista tarefas em ordem de prioridade\n"
         "/create_poll_task - Criar votação para tarefa\n"
         "/create_poll_event - Criar votação para evento\n"
+        "/delete_event - Deletar um evento\n"
+        "/delete_task - Deletar uma tarefas\n"
         # Adicione outros comandos conforme necessário
     )
     bot.reply_to(message, menu_message)
@@ -545,38 +548,91 @@ def criar_poll_event(chat_id, user_id):
 
     del poll_data[user_id]
 
-""" def resultados_polls_event(poll: Poll):
-    poll_id = poll.id
-    question = poll.question
-    options = poll.options
-
-    # Opcao com mais votacao
-    top_option = max(options, key=lambda opt: opt.voter_count)
-    top_option_text = top_option.text
-    top_votes = top_option.voter_count
 
 
-    username_poll = completed_polls[poll_id]["username"]
-    group_poll = completed_polls[poll_id]["group_name"]
-    titulo_poll = completed_polls[poll_id]["question"]
-    group_id_poll = completed_polls[poll_id]["group_id"]
-    chat_id = completed_polls[poll_id]["chat_id"]
+#################################
+#                               #
+#                               #
+#   DELETAR EVENTOS             #
+#                               #
+#################################
 
+@bot.message_handler(commands=['delete_event'])
+def ask_username_delete_event(message):
+    chat_id = message.chat.id
+    msg = bot.send_message(chat_id, "Escreva o seu usuário com o @.")
+    bot.register_next_step_handler(msg, receive_username_delete_event)
 
-    total_eleitores = sum(opt.voter_count for opt in options)
-    expected_voters = int(completed_polls[poll_id]["voters"])
+def receive_username_delete_event(message):
+    chat_id = message.chat.id
+    username = message.text
 
-    if total_eleitores >= expected_voters:
-        armazenar_evento(group_id_poll,username_poll,group_poll,titulo_poll,top_option_text)
+    if not username.startswith("@"):
+        msg = bot.send_message(chat_id, "Por favor, entre um usuário válido começando com '@'.")
+        bot.register_next_step_handler(msg, receive_username_delete_event)
+        return
 
-        bot.send_message(chat_id, f"Resultado da votacao: {question}\n"
-                    f"Vencedor: {top_option_text} com {top_votes} votos.")
-    
-        del completed_polls[poll_id]
+    poll_data[chat_id] = {"username": username}
+    msg = bot.send_message(chat_id, "Por favor, entre o nome do evento que deseja excluir.")
+    bot.register_next_step_handler(msg, receive_name_delete_event)
 
+def receive_name_delete_event(message):
+    chat_id = message.chat.id
+    event_name = message.text
+
+    username = poll_data[chat_id]["username"]
+
+    event = query_event(username,event_name)
+
+    if event:
+        event_id = event[0]
+        deletedb_event(event_id)
+        bot.send_message(chat_id, f"O evento {event_name} foi excluído com sucesso.")
     else:
-        bot.send_message(chat_id, f"Aguardando mais votos. {total_eleitores}/{expected_voters} votaram até agora.")
- """
+        bot.send_message(chat_id, "Evento não encontrado. Verifique as informações fornecidas.")
+
+
+#################################
+#                               #
+#                               #
+#   DELETAR EVENTOS             #
+#                               #
+#################################
+
+@bot.message_handler(commands=['delete_task'])
+def ask_username_delete_task(message):
+    chat_id = message.chat.id
+    msg = bot.send_message(chat_id, "Escreva o seu usuário com o @.")
+    bot.register_next_step_handler(msg, receive_username_delete_task)
+
+def receive_username_delete_task(message):
+    chat_id = message.chat.id
+    username = message.text
+
+    if not username.startswith("@"):
+        msg = bot.send_message(chat_id, "Por favor, entre um usuário válido começando com '@'.")
+        bot.register_next_step_handler(msg, receive_username_delete_task)
+        return
+
+    poll_data[chat_id] = {"username": username}
+    msg = bot.send_message(chat_id, "Por favor, entre o nome da tarefa que deseja excluir.")
+    bot.register_next_step_handler(msg, receive_name_delete_task)
+
+def receive_name_delete_task(message):
+    chat_id = message.chat.id
+    task_name = message.text
+
+    username = poll_data[chat_id]["username"]
+
+    task = query_task(username,task_name)
+
+    if task:
+        task_id = task[0]
+        deletedb_task(task_id)
+        bot.send_message(chat_id, f"A tarefa {task_name} foi excluída com sucesso.")
+    else:
+        bot.send_message(chat_id, "Tarefa não encontrada. Verifique as informações fornecidas.")
+
 
 # Mantém o bot em funcionamento
 bot.infinity_polling()
