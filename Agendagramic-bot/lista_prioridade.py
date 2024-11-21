@@ -12,6 +12,13 @@ class Prioridade(IntEnum):
     Media = 1
     Baixa = 2
 
+def map_prioridade_to_int(priority_str):
+    mapping = {
+        'alta': Prioridade.Alta,
+        'media': Prioridade.Media,
+        'baixa': Prioridade.Baixa
+    }
+    return mapping.get(priority_str.lower()) 
 
 
 def listar_prioridade_db(user_id):
@@ -28,7 +35,8 @@ def listar_prioridade_db(user_id):
         } for task in tasks
     ]
 
-    tasks_ordenadas = sorted(tasks_data, key=lambda task: Prioridade[task["prioridade"]])
+    tasks_ordenadas = sorted(tasks_data, key=lambda task: map_prioridade_to_int(task["prioridade"]))
+
     message = f"Lista de tarefas por prioridade do usuário {user_id}:\n"
 
     for item in tasks_ordenadas:
