@@ -54,18 +54,18 @@ def test_login_submit(driver):
     send_button = wait_for_element(driver, By.XPATH, '//*[@id="column-center"]/div/div/div[4]/div/div[5]/button/div')
     send_button.click()
 
-    # Espera para garantir que o comando "/menu" foi processado antes de fechar o navegador
+    # Espera para garantir que o comando foi processado
     time.sleep(3)
 
-        # Aguarda o campo de entrada de texto novamente e envia o comando "/menu"
+    # Aguarda o campo de entrada de texto novamente e envia o comando "/menu"
     task_input = wait_for_element(driver, By.XPATH, '//*[@id="column-center"]/div/div/div[4]/div/div[1]/div/div[8]/div[1]/div[1]')
     task_input.send_keys("/task")
 
-        # Aguarda o botão de envio e clica
+    # Aguarda o botão de envio e clica
     send_button = wait_for_element(driver, By.XPATH, '//*[@id="column-center"]/div/div/div[4]/div/div[5]/button/div')
     send_button.click()
 
-    # Espera para garantir que o comando "/menu" foi processado antes de fechar o navegador
+    # Espera para garantir que o comando foi processado
     time.sleep(3)
 
     add_task_input = wait_for_element(driver, By.XPATH, '//*[@id="column-center"]/div/div/div[4]/div/div[1]/div/div[8]/div[1]/div[1]')
@@ -74,7 +74,7 @@ def test_login_submit(driver):
     send_button = wait_for_element(driver, By.XPATH, '//*[@id="column-center"]/div/div/div[4]/div/div[5]/button/div')
     send_button.click()
 
-    # Espera para garantir que o comando "/menu" foi processado antes de fechar o navegador
+    # Espera para garantir que o comando foi processado
     time.sleep(3)
 
     task_priority_input = wait_for_element(driver, By.XPATH, '//*[@id="column-center"]/div/div/div[4]/div/div[1]/div/div[8]/div[1]/div[1]')
@@ -83,7 +83,7 @@ def test_login_submit(driver):
     send_button = wait_for_element(driver, By.XPATH, '//*[@id="column-center"]/div/div/div[4]/div/div[5]/button/div')
     send_button.click()
 
-    # Espera para garantir que o comando "/menu" foi processado antes de fechar o navegador
+    # Espera para garantir que o comando foi processado
     time.sleep(3)
 
     task_status_input = wait_for_element(driver, By.XPATH, '//*[@id="column-center"]/div/div/div[4]/div/div[1]/div/div[8]/div[1]/div[1]')
@@ -92,26 +92,26 @@ def test_login_submit(driver):
     send_button = wait_for_element(driver, By.XPATH, '//*[@id="column-center"]/div/div/div[4]/div/div[5]/button/div')
     send_button.click()
 
-        # Espera para garantir que o comando "/menu" foi processado antes de fechar o navegador
+    # Espera para garantir que o comando foi processado
     time.sleep(3)
 
 
     username_task_input = wait_for_element(driver, By.XPATH, '//*[@id="column-center"]/div/div/div[4]/div/div[1]/div/div[8]/div[1]/div[1]')
-    username_task_input.send_keys("@FestaZumbi")
+    username_task_input.send_keys("@BayernDesSammamia")
 
     send_button = wait_for_element(driver, By.XPATH, '//*[@id="column-center"]/div/div/div[4]/div/div[5]/button/div')
     send_button.click()
 
-        # Espera para garantir que o comando "/menu" foi processado antes de fechar o navegador
+    # Espera para garantir que o comando foi processado
     time.sleep(3)
 
     task_group_input = wait_for_element(driver, By.XPATH, '//*[@id="column-center"]/div/div/div[4]/div/div[1]/div/div[8]/div[1]/div[1]')
-    task_group_input.send_keys("Grupo de teste")
+    task_group_input.send_keys("Agendagramic Desenvolvedores.")
 
     send_button = wait_for_element(driver, By.XPATH, '//*[@id="column-center"]/div/div/div[4]/div/div[5]/button/div')
     send_button.click()
 
-        # Espera para garantir que o comando "/menu" foi processado antes de fechar o navegador
+    # Espera para garantir que o comando foi processado
     time.sleep(3)
 
     list_task_priority = wait_for_element(driver, By.XPATH, '//*[@id="column-center"]/div/div/div[4]/div/div[1]/div/div[8]/div[1]/div[1]')
@@ -120,23 +120,14 @@ def test_login_submit(driver):
     send_button = wait_for_element(driver, By.XPATH, '//*[@id="column-center"]/div/div/div[4]/div/div[5]/button/div')
     send_button.click()
 
-        # Espera para garantir que o comando "/menu" foi processado antes de fechar o navegador
+    # Espera para garantir que o comando foi processado
     time.sleep(3)
 
     username_task_priority = wait_for_element(driver, By.XPATH, '//*[@id="column-center"]/div/div/div[4]/div/div[1]/div/div[8]/div[1]/div[1]')
-    username_task_priority.send_keys("@FestaZumbi")
+    username_task_priority.send_keys("@BayernDesSammamia")
 
     send_button = wait_for_element(driver, By.XPATH, '//*[@id="column-center"]/div/div/div[4]/div/div[5]/button/div')
     send_button.click()
 
-        # Espera para garantir que o comando "/menu" foi processado antes de fechar o navegador
-    time.sleep(3)
-
-
-
-    
-
-    
-
-
-
+    # Espera para garantir que o comando foi processado
+    time.sleep(8)
