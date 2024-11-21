@@ -25,7 +25,7 @@
         <p class="text-lg font-semibold text-black">*Em Desenvolvimento*</p>
       </div>
 
-        <section class="bg-medium-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2">
+    <section class="bg-medium-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2">
     <h2 class="text-2xl font-semibold text-white mb-4">Suas Equipes</h2>
     <div v-if="userGroups.length" class="space-y-4">
       <div 
@@ -38,6 +38,21 @@
     </div>
     <p v-else class="text-gray-300">Você ainda não está registrado em nenhuma equipe.</p>
   </section>
+
+  <section class="bg-medium-gray p-6 rounded-3xl shadow-md border-lighter-gray border-2">
+  <h2 class="text-2xl font-semibold text-white mb-4">Grupos em que Você é Membro</h2>
+  <div v-if="memberGroups.length" class="space-y-4">
+    <div 
+      v-for="(group, index) in memberGroups" 
+      :key="index" 
+      class="bg-light-gray p-4 rounded-3xl border-white border-2"
+    >
+      <h3 class="text-xl font-semibold text-black mb-2">{{ group.name }}</h3>
+    </div>
+  </div>
+  <p v-else class="text-gray-300">Você não é membro de nenhum grupo ainda.</p>
+</section>
+
 
 
       <!-- Conteúdo Principal da Página de Gerenciamento de Equipe -->
@@ -118,6 +133,8 @@ const newTeamName = ref('');
 // Estado para armazenar as equipes e seus membros
 const teams = ref([]);
 
+const memberGroups = ref([]);
+
 const groupAdmin = ref('default_user');
 
 const userGroups = ref([]);
@@ -132,7 +149,7 @@ const fetchUserGroups = async() => {
         console.log('API Response:', response.data);
         if (response.data.success) {
           userGroups.value = response.data.groups.map(group => ({
-          name: group[0],
+          name: group[0] || group.name || group,
           }));
         } else {
           console.error('Failed to fetch groups:', response.data.message);
@@ -142,7 +159,25 @@ const fetchUserGroups = async() => {
       }
 };
 
-
+const fetchUserMembership = async() => {
+  try {
+        const response = await axios.get(`http://localhost:5000/api/groups_membro`, {
+          params: {
+            userTelegram: groupAdmin.value,
+          },
+        });
+        console.log('API Response:', response.data);
+        if (response.data.success) {
+          memberGroups.value = response.data.groups.map(group => ({
+          name: group[0] || group.name || group,
+          }));
+        } else {
+          console.error('Failed to fetch groups:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+};
 
 // Função para redirecionar à página inicial (logado)
 const goToHome = () => {
@@ -276,6 +311,7 @@ onMounted(async () => {
     if (storedTelegram) {
       groupAdmin.value = storedTelegram;
       await fetchUserGroups();
+      await fetchUserMembership()
     } else {
       console.warn('No Telegram ID found in local storage.');
     }

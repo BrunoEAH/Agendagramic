@@ -170,7 +170,9 @@ const tasks = ref([]);
 const events = ref([]);
 
 const goToDate = (day) => {
-  router.push(`/profile/agenda/day/${day}`);
+  if (!day) return;
+  const [year, month] = selectedDate.value.split("-");
+  router.push(`/profile/agenda/day/${year}/${month}/${day}`);
 };
 
 // Carrega dados de tarefas e eventos para o dia atual
