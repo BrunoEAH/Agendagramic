@@ -152,7 +152,7 @@ def get_events():
                 cursor.execute("SELECT nome FROM Grupos WHERE group_id = ?", (event['id_group'],))
                 group_name = cursor.fetchone()
                 if group_name:
-                    task['group_name'] = group_name[0]
+                    event['group_name'] = group_name[0]
 
             events.extend(group_events)
 

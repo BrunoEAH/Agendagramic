@@ -410,10 +410,10 @@ def criar_poll_task(chat_id, user_id):
         "group_name": poll_data[user_id]["group_name"],
         "group_id": poll_data[user_id]["group_id"],
         "username": poll_data[user_id]["username"],
-        "voters": poll_data[user_id]["voters"]
+        "voters": poll_data[user_id]["voters"],
+        "chat_id": chat_id,
+        "tipo": "Task"
     }
-
-    completed_polls[votacao.poll.id]["chat_id"] = chat_id
 
     tipo = "Task"
 
@@ -421,11 +421,18 @@ def criar_poll_task(chat_id, user_id):
 
 @bot.poll_handler(func=lambda poll: True)
 def resultados_polls_task(poll: Poll):
-    global tipo
-    if tipo == "Task":
-        handle_poll_results(poll, poll_type='task')
+    poll_data = completed_polls.get(poll.id)
+    if poll_data:
+        tipo = poll_data.get("tipo", "event")  # Default to "event" if tipo is not found
+
+        if tipo == "Task":
+            handle_poll_results(poll, poll_type='task')
+        else:
+            handle_poll_results(poll, poll_type='event')
     else:
-        handle_poll_results(poll, poll_type='event')
+        # Handle case if poll.id is not found in completed_polls
+        print(f"Poll {poll.id} not found in completed_polls")
+
 
 #################################
 #                               #
